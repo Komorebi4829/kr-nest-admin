@@ -1,11 +1,12 @@
 {
-  "name": "@kr-nest-admin/api",
+  "name": "api",
   "private": true,
   "version": "0.0.1",
   "description": "",
   "license": "UNLICENSED",
   "scripts": {
     "cli": "nest",
+    "dev": "npm run start",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
