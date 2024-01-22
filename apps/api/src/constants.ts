@@ -2,17 +2,39 @@ import { NestFactory } from '@nestjs/core'
 
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify'
 
+import { existsSync } from 'fs-extra'
+
+import { isNil, join } from 'lodash'
+
 import * as configs from './config'
+// import { ArticleModule } from './modules/article/article.module'
+import { ContentModule } from './modules/content/content.module'
 import { CreateOptions } from './modules/core/types'
+import * as dbCommands from './modules/database/commands'
+import { DatabaseModule } from './modules/database/database.module'
+import { MeilliModule } from './modules/meilisearch/melli.module'
+import { RbacGuard } from './modules/rbac/guards'
+import { RbacModule } from './modules/rbac/rbac.module'
+import { Restful } from './modules/restful/restful'
+import { RestfulModule } from './modules/restful/restful.module'
+
+import { ApiConfig } from './modules/restful/types'
+import { UserModule } from './modules/user/user.module'
 
 export const createOptions: CreateOptions = {
     config: { factories: configs, storage: { enabled: true } },
-    modules: async (configure) => [],
-    commands: () => [
-        // ...Object.values(dbCommands)
+    modules: async (configure) => [
+        // ArticleModule,
+        DatabaseModule.forRoot(configure),
+        MeilliModule.forRoot(configure),
+        RestfulModule.forRoot(configure),
+        ContentModule.forRoot(configure),
+        UserModule.forRoot(configure),
+        RbacModule.forRoot(configure),
     ],
+    commands: () => [...Object.values(dbCommands)],
     globals: {
-        // guard: RbacGuard,
+        guard: RbacGuard,
     },
     builder: async ({ configure, BootModule }) => {
         const container = await NestFactory.create<NestFastifyApplication>(
@@ -23,20 +45,20 @@ export const createOptions: CreateOptions = {
                 logger: ['error', 'warn'],
             },
         )
-        // if (!isNil(await configure.get<ApiConfig>('api', null))) {
-        //     const restful = container.get(Restful)
-        //     /**
-        //      * 判断是否存在metadata模块,存在的话则加载并传入factoryDocs
-        //      */
-        //     let metadata: () => Promise<Record<string, any>>
-        //     if (existsSync(join(__dirname, 'metadata.js'))) {
-        //         metadata = (await import(join(__dirname, 'metadata.js'))).default
-        //     }
-        //     if (existsSync(join(__dirname, 'metadata.ts'))) {
-        //         metadata = (await import(join(__dirname, 'metadata.ts'))).default
-        //     }
-        //     await restful.factoryDocs(container, metadata)
-        // }
+        if (!isNil(await configure.get<ApiConfig>('api', null))) {
+            const restful = container.get(Restful)
+            /**
+             * 判断是否存在metadata模块,存在的话则加载并传入factoryDocs
+             */
+            let metadata: () => Promise<Record<string, any>>
+            if (existsSync(join(__dirname, 'metadata.js'))) {
+                metadata = (await import(join(__dirname, 'metadata.js'))).default
+            }
+            if (existsSync(join(__dirname, 'metadata.ts'))) {
+                metadata = (await import(join(__dirname, 'metadata.ts'))).default
+            }
+            await restful.factoryDocs(container, metadata)
+        }
         return container
     },
 }

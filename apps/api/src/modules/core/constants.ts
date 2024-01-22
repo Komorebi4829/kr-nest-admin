@@ -3,7 +3,7 @@ import { toNumber } from 'lodash'
 
 import { Configure } from '../config/configure'
 
-// import { echoApi } from '../restful/helpers'
+import { echoApi } from '../restful/helpers'
 
 import { getRandomCharString, toBoolean } from './helpers'
 import { App } from './types'
@@ -24,6 +24,8 @@ export const listened: (app: App, startTime: Date) => () => Promise<void> =
     ({ configure, container }, startTime) =>
     async () => {
         console.log()
-        // await echoApi(configure, container)
+        await echoApi(configure, container)
         console.log('used time:', chalk.cyan(`${new Date().getTime() - startTime.getTime()}`))
     }
+
+export const MODULE_BUILDER_REGISTER = 'module_builder_register'

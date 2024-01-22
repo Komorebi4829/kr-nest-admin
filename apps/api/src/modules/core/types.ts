@@ -98,3 +98,25 @@ export interface TimeOptions {
 
     zonetime?: string
 }
+
+/**
+ * 模块构建器参数选项
+ */
+export type ModuleBuilderMeta = ModuleMetadata & {
+    global?: boolean
+    commands?: CommandCollection
+}
+
+/**
+ * 模块构建器
+ */
+export type ModuleMetaRegister<P extends Record<string, any>> = (
+    configure: Configure,
+    params: P,
+) => ModuleBuilderMeta | Promise<ModuleBuilderMeta>
+/** ****************************** Redis及队列 ***************************** */
+
+/**
+ * 类转义为普通对象后的类型
+ */
+export type ClassToPlain<T> = { [key in keyof T]: T[key] }
