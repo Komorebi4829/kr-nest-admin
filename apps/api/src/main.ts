@@ -1,9 +1,5 @@
-import { NestFactory } from '@nestjs/core'
+import { createOptions } from './constants'
+import { listened } from './modules/core/constants'
+import { createApp, startApp } from './modules/core/helpers/app'
 
-import { AppModule } from './app.module'
-
-async function bootstrap() {
-    const app = await NestFactory.create(AppModule)
-    await app.listen(3000)
-}
-bootstrap()
+startApp(createApp(createOptions), listened)

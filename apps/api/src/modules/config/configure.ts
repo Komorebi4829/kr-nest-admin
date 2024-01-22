@@ -23,7 +23,7 @@ export class Configure {
 
     protected storage: Storage
 
-    async initilize(configs: Record<string, any> = {}, option: ConfigStorageOption = {}) {
+    async initialize(configs: Record<string, any> = {}, option: ConfigStorageOption = {}) {
         if (this.inited) return this
         this._env = new Env()
         await this._env.load()
@@ -114,6 +114,7 @@ export class Configure {
             defaultValue = isAsyncFn(defaultRegister)
                 ? await defaultRegister(this)
                 : defaultRegister(this)
+
             value = deepMerge(defaultValue, value, 'replace')
         }
         if (!isNil(hook)) {
