@@ -24,7 +24,6 @@ import { UserModule } from './modules/user/user.module'
 export const createOptions: CreateOptions = {
     config: { factories: configs, storage: { enabled: true } },
     modules: async (configure) => [
-        // ArticleModule,
         DatabaseModule.forRoot(configure),
         MeilliModule.forRoot(configure),
         RestfulModule.forRoot(configure),
