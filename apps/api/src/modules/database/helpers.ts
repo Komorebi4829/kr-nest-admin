@@ -321,7 +321,7 @@ export async function runSeeder(
             await resetForeignKey(em, dataSource.options.type, false)
             await queryRunner.commitTransaction()
         } catch (err) {
-            console.log(err)
+            console.log('~ file: helpers.ts:324 ~ err:', err)
             await queryRunner.rollbackTransaction()
         } finally {
             await queryRunner.release()

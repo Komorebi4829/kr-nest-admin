@@ -129,17 +129,15 @@ export class RbacResolver<A extends AbilityTuple = AbilityTuple, C extends Mongo
             })
 
             if (isNil(role)) {
-                role = await manager.save(
-                    manager.create(RoleEntity, {
-                        name: item.name,
-                        label: item.label,
-                        description: item.description,
-                        systemed: true,
-                    }),
-                    {
-                        reload: true,
-                    },
-                )
+                role = manager.create(RoleEntity, {
+                    name: item.name,
+                    label: item.label,
+                    description: item.description,
+                    systemed: true,
+                })
+                await manager.save(role, {
+                    reload: true,
+                })
             } else {
                 await manager.update(RoleEntity, role.id, { systemed: true })
             }

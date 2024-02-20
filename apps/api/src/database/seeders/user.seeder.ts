@@ -36,12 +36,12 @@ export default class UserSeeder extends BaseSeeder {
 
     private async loadSuperUser(rbac: RbacResolver) {
         const repository = getCustomRepository(this.dataSource, UserRepository)
-        const creator = await repository.findOneBy({ username: 'pincman' })
+        const creator = await repository.findOneBy({ username: 'superAdmin' })
         const userFactory = this.factorier(UserEntity)
         if (isNil(creator)) {
             await userFactory<IUserFactoryOptions>({
-                username: 'pincman',
-                nickname: 'pincman',
+                username: 'superAdmin',
+                nickname: 'superAdmin',
                 password: '123456aA$',
             }).create({}, 'username')
         }
@@ -60,7 +60,7 @@ export default class UserSeeder extends BaseSeeder {
             await userFactory<IUserFactoryOptions>({
                 username: 'xiaoming',
                 nickname: '小明',
-                phone: '+86.18605853847',
+                phone: '+86.18605850000',
                 password: '123456aA$',
                 roles,
             }).create({}, 'username')

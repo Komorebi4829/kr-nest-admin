@@ -53,7 +53,7 @@ export class TypeormMigrationGenerate {
                         `        await queryRunner.query(\`${upQuery.query.replace(
                             /`/g,
                             '\\`',
-                        )}\`${TypeormMigrationGenerate.queryParams(upQuery.parameters)});`,
+                        )}\`${TypeormMigrationGenerate.queryParams(upQuery.parameters)})`,
                     )
                 })
                 sqlInMemory.downQueries.forEach((downQuery) => {
@@ -61,7 +61,7 @@ export class TypeormMigrationGenerate {
                         `        await queryRunner.query(\`${downQuery.query.replace(
                             /`/g,
                             '\\`',
-                        )}\`${TypeormMigrationGenerate.queryParams(downQuery.parameters)});`,
+                        )}\`${TypeormMigrationGenerate.queryParams(downQuery.parameters)})`,
                     )
                 })
             } finally {
@@ -129,7 +129,7 @@ export class TypeormMigrationGenerate {
     ): string {
         const migrationName = `${camelCase(upperFirst(name), true)}${timestamp}`
 
-        return `import typeorm = require('typeorm');;
+        return `import typeorm = require('typeorm');
 
 class ${migrationName} implements typeorm.MigrationInterface {
     name = '${migrationName}'

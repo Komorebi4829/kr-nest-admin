@@ -38,7 +38,10 @@ export const MigrationRunHandler = async (
             migrationsRun: false,
             dropSchema,
             logging: ['error'],
-            migrations: [join(dbConfig.paths.migration, '***.js')],
+            migrations: [
+                join(dbConfig.paths.migration, '**/*.ts'),
+                join(dbConfig.paths.migration, '**/*.js'),
+            ],
         } as any
         if (dropSchema) {
             dataSource.setOptions(options)
