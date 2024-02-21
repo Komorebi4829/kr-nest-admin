@@ -6,7 +6,7 @@
 //         />
 //     );
 
-import { RouteOption } from '@/components/router/types';
+import { RouteOption } from '@/components/router/types'
 
 // };
 export const addLoading = (routes: RouteOption[]): RouteOption[] => {
@@ -14,9 +14,9 @@ export const addLoading = (routes: RouteOption[]): RouteOption[] => {
         const data = {
             ...item,
             // loading: RouteLoading,
-        };
+        }
         if ('children' in data && data.children?.length)
-            data.children = addLoading([...data.children]);
-        return data;
-    });
-};
+            data.children = addLoading([...data.children])
+        return data
+    })
+}

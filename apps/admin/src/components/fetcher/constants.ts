@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from 'axios';
-import { createContext } from 'react';
+import axios, { AxiosInstance } from 'axios'
+import { createContext } from 'react'
 
-export const FetcherContext = createContext<AxiosInstance>(axios.create());
+export const FetcherContext = createContext<AxiosInstance>(axios.create())

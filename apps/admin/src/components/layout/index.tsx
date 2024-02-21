@@ -1,29 +1,29 @@
-'use client';
+'use client'
 
-import { Layout } from 'antd';
+import { Layout } from 'antd'
 
-import { FC, ReactNode, useEffect, useMemo, useState } from 'react';
+import { FC, ReactNode, useEffect, useMemo, useState } from 'react'
 
-import { useLocation } from 'react-router';
+import { useLocation } from 'react-router'
 
-import { useResponsiveMobileCheck } from '@/utils/hooks';
+import { useResponsiveMobileCheck } from '@/utils/hooks'
 
-import KeepAlive from '../KeepAlive/view';
-import { useRouterStore } from '../router/hooks';
+import KeepAlive from '../KeepAlive/view'
+import { useRouterStore } from '../router/hooks'
 
-import { ThemeStore } from '../theme/store';
+import { ThemeStore } from '../theme/store'
 
-import { ConfigDrawer } from './components/drawer';
-import { LayoutHeader } from './components/header';
-import { EmbedSidebar, Sidebar } from './components/sidebar';
-import KeepLiveTabs from './components/tabs';
-import { LayoutActionType, LayoutThemeContext, layoutDarkTheme } from './constants';
-import { useLayout } from './hooks';
-import { LayoutStore } from './store';
+import { ConfigDrawer } from './components/drawer'
+import { LayoutHeader } from './components/header'
+import { EmbedSidebar, Sidebar } from './components/sidebar'
+import KeepLiveTabs from './components/tabs'
+import { LayoutActionType, LayoutThemeContext, layoutDarkTheme } from './constants'
+import { useLayout } from './hooks'
+import { LayoutStore } from './store'
 
-import $styles from './styles/index.module.css';
-import { LayoutConfig, LayoutTheme } from './types';
-import { getLayoutClasses, getLayoutCssStyle, getMenuData } from './utils';
+import $styles from './styles/index.module.css'
+import { LayoutConfig, LayoutTheme } from './types'
+import { getLayoutClasses, getLayoutCssStyle, getMenuData } from './utils'
 
 const LayoutContent: FC<{ children?: ReactNode }> = ({ children }) => {
     return (
@@ -35,10 +35,10 @@ const LayoutContent: FC<{ children?: ReactNode }> = ({ children }) => {
                 <KeepAlive>{children}</KeepAlive>
             </div>
         </div>
-    );
-};
+    )
+}
 const SideLayout: FC<{ children?: ReactNode }> = ({ children }) => {
-    const { Content } = Layout;
+    const { Content } = Layout
     return (
         <>
             <Sidebar />
@@ -49,10 +49,10 @@ const SideLayout: FC<{ children?: ReactNode }> = ({ children }) => {
                 </Content>
             </Layout>
         </>
-    );
-};
+    )
+}
 const ContentLayout: FC<{ children?: ReactNode }> = ({ children }) => {
-    const { Content } = Layout;
+    const { Content } = Layout
     return (
         <>
             <LayoutHeader />
@@ -65,10 +65,10 @@ const ContentLayout: FC<{ children?: ReactNode }> = ({ children }) => {
                 </Layout>
             </section>
         </>
-    );
-};
+    )
+}
 const TopLayout: FC<{ children?: ReactNode }> = ({ children }) => {
-    const { Content } = Layout;
+    const { Content } = Layout
     return (
         <>
             <LayoutHeader />
@@ -76,10 +76,10 @@ const TopLayout: FC<{ children?: ReactNode }> = ({ children }) => {
                 <LayoutContent>{children}</LayoutContent>
             </Content>
         </>
-    );
-};
+    )
+}
 const EmbedLayout: FC<{ children?: ReactNode }> = ({ children }) => {
-    const { Content } = Layout;
+    const { Content } = Layout
     return (
         <>
             <Sidebar />
@@ -95,56 +95,56 @@ const EmbedLayout: FC<{ children?: ReactNode }> = ({ children }) => {
                 </Layout>
             </section>
         </>
-    );
-};
+    )
+}
 
 const LayoutThemeProvider: FC<{ children?: ReactNode }> = ({ children }) => {
-    const layoutTheme = LayoutStore((state) => state.theme);
-    const [theme, setTheme] = useState<LayoutTheme>(layoutTheme);
-    const systemTheme = ThemeStore((state) => state.mode);
+    const layoutTheme = LayoutStore((state) => state.theme)
+    const [theme, setTheme] = useState<LayoutTheme>(layoutTheme)
+    const systemTheme = ThemeStore((state) => state.mode)
     useEffect(() => {
-        setTheme(systemTheme === 'dark' ? layoutDarkTheme : layoutTheme);
-    }, [layoutTheme, systemTheme]);
-    return <LayoutThemeContext.Provider value={theme}>{children}</LayoutThemeContext.Provider>;
-};
+        setTheme(systemTheme === 'dark' ? layoutDarkTheme : layoutTheme)
+    }, [layoutTheme, systemTheme])
+    return <LayoutThemeContext.Provider value={theme}>{children}</LayoutThemeContext.Provider>
+}
 
 const LayoutWrapper: FC<LayoutConfig & { children?: ReactNode }> = ({ children }) => {
-    const [classes, setClasses] = useState<string>('');
-    const isMobile = useResponsiveMobileCheck();
-    const { fixed, mode, styles } = useLayout();
-    const location = useLocation();
-    const dispatch = LayoutStore((state) => state.dispatch);
-    const menus = useRouterStore.useMenus();
+    const [classes, setClasses] = useState<string>('')
+    const isMobile = useResponsiveMobileCheck()
+    const { fixed, mode, styles } = useLayout()
+    const location = useLocation()
+    const dispatch = LayoutStore((state) => state.dispatch)
+    const menus = useRouterStore.useMenus()
     useEffect(() => {
-        setClasses(getLayoutClasses(fixed, mode, $styles, isMobile));
-    }, [fixed, mode, isMobile]);
+        setClasses(getLayoutClasses(fixed, mode, $styles, isMobile))
+    }, [fixed, mode, isMobile])
     useEffect(() => {
         dispatch({
             type: LayoutActionType.CHANGE_MENU,
             value: getMenuData(menus, location, mode, isMobile),
-        });
-    }, [mode, menus, location, isMobile]);
+        })
+    }, [mode, menus, location, isMobile])
     const Main = useMemo(() => {
         if (!isMobile) {
-            if (mode === 'top') return <TopLayout>{children}</TopLayout>;
-            if (mode === 'content') return <ContentLayout>{children}</ContentLayout>;
-            if (mode === 'embed') return <EmbedLayout>{children}</EmbedLayout>;
+            if (mode === 'top') return <TopLayout>{children}</TopLayout>
+            if (mode === 'content') return <ContentLayout>{children}</ContentLayout>
+            if (mode === 'embed') return <EmbedLayout>{children}</EmbedLayout>
         }
-        return <SideLayout>{children}</SideLayout>;
-    }, [mode, isMobile]);
+        return <SideLayout>{children}</SideLayout>
+    }, [mode, isMobile])
     return (
         <Layout className={classes} style={getLayoutCssStyle(styles)}>
             <LayoutThemeProvider>{Main}</LayoutThemeProvider>
         </Layout>
-    );
-};
+    )
+}
 
 const MasterLayout: FC<{ children?: ReactNode }> = ({ children }) => {
     return (
         <ConfigDrawer>
             <LayoutWrapper>{children}</LayoutWrapper>
         </ConfigDrawer>
-    );
-};
+    )
+}
 
-export default MasterLayout;
+export default MasterLayout

@@ -1,19 +1,19 @@
-import { omit } from 'lodash';
-import { CSSProperties, useCallback, useState } from 'react';
+import { omit } from 'lodash'
+import { CSSProperties, useCallback, useState } from 'react'
 
-import { useUpdateEffect } from 'react-use';
+import { useUpdateEffect } from 'react-use'
 
-import { ThemeMode } from '../theme/constants';
-import { useTheme } from '../theme/hooks';
+import { ThemeMode } from '../theme/constants'
+import { useTheme } from '../theme/hooks'
 
-import { defaultStyle } from './constants';
-import { SpinnerOption } from './types';
+import { defaultStyle } from './constants'
+import { SpinnerOption } from './types'
 
 export const useSpinnerStyle = <T extends RecordAnyOrNever>(props: SpinnerOption<T>) => {
-    const { center, style, size, darkColor, speed } = props;
-    const configColor = '#3c3c98';
-    const { mode: themeMode } = useTheme();
-    const [color, setColor] = useState(props.color ?? configColor);
+    const { center, style, size, darkColor, speed } = props
+    const configColor = '#3c3c98'
+    const { mode: themeMode } = useTheme()
+    const [color, setColor] = useState(props.color ?? configColor)
     const getStyle = useCallback(
         (t: `${ThemeMode}`) => ({
             ...(center ? defaultStyle : {}),
@@ -25,13 +25,13 @@ export const useSpinnerStyle = <T extends RecordAnyOrNever>(props: SpinnerOption
             '--darkreader-border--color': darkColor ?? color,
         }),
         [color],
-    );
-    const [styles, setStyles] = useState(getStyle(themeMode));
+    )
+    const [styles, setStyles] = useState(getStyle(themeMode))
     useUpdateEffect(() => {
-        setColor(props.color ?? configColor);
-    }, [configColor, props.color]);
+        setColor(props.color ?? configColor)
+    }, [configColor, props.color])
     useUpdateEffect(() => {
-        setStyles(getStyle(themeMode));
-    }, [themeMode]);
-    return styles as CSSProperties;
-};
+        setStyles(getStyle(themeMode))
+    }, [themeMode])
+    return styles as CSSProperties
+}

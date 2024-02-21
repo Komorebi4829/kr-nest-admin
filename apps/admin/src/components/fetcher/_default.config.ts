@@ -1,4 +1,4 @@
-import { FetcherConfig } from './types';
+import { FetcherConfig } from './types'
 
 export const defaultFetcherConfig = (): FetcherConfig => ({
     baseURL: '/api/',
@@ -7,4 +7,4 @@ export const defaultFetcherConfig = (): FetcherConfig => ({
     token: null,
     cancel_repeat: true,
     swr: {},
-});
+})

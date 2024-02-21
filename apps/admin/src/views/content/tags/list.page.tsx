@@ -1,3 +1,3 @@
 export default () => {
-    return <div>tag list</div>;
-};
+    return <div>tag list</div>
+}

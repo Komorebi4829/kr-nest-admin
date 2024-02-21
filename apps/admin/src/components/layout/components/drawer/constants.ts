@@ -1,4 +1,4 @@
-import { LayoutMode } from '../../constants';
+import { LayoutMode } from '../../constants'
 
 export enum LayoutTheme {
     DarkLight = 'dark-light',
@@ -24,7 +24,7 @@ export const LayoutModeList: Array<{ title: string; type: `${LayoutMode}` }> = [
         title: '嵌入双菜单',
         type: LayoutMode.EMBED,
     },
-];
+]
 
 export const LayoutThemeList: Array<{ title: string; type: `${LayoutTheme}` }> = [
     {
@@ -44,7 +44,7 @@ export const LayoutThemeList: Array<{ title: string; type: `${LayoutTheme}` }> =
         title: '左侧暗-顶部暗',
         type: LayoutTheme.DARKDARK,
     },
-];
+]
 // export const ColorList: Array<{ title: string; type: keyof ColorConfig }> = [
 //     {
 //         title: '主色',

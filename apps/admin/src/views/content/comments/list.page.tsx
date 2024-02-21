@@ -1,3 +1,3 @@
 export default () => {
-    return <div>comment list</div>;
-};
+    return <div>comment list</div>
+}

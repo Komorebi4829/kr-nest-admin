@@ -1,44 +1,44 @@
-import { useDebounceFn } from 'ahooks';
-import { Drawer, Layout, theme as AntdTheme } from 'antd';
+import { useDebounceFn } from 'ahooks'
+import { Drawer, Layout, theme as AntdTheme } from 'antd'
 
-import { CollapseType } from 'antd/lib/layout/Sider';
-import { useCallback, useMemo, useState } from 'react';
+import { CollapseType } from 'antd/lib/layout/Sider'
+import { useCallback, useMemo, useState } from 'react'
 
-import { useUpdateEffect } from 'react-use';
+import { useUpdateEffect } from 'react-use'
 
-import { EmbedMenu, SideMenu } from '@/components/layout/components/menu';
-import { useResponsiveMobileCheck } from '@/utils/hooks';
+import { EmbedMenu, SideMenu } from '@/components/layout/components/menu'
+import { useResponsiveMobileCheck } from '@/utils/hooks'
 
-import { useLayout, useLayoutAction, useLayoutTheme } from '../../hooks';
+import { useLayout, useLayoutAction, useLayoutTheme } from '../../hooks'
 
-import { Logo } from './logo';
+import { Logo } from './logo'
 
 export const Sidebar = () => {
-    const { Sider } = Layout;
-    const isMobile = useResponsiveMobileCheck();
-    const { mode, collapsed, styles: layoutStyles, mobileSide, menu } = useLayout();
-    const theme = useLayoutTheme();
-    const { changeCollapse, changeMobileSide } = useLayoutAction();
-    const [collapse, setCollapse] = useState(collapsed);
+    const { Sider } = Layout
+    const isMobile = useResponsiveMobileCheck()
+    const { mode, collapsed, styles: layoutStyles, mobileSide, menu } = useLayout()
+    const theme = useLayoutTheme()
+    const { changeCollapse, changeMobileSide } = useLayoutAction()
+    const [collapse, setCollapse] = useState(collapsed)
     useUpdateEffect(() => {
-        setCollapse(collapsed);
-    }, [collapsed]);
+        setCollapse(collapsed)
+    }, [collapsed])
     const { run: onCollapse } = useDebounceFn(
         (_value: boolean, type: CollapseType) => {
-            if (!isMobile && type === 'responsive') changeCollapse(true);
+            if (!isMobile && type === 'responsive') changeCollapse(true)
         },
         { wait: 100 },
-    );
-    const closeDrawer = useCallback(() => changeMobileSide(false), []);
+    )
+    const closeDrawer = useCallback(() => changeMobileSide(false), [])
     const {
         token: { colorBgContainer },
-    } = AntdTheme.useToken();
+    } = AntdTheme.useToken()
     const styles = useMemo(
         () => (theme.sidebar !== 'dark' ? { background: colorBgContainer } : {}),
         [theme.sidebar],
-    );
+    )
     if (!isMobile) {
-        if (mode === 'top') return null;
+        if (mode === 'top') return null
         if (mode === 'embed') {
             return (
                 <Sider
@@ -50,7 +50,7 @@ export const Sidebar = () => {
                 >
                     <EmbedMenu theme={theme.sidebar} menu={menu} />
                 </Sider>
-            );
+            )
         }
         return (
             <Sider
@@ -67,7 +67,7 @@ export const Sidebar = () => {
                 {mode !== 'content' ? <Logo style={{ backgroundColor: '#000' }} /> : null}
                 <SideMenu theme={theme.sidebar} menu={menu} />
             </Sider>
-        );
+        )
     }
 
     return (
@@ -92,12 +92,12 @@ export const Sidebar = () => {
                 </Sider>
             </Layout>
         </Drawer>
-    );
-};
+    )
+}
 export const EmbedSidebar = () => {
-    const { Sider } = Layout;
-    const { styles, menu } = useLayout();
-    const theme = useLayoutTheme();
+    const { Sider } = Layout
+    const { styles, menu } = useLayout()
+    const theme = useLayoutTheme()
     return (
         <Sider
             collapsible
@@ -108,5 +108,5 @@ export const EmbedSidebar = () => {
         >
             <SideMenu theme={theme.embed} menu={menu} />
         </Sider>
-    );
-};
+    )
+}

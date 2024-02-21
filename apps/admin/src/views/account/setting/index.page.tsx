@@ -1,3 +1,3 @@
 export default () => {
-    return <div>user setting</div>;
-};
+    return <div>user setting</div>
+}

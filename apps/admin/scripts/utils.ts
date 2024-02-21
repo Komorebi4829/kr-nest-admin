@@ -1,3 +1,3 @@
-import { resolve } from 'path';
+import { resolve } from 'path'
 
-export const pathResolve = (dir: string) => resolve(__dirname, '../', dir);
+export const pathResolve = (dir: string) => resolve(__dirname, '../', dir)

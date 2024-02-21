@@ -1,7 +1,7 @@
-import enUS from 'antd/es/locale/en_US';
-import zhCN from 'antd/es/locale/zh_CN';
+import enUS from 'antd/es/locale/en_US'
+import zhCN from 'antd/es/locale/zh_CN'
 
-import { LangItem } from './types';
+import { LangItem } from './types'
 
 export const langs: LangItem[] = [
     {
@@ -14,4 +14,4 @@ export const langs: LangItem[] = [
         label: '🇨🇳 简体中文',
         antdData: zhCN,
     },
-];
+]

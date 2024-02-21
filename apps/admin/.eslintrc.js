@@ -3,5 +3,5 @@ module.exports = {
     parserOptions: {
         project: './tsconfig.eslint.json',
     },
-    extends: ['@3rapp/eslint-config/react'],
+    extends: ['@repo/eslint-config/react'],
 };

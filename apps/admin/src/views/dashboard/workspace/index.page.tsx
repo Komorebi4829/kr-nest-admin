@@ -1,3 +1,3 @@
 export default () => {
-    return <div>workspace</div>;
-};
+    return <div>workspace</div>
+}

@@ -1,39 +1,39 @@
-import { ProForm, ProFormText } from '@ant-design/pro-components';
-import { App } from 'antd';
-import { isNil } from 'lodash';
-import { FC, useCallback, useEffect } from 'react';
+import { ProForm, ProFormText } from '@ant-design/pro-components'
+import { App } from 'antd'
+import { isNil } from 'lodash'
+import { FC, useCallback, useEffect } from 'react'
 
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
-import { useAuth } from '@/components/auth/hooks';
-import { useFetcher } from '@/components/fetcher/hooks';
-import { FetcherStore } from '@/components/fetcher/store';
-import { useRouterStore } from '@/components/router/hooks';
+import { useAuth } from '@/components/auth/hooks'
+import { useFetcher } from '@/components/fetcher/hooks'
+import { FetcherStore } from '@/components/fetcher/store'
+import { useRouterStore } from '@/components/router/hooks'
 
 const CredentialForm: FC = () => {
-    const { message } = App.useApp();
-    const fetcher = useFetcher();
-    const basePath = useRouterStore((state) => state.config.basename)!;
-    const routerReady = useRouterStore((state) => state.ready);
-    const auth = useAuth();
-    const [searchParams] = useSearchParams();
-    const navigate = useNavigate();
+    const { message } = App.useApp()
+    const fetcher = useFetcher()
+    const basePath = useRouterStore((state) => state.config.basename)!
+    const routerReady = useRouterStore((state) => state.ready)
+    const auth = useAuth()
+    const [searchParams] = useSearchParams()
+    const navigate = useNavigate()
     const getRedirect = useCallback(() => {
-        let queryRedirect = searchParams.get('redirect');
+        let queryRedirect = searchParams.get('redirect')
         if (queryRedirect && queryRedirect.length > 0) {
             searchParams.forEach((v, k) => {
-                if (k !== 'redirect') queryRedirect = `${queryRedirect}&${k}=${v}`;
-            });
-            return queryRedirect;
+                if (k !== 'redirect') queryRedirect = `${queryRedirect}&${k}=${v}`
+            })
+            return queryRedirect
         }
-        return basePath;
-    }, [searchParams]);
+        return basePath
+    }, [searchParams])
     useEffect(() => {
-        const redirect = getRedirect();
+        const redirect = getRedirect()
         if (routerReady && !isNil(auth)) {
-            navigate(redirect, { replace: true });
+            navigate(redirect, { replace: true })
         }
-    }, [routerReady, auth]);
+    }, [routerReady, auth])
     return (
         <div className="tw-p-4 tw-w-full">
             <ProForm
@@ -42,16 +42,16 @@ const CredentialForm: FC = () => {
                     try {
                         const {
                             data: { token },
-                        } = await fetcher.post('/auth/login', values);
+                        } = await fetcher.post('/auth/login', values)
                         if (!isNil(token)) {
                             FetcherStore.setState((state) => {
-                                state.token = token;
-                            });
+                                state.token = token
+                            })
                         }
-                        message.success('登录成功');
+                        message.success('登录成功')
                         // waitTime();
                     } catch (err) {
-                        message.error('用户名或密码错误');
+                        message.error('用户名或密码错误')
                     }
                 }}
                 submitter={{
@@ -93,6 +93,6 @@ const CredentialForm: FC = () => {
                 />
             </ProForm>
         </div>
-    );
-};
-export default CredentialForm;
+    )
+}
+export default CredentialForm

@@ -1,8 +1,8 @@
-import { redirect } from 'react-router';
+import { redirect } from 'react-router'
 
-import { RouteOption } from '@/components/router/types';
+import { RouteOption } from '@/components/router/types'
 
-import MonitorIcon from '~icons/carbon/airplay-filled';
+import MonitorIcon from '~icons/carbon/airplay-filled'
 
 export const dashboard: RouteOption = {
     id: 'dashboard',
@@ -37,4 +37,4 @@ export const dashboard: RouteOption = {
             meta: { name: '工作台' },
         },
     ],
-};
+}

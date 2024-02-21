@@ -1,8 +1,8 @@
-import { redirect } from 'react-router';
+import { redirect } from 'react-router'
 
-import { RouteOption } from '@/components/router/types';
+import { RouteOption } from '@/components/router/types'
 
-import ContentIcon from '~icons/fluent/cube-16-regular';
+import ContentIcon from '~icons/fluent/cube-16-regular'
 
 export const content: RouteOption = {
     id: 'content',
@@ -46,4 +46,4 @@ export const content: RouteOption = {
             meta: { name: '评论管理' },
         },
     ],
-};
+}

@@ -1,10 +1,10 @@
-import clsx from 'clsx';
-import type { FC } from 'react';
+import clsx from 'clsx'
+import type { FC } from 'react'
 
-import bgimg from '@/assets/images/login-box-bg.svg';
+import bgimg from '@/assets/images/login-box-bg.svg'
 
-import CredentialForm from './credential.form';
-import $styles from './login.module.css';
+import CredentialForm from './credential.form'
+import $styles from './login.module.css'
 
 const Login: FC = () => {
     return (
@@ -31,6 +31,6 @@ const Login: FC = () => {
                 </div>
             </div>
         </div>
-    );
-};
-export default Login;
+    )
+}
+export default Login

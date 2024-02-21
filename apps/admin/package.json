@@ -1,5 +1,5 @@
 {
-    "name": "@3rapp/admin",
+    "name": "@repo/admin",
     "private": true,
     "version": "0.0.0",
     "scripts": {
@@ -9,7 +9,7 @@
         "preview": "vite preview"
     },
     "dependencies": {
-        "@3rapp/utils": "workspace:*",
+        "@repo/utils": "workspace:*",
         "@ant-design/cssinjs": "^1.13.2",
         "@ant-design/icons": "^5.1.4",
         "@ant-design/pro-components": "^2.6.7",
@@ -36,11 +36,11 @@
         "zustand": "^4.3.9"
     },
     "devDependencies": {
-        "@3rapp/eslint-config": "workspace:*",
-        "@3rapp/stylelint-config": "workspace:*",
-        "@3rapp/ts-config": "workspace:*",
+        "@repo/eslint-config": "workspace:*",
+        "@repo/stylelint-config": "workspace:*",
+        "@repo/ts-config": "workspace:*",
         "@iconify/json": "^2.2.93",
-        "@types/lodash": "^4.14.195",
+        "@types/lodash": "^4.14.202",
         "@types/node": "^20.4.4",
         "@types/promise-timeout": "^1.3.0",
         "@types/react": "^18.2.15",

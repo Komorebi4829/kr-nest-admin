@@ -1,5 +1,5 @@
 {
-    "extends": "@3rapp/ts-config/react.json",
+    "extends": "@repo/ts-config/react.json",
     "compilerOptions": {
         "baseUrl": ".",
         "outDir": "./dist",

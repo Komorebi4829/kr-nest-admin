@@ -1,6 +1,6 @@
-import { omit } from 'lodash';
+import { omit } from 'lodash'
 
-import { langs } from './langs';
-import { LocaleState } from './types';
+import { langs } from './langs'
+import { LocaleState } from './types'
 
-export const defaultLang: LocaleState = omit(langs[0], ['antdData']) as LocaleState;
+export const defaultLang: LocaleState = omit(langs[0], ['antdData']) as LocaleState

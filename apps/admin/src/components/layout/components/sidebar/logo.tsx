@@ -1,4 +1,4 @@
-import { CSSProperties, FC } from 'react';
+import { CSSProperties, FC } from 'react'
 
 export const Logo: FC<{ style?: CSSProperties }> = ({ style }) => {
     return (
@@ -6,5 +6,5 @@ export const Logo: FC<{ style?: CSSProperties }> = ({ style }) => {
             className="tw-h-[36px] tw-m-[16px] tw-bg-[rgb(255 255 255 / 20%)]"
             style={style ?? {}}
         />
-    );
-};
+    )
+}

@@ -5,10 +5,11 @@ module.exports = {
   printWidth: 100,
   proseWrap: "never",
   endOfLine: "auto",
-  semi: true,
+  semi: false,
   tabWidth: 4,
   vueIndentScriptAndStyle: true,
   htmlWhitespaceSensitivity: "strict",
+  useTabs: false,
   overrides: [
     {
       files: ".prettierrc",

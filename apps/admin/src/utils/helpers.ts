@@ -1,20 +1,20 @@
-import deepmerge from 'deepmerge';
-import { isNil } from 'lodash';
-import { MutableRefObject } from 'react';
+import deepmerge from 'deepmerge'
+import { isNil } from 'lodash'
+import { MutableRefObject } from 'react'
 
 /**
  * 检测当前路径是否为一个URL
  * @param path 路径(字符串)
  */
 export const isUrl = (path?: string): boolean => {
-    if (isNil(path) || !path.startsWith('http')) return false;
+    if (isNil(path) || !path.startsWith('http')) return false
     try {
-        const url = new URL(path);
-        return !!url;
+        const url = new URL(path)
+        return !!url
     } catch (error) {
-        return false;
+        return false
     }
-};
+}
 
 /**
  * 深度合并对象
@@ -27,14 +27,14 @@ export const deepMerge = <T1, T2>(
     y: Partial<T2>,
     arrayMode: 'replace' | 'merge' = 'merge',
 ) => {
-    const options: deepmerge.Options = {};
+    const options: deepmerge.Options = {}
     if (arrayMode === 'replace') {
-        options.arrayMerge = (_d, s, _o) => s;
+        options.arrayMerge = (_d, s, _o) => s
     } else if (arrayMode === 'merge') {
-        options.arrayMerge = (_d, s, _o) => Array.from(new Set([..._d, ...s]));
+        options.arrayMerge = (_d, s, _o) => Array.from(new Set([..._d, ...s]))
     }
-    return deepmerge(x, y, options) as T2 extends T1 ? T1 : T1 & T2;
-};
+    return deepmerge(x, y, options) as T2 extends T1 ? T1 : T1 & T2
+}
 
 /**
  * 检测当前函数是否为异步函数
@@ -43,8 +43,8 @@ export const deepMerge = <T1, T2>(
 export function isAsyncFn<R, A extends Array<any>>(
     callback: (...asgs: A) => Promise<R> | R,
 ): callback is (...asgs: A) => Promise<R> {
-    const AsyncFunction = (async () => {}).constructor;
-    return callback instanceof AsyncFunction === true;
+    const AsyncFunction = (async () => {}).constructor
+    return callback instanceof AsyncFunction === true
 }
 
 /**
@@ -59,16 +59,16 @@ export const debounceRun = (
     wait?: number,
 ) => {
     if (isNil(ref.current)) {
-        clearTimeout(ref.current);
+        clearTimeout(ref.current)
         ref.current = setTimeout(() => {
             if (isAsyncFn(fn)) {
                 fn().then(() => {
-                    ref.current = undefined;
-                });
+                    ref.current = undefined
+                })
             } else {
-                fn();
-                ref.current = undefined;
+                fn()
+                ref.current = undefined
             }
-        }, wait ?? 10);
+        }, wait ?? 10)
     }
-};
+}

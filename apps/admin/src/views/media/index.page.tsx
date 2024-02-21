@@ -1,3 +1,3 @@
 export default () => {
-    return <div>media list</div>;
-};
+    return <div>media list</div>
+}

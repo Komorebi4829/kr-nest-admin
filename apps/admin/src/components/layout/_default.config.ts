@@ -1,4 +1,4 @@
-import { LayoutState } from './types';
+import { LayoutState } from './types'
 
 export const DefaultLayoutConfig: Omit<LayoutState, 'mobileSide'> = {
     mode: 'side',
@@ -29,4 +29,4 @@ export const DefaultLayoutConfig: Omit<LayoutState, 'mobileSide'> = {
             selects: [],
         },
     },
-};
+}

@@ -1,3 +1,3 @@
 export default () => {
-    return <div>500 gateway error!</div>;
-};
+    return <div>500 gateway error!</div>
+}

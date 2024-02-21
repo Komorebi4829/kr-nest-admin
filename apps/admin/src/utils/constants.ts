@@ -17,4 +17,4 @@ export const defaultScreenConfig: { [key in `${ScreenSizeType}`]: number } = {
     lg: 992,
     xl: 1200,
     '2xl': 1400,
-};
+}

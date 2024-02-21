@@ -1,6 +1,6 @@
-import { Spinner } from '../spinner';
+import { Spinner } from '../spinner'
 
-import { RouterConfig } from './types';
+import { RouterConfig } from './types'
 
 export const getDefaultRouterConfig: <M extends RecordNever>() => RouterConfig<M> = () => ({
     basePath: '/',
@@ -8,4 +8,4 @@ export const getDefaultRouterConfig: <M extends RecordNever>() => RouterConfig<M
     loading: () => <Spinner name="Box" center />,
     routes: [],
     auth: { enabled: true, path: '/auth/login', page: 'auth/login' },
-});
+})

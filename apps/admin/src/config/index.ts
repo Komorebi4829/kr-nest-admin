@@ -1,14 +1,14 @@
-import { IConfig } from '../types';
+import { IConfig } from '../types'
 
-import { account } from './routes/account';
-import { content } from './routes/content';
-import { dashboard } from './routes/dashboard';
-import { errors } from './routes/errors';
-import { home } from './routes/home';
+import { account } from './routes/account'
+import { content } from './routes/content'
+import { dashboard } from './routes/dashboard'
+import { errors } from './routes/errors'
+import { home } from './routes/home'
 
-import { addLoading } from './routes/loading';
-import { media } from './routes/media';
-import { setting } from './routes/setting';
+import { addLoading } from './routes/loading'
+import { media } from './routes/media'
+import { setting } from './routes/setting'
 
 export const config = (): IConfig => ({
     auth: { api: '/auth/info' },
@@ -28,4 +28,4 @@ export const config = (): IConfig => ({
             errors,
         ],
     },
-});
+})

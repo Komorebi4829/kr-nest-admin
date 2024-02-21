@@ -1,5 +1,5 @@
-import { capitalize } from 'lodash';
-import { create, Mutate, StateCreator, StoreApi, UseBoundStore } from 'zustand';
+import { capitalize } from 'lodash'
+import { create, Mutate, StateCreator, StoreApi, UseBoundStore } from 'zustand'
 import {
     subscribeWithSelector,
     devtools,
@@ -7,10 +7,10 @@ import {
     PersistOptions,
     DevtoolsOptions,
     redux,
-} from 'zustand/middleware';
-import { immer } from 'zustand/middleware/immer';
+} from 'zustand/middleware'
+import { immer } from 'zustand/middleware/immer'
 
-import { ZustandGetterSelectors, ZustandHookSelectors } from './types';
+import { ZustandGetterSelectors, ZustandHookSelectors } from './types'
 
 /**
  * 在nextjs下使用PersistStore，为方便后续写前台而备用
@@ -46,8 +46,8 @@ export const createStore = <T extends object>(
     >,
     devtoolsOptions?: DevtoolsOptions,
 ) => {
-    return create<T>()(subscribeWithSelector(immer(devtools(creator, devtoolsOptions))));
-};
+    return create<T>()(subscribeWithSelector(immer(devtools(creator, devtoolsOptions))))
+}
 
 /**
  * 创建包含订阅，immer以及devtoools功能的普通状态商店
@@ -73,8 +73,8 @@ export const createPersistStore = <T extends object, P = T>(
         subscribeWithSelector(
             immer(devtools(persist(creator as unknown as any, persistOptions), devtoolsOptions)),
         ),
-    );
-};
+    )
+}
 
 /**
  * 创建包含订阅，immer以及devtoools功能的reducer状态商店
@@ -86,13 +86,13 @@ export const createPersistStore = <T extends object, P = T>(
 export const createReduxStore = <
     T extends object,
     A extends {
-        type: unknown;
+        type: unknown
     },
 >(
     reducer: (state: T, action: A) => T,
     initialState: T,
     devtoolsOptions?: DevtoolsOptions,
-) => create(subscribeWithSelector(immer(devtools(redux(reducer, initialState), devtoolsOptions))));
+) => create(subscribeWithSelector(immer(devtools(redux(reducer, initialState), devtoolsOptions))))
 
 /**
  * 创建包含订阅，immer以及devtoools功能的reducer状态商店
@@ -104,7 +104,7 @@ export const createReduxStore = <
 export const createPersistReduxStore = <
     T extends object,
     A extends {
-        type: unknown;
+        type: unknown
     },
     P = T,
 >(
@@ -122,7 +122,7 @@ export const createPersistReduxStore = <
                 ),
             ),
         ),
-    );
+    )
 
 /**
  * 直接通过getters获取状态值，比如store.getters.xxx()
@@ -140,16 +140,16 @@ export function createStoreGetters<T extends object>(
         >
     >,
 ) {
-    const storeIn = store as any;
+    const storeIn = store as any
 
-    storeIn.getters = {};
+    storeIn.getters = {}
     Object.keys(storeIn.getState()).forEach((key) => {
-        const selector = (state: T) => state[key as keyof T];
-        storeIn.getters[key] = () => storeIn(selector);
-    });
+        const selector = (state: T) => state[key as keyof T]
+        storeIn.getters[key] = () => storeIn(selector)
+    })
 
     // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-    return storeIn as typeof store & ZustandGetterSelectors<T>;
+    return storeIn as typeof store & ZustandGetterSelectors<T>
 }
 
 /**
@@ -168,13 +168,13 @@ export function createStoreHooks<T extends Record<string, any>>(
         >
     >,
 ) {
-    const storeIn = store as any;
+    const storeIn = store as any
 
     Object.keys(storeIn.getState()).forEach((key) => {
-        const selector = (state: T) => state[key as keyof T];
-        storeIn[`use${capitalize(key)}`] = () => storeIn(selector);
-    });
+        const selector = (state: T) => state[key as keyof T]
+        storeIn[`use${capitalize(key)}`] = () => storeIn(selector)
+    })
 
     // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-    return storeIn as typeof store & ZustandHookSelectors<T>;
+    return storeIn as typeof store & ZustandHookSelectors<T>
 }

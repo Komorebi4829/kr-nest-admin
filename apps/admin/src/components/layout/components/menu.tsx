@@ -1,53 +1,53 @@
-import { useDebounceFn } from 'ahooks';
-import { Menu, MenuProps } from 'antd';
+import { useDebounceFn } from 'ahooks'
+import { Menu, MenuProps } from 'antd'
 import {
     ItemType,
     MenuDividerType,
     MenuItemGroupType,
     SubMenuType,
-} from 'antd/es/menu/hooks/useItems';
-import { isNil, isString } from 'lodash';
+} from 'antd/es/menu/hooks/useItems'
+import { isNil, isString } from 'lodash'
 
-import { useCallback, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useCallback, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 
-import { useUpdateEffect } from 'react-use';
+import { useUpdateEffect } from 'react-use'
 
-import { isUrl } from '@/utils';
+import { isUrl } from '@/utils'
 
-import { useResponsive } from '@/utils/hooks';
+import { useResponsive } from '@/utils/hooks'
 
-import Icon from '../../icon/icon';
+import Icon from '../../icon/icon'
 
-import { RouteOption } from '../../router/types';
-import { ThemeMode } from '../../theme/constants';
+import { RouteOption } from '../../router/types'
+import { ThemeMode } from '../../theme/constants'
 
-import { useLayout } from '../hooks';
+import { useLayout } from '../hooks'
 
-import { LayoutMenuState } from '../types';
+import { LayoutMenuState } from '../types'
 
 const getMenuItem = (menu: RouteOption): ItemType => {
-    const meta = menu.meta ?? {};
-    const text = meta.name ?? menu.id ?? '';
+    const meta = menu.meta ?? {}
+    const text = meta.name ?? menu.id ?? ''
     const item: ItemType = {
         key: menu.id,
-    };
+    }
     if (menu.devide) {
         return {
             ...item,
             type: 'divider',
-        } as MenuDividerType;
+        } as MenuDividerType
     }
     if (menu.onlyGroup) {
-        (item as MenuItemGroupType).type = 'group';
-        (item as MenuItemGroupType).label = text;
+        ;(item as MenuItemGroupType).type = 'group'
+        ;(item as MenuItemGroupType).label = text
     } else {
         if (!isNil(meta.icon)) {
-            (item as any).icon = isString(meta.icon) ? (
+            ;(item as any).icon = isString(meta.icon) ? (
                 <Icon name={meta.icon as any} />
             ) : (
                 <Icon component={meta.icon} style={{ fontSize: '0.875rem' }} />
-            );
+            )
         }
         if (!isNil(menu.path)) {
             if (!menu.children?.length) {
@@ -57,58 +57,58 @@ const getMenuItem = (menu: RouteOption): ItemType => {
                     </a>
                 ) : (
                     <Link to={menu.path}>{text}</Link>
-                );
+                )
             } else {
-                item.label = text;
+                item.label = text
             }
         }
     }
     if (menu.children?.length) {
-        (item as SubMenuType | MenuItemGroupType).children = menu.children.map((child) =>
+        ;(item as SubMenuType | MenuItemGroupType).children = menu.children.map((child) =>
             getMenuItem(child),
-        );
+        )
     }
-    return item;
-};
+    return item
+}
 
 export const SideMenu: FC<{
-    mode?: MenuProps['mode'];
-    theme: `${ThemeMode}`;
-    menu: LayoutMenuState;
+    mode?: MenuProps['mode']
+    theme: `${ThemeMode}`
+    menu: LayoutMenuState
 }> = ({ mode = 'inline', theme, menu }) => {
-    const { collapsed } = useLayout();
-    const { isMobile } = useResponsive();
-    const ref = useRef<string[]>(mode !== 'horizontal' ? menu.opens : []);
-    const [opens, setOpens] = useState<string[] | undefined>(collapsed ? undefined : ref.current);
+    const { collapsed } = useLayout()
+    const { isMobile } = useResponsive()
+    const ref = useRef<string[]>(mode !== 'horizontal' ? menu.opens : [])
+    const [opens, setOpens] = useState<string[] | undefined>(collapsed ? undefined : ref.current)
     const { run: changeOpens } = useDebounceFn((data: string[]) => setOpens(data), {
         wait: 50,
-    });
+    })
     useUpdateEffect(() => {
-        setOpens(menu.opens);
-    }, [menu.opens]);
+        setOpens(menu.opens)
+    }, [menu.opens])
     useUpdateEffect(() => {
         if (mode !== 'horizontal') {
-            collapsed ? setOpens(undefined) : changeOpens(ref.current);
+            collapsed ? setOpens(undefined) : changeOpens(ref.current)
         }
-    }, [collapsed]);
+    }, [collapsed])
     useUpdateEffect(() => {
-        if (!collapsed && !isNil(opens) && mode !== 'horizontal') ref.current = opens;
-    }, [opens]);
+        if (!collapsed && !isNil(opens) && mode !== 'horizontal') ref.current = opens
+    }, [opens])
     const onOpenChange = useCallback(
         (keys: string[]) => {
-            if (mode === 'horizontal' || collapsed || !opens) return;
-            const latest = keys.find((key) => opens.indexOf(key) === -1);
+            if (mode === 'horizontal' || collapsed || !opens) return
+            const latest = keys.find((key) => opens.indexOf(key) === -1)
             if (latest && menu.rootSubKeys.indexOf(latest) === -1) {
-                setOpens(keys);
+                setOpens(keys)
             } else {
-                setOpens(latest ? [latest] : []);
+                setOpens(latest ? [latest] : [])
             }
         },
         [opens, mode, collapsed],
-    );
+    )
     useUpdateEffect(() => {
-        setOpens(menu.opens);
-    }, [isMobile]);
+        setOpens(menu.opens)
+    }, [isMobile])
     return (
         <div className="fixed-sidebar-content">
             <Menu
@@ -122,8 +122,8 @@ export const SideMenu: FC<{
                 onOpenChange={onOpenChange}
             />
         </div>
-    );
-};
+    )
+}
 export const EmbedMenu: FC<{ theme: `${ThemeMode}`; menu: LayoutMenuState }> = ({
     theme,
     menu,
@@ -135,5 +135,5 @@ export const EmbedMenu: FC<{ theme: `${ThemeMode}`; menu: LayoutMenuState }> = (
             selectedKeys={menu.split.selects}
             items={menu.split.data.map((item) => getMenuItem(item))}
         />
-    );
-};
+    )
+}

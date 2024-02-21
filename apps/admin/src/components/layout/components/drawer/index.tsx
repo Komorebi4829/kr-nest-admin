@@ -1,16 +1,16 @@
-import { Divider, Drawer, Switch, Tooltip } from 'antd';
-import clsx from 'clsx';
-import { FC, ReactNode, useCallback, useState } from 'react';
+import { Divider, Drawer, Switch, Tooltip } from 'antd'
+import clsx from 'clsx'
+import { FC, ReactNode, useCallback, useState } from 'react'
 
-import { useLayout, useLayoutAction } from '../../hooks';
+import { useLayout, useLayoutAction } from '../../hooks'
 
-import { LayoutModeList, LayoutTheme, LayoutThemeList } from './constants';
-import { ChangeDrawerContext, DrawerContext, useDrawer, useDrawerChange } from './hooks';
+import { LayoutModeList, LayoutTheme, LayoutThemeList } from './constants'
+import { ChangeDrawerContext, DrawerContext, useDrawer, useDrawerChange } from './hooks'
 
-import $styles from './style.module.css';
+import $styles from './style.module.css'
 
 const LayoutSetting = () => {
-    const { changeMode } = useLayoutAction();
+    const { changeMode } = useLayoutAction()
     return (
         <div className={$styles.layoutMode}>
             {LayoutModeList.map((item, index) => (
@@ -24,20 +24,20 @@ const LayoutSetting = () => {
                 </Tooltip>
             ))}
         </div>
-    );
-};
+    )
+}
 
 const ThemeSetting = () => {
-    const { changeTheme: changeLayoutTheme } = useLayoutAction();
+    const { changeTheme: changeLayoutTheme } = useLayoutAction()
     const changeTheme = useCallback((type: `${LayoutTheme}`) => {
-        const theme = type.split('-') as Array<'light' | 'dark'>;
+        const theme = type.split('-') as Array<'light' | 'dark'>
         if (theme.length === 2) {
             changeLayoutTheme({
                 header: theme[1],
                 sidebar: theme[0],
-            });
+            })
         }
-    }, []);
+    }, [])
     return (
         <div className={$styles.layoutTheme}>
             {LayoutThemeList.map((item, index) => (
@@ -49,8 +49,8 @@ const ThemeSetting = () => {
                 </Tooltip>
             ))}
         </div>
-    );
-};
+    )
+}
 
 // const ColorSetting = () => {
 //     const colors = useColors();
@@ -113,8 +113,8 @@ const ThemeSetting = () => {
 // };
 
 const Feature: FC = () => {
-    const { mode, fixed, collapsed } = useLayout();
-    const { changeFixed, changeCollapse } = useLayoutAction();
+    const { mode, fixed, collapsed } = useLayout()
+    const { changeFixed, changeCollapse } = useLayoutAction()
     return (
         <>
             <div className="tw-flex tw-justify-between tw-mb-2">
@@ -147,24 +147,24 @@ const Feature: FC = () => {
                 <Switch checked={collapsed} onChange={(checked) => changeCollapse(checked)} />
             </div>
         </>
-    );
-};
+    )
+}
 
 const DrawerProvider: FC<{ children?: ReactNode }> = ({ children }) => {
-    const [show, changeShow] = useState(false);
-    const changeStatus = useCallback(changeShow, []);
+    const [show, changeShow] = useState(false)
+    const changeStatus = useCallback(changeShow, [])
     return (
         <DrawerContext.Provider value={show}>
             <ChangeDrawerContext.Provider value={changeStatus}>
                 {children}
             </ChangeDrawerContext.Provider>
         </DrawerContext.Provider>
-    );
-};
+    )
+}
 
 const DrawerView: FC = () => {
-    const open = useDrawer();
-    const changeVisible = useDrawerChange();
+    const open = useDrawer()
+    const changeVisible = useDrawerChange()
     return (
         <Drawer
             title="界面设置"
@@ -182,11 +182,11 @@ const DrawerView: FC = () => {
             <Divider>功能</Divider>
             <Feature />
         </Drawer>
-    );
-};
+    )
+}
 export const ConfigDrawer: FC<{ children?: ReactNode }> = ({ children }) => (
     <DrawerProvider>
         {children}
         <DrawerView />
     </DrawerProvider>
-);
+)

@@ -1,22 +1,22 @@
-import { isNil } from 'lodash';
-import { useCallback, useEffect, useRef } from 'react';
+import { isNil } from 'lodash'
+import { useCallback, useEffect, useRef } from 'react'
 
-import { useUnmount } from 'react-use';
+import { useUnmount } from 'react-use'
 
-import { useStore } from 'zustand';
-import { shallow } from 'zustand/shallow';
+import { useStore } from 'zustand'
+import { shallow } from 'zustand/shallow'
 
 // import { enable as enableDarkMode, disable as disableDarkMode } from 'darkreader';
 
-import { debounceRun } from '@/utils/helpers';
+import { debounceRun } from '@/utils/helpers'
 
-import { ThemeMode } from './constants';
-import { ThemeStore } from './store';
+import { ThemeMode } from './constants'
+import { ThemeStore } from './store'
 /**
  * 获取主题状态
  */
 export const useTheme = () =>
-    useStore(ThemeStore, (state) => ({ mode: state.mode, compact: state.compact }), shallow);
+    useStore(ThemeStore, (state) => ({ mode: state.mode, compact: state.compact }), shallow)
 
 /**
  * 主题操作函数
@@ -38,7 +38,7 @@ export const useThemeActions = () => ({
         useStore(ThemeStore, (state) => state.toggleCompact),
         [],
     ),
-});
+})
 
 /**
  * 暗黑和明亮模式的切换监听器
@@ -47,11 +47,11 @@ export const useThemeActions = () => ({
 const ThemeModeListener = async (mode: `${ThemeMode}`) => {
     // 为tailwind添加暗黑主题类
     // const { mode: theme, darken } = ThemeStore.getState();
-    const reverse = mode === 'dark' ? 'light' : 'dark';
-    const html = document.documentElement;
-    html.classList.remove(reverse);
-    html.classList.remove(mode);
-    html.classList.add(mode);
+    const reverse = mode === 'dark' ? 'light' : 'dark'
+    const html = document.documentElement
+    html.classList.remove(reverse)
+    html.classList.remove(mode)
+    html.classList.add(mode)
     // if (typeof window !== 'undefined') {
     //     const { enable: enableDarkMode, disable: disableDarkMode } = await import('darkreader');
     //     if (theme === 'dark') {
@@ -60,14 +60,14 @@ const ThemeModeListener = async (mode: `${ThemeMode}`) => {
     //         disableDarkMode();
     //     }
     // }
-};
+}
 
 /**
  * 主题组件初始化钩子
  */
 export const useThemeListner = () => {
-    const debounceRef = useRef();
-    let unSub: () => void;
+    const debounceRef = useRef()
+    let unSub: () => void
     useEffect(() => {
         ThemeStore.subscribe(
             (state) => state.mode,
@@ -75,9 +75,9 @@ export const useThemeListner = () => {
             {
                 fireImmediately: true,
             },
-        );
-    }, []);
+        )
+    }, [])
     useUnmount(() => {
-        if (!isNil(unSub)) unSub();
-    });
-};
+        if (!isNil(unSub)) unSub()
+    })
+}

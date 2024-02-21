@@ -1,6 +1,6 @@
-import { createContext } from 'react';
+import { createContext } from 'react'
 
-import { LayoutTheme } from './types';
+import { LayoutTheme } from './types'
 
 /**
  * 布局模式
@@ -50,12 +50,12 @@ export enum LayoutActionType {
 /**
  * 暗黑模式下的组件背景色
  */
-export const layoutDarkTheme: LayoutTheme = { header: 'dark', sidebar: 'light', embed: 'light' };
+export const layoutDarkTheme: LayoutTheme = { header: 'dark', sidebar: 'light', embed: 'light' }
 
 const defaultLayoutTheme: LayoutTheme = {
     header: 'light',
     sidebar: 'dark',
     embed: 'light',
-};
+}
 
-export const LayoutThemeContext = createContext<LayoutTheme>(defaultLayoutTheme);
+export const LayoutThemeContext = createContext<LayoutTheme>(defaultLayoutTheme)

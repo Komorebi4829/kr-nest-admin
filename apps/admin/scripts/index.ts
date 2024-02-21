@@ -1,12 +1,12 @@
-import merge from 'deepmerge';
-import { ConfigEnv, UserConfig } from 'vite';
+import merge from 'deepmerge'
+import { ConfigEnv, UserConfig } from 'vite'
 
-import { createPlugins } from './plugins';
-import { Configure } from './types';
-import { pathResolve } from './utils';
+import { createPlugins } from './plugins'
+import { Configure } from './types'
+import { pathResolve } from './utils'
 
 export const createConfig = (params: ConfigEnv, configure?: Configure): UserConfig => {
-    const isBuild = params.command === 'build';
+    const isBuild = params.command === 'build'
     return merge<UserConfig>(
         {
             resolve: {
@@ -20,9 +20,10 @@ export const createConfig = (params: ConfigEnv, configure?: Configure): UserConf
                 },
             },
             server: {
+                port: 5601,
                 proxy: {
                     '/api': {
-                        target: 'http://localhost:3100/api',
+                        target: 'http://localhost:5600/api',
                         changeOrigin: true,
                         rewrite: (path) => path.replace(/^\/api/, ''),
                     },
@@ -35,5 +36,5 @@ export const createConfig = (params: ConfigEnv, configure?: Configure): UserConf
         {
             arrayMerge: (_d, s, _o) => Array.from(new Set([..._d, ...s])),
         },
-    );
-};
+    )
+}

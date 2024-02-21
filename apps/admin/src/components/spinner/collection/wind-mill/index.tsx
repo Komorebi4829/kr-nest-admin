@@ -1,10 +1,10 @@
-import type { SpinnerOption } from '../../types';
-import { useSpinnerStyle } from '../../utils';
+import type { SpinnerOption } from '../../types'
+import { useSpinnerStyle } from '../../utils'
 
-import classes from './style.module.css';
+import classes from './style.module.css'
 
 export const WaveMill = (props: SpinnerOption) => {
-    const style = useSpinnerStyle(props);
+    const style = useSpinnerStyle(props)
     return (
         <div className={classes.container} style={style}>
             <div />
@@ -14,5 +14,5 @@ export const WaveMill = (props: SpinnerOption) => {
                 <div />
             </div>
         </div>
-    );
-};
+    )
+}

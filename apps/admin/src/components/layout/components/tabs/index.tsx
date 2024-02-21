@@ -1,60 +1,54 @@
-import { Dropdown, MenuProps, Tabs, TabsProps, theme as AntdTheme } from 'antd';
+import { Dropdown, MenuProps, Tabs, TabsProps, theme as AntdTheme } from 'antd'
 
-import { filter, findIndex } from 'lodash';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { filter, findIndex } from 'lodash'
+import { memo, useCallback, useMemo, useState } from 'react'
 
-import { useDeepCompareEffect } from 'react-use';
+import { useDeepCompareEffect } from 'react-use'
 
-import { useActivedAlive, useKeepAliveDispath, useKeepAlives } from '@/components/KeepAlive';
+import { useActivedAlive, useKeepAliveDispath, useKeepAlives } from '@/components/KeepAlive'
 
-import Icon from '@/components/icon/icon';
-import { useRouterStore } from '@/components/router/hooks';
+import Icon from '@/components/icon/icon'
+import { useRouterStore } from '@/components/router/hooks'
 
-import { RouteOption } from '@/components/router/types';
-import { useDeepCompareUpdateEffect } from '@/utils/hooks';
+import { RouteOption } from '@/components/router/types'
+import { useDeepCompareUpdateEffect } from '@/utils/hooks'
 
-import $styles from './style.module.css';
+import $styles from './style.module.css'
 
-import IconClear from '~icons/ant-design/minus-outlined';
-import IconArrowDown from '~icons/ion/chevron-down-sharp';
-import IconClose from '~icons/ion/close-outline';
-import IconRefresh from '~icons/ion/md-refresh';
-import IconLeft from '~icons/mdi/arrow-collapse-left';
-import IconRight from '~icons/mdi/arrow-collapse-right';
-import IconExpend from '~icons/mdi/arrow-expand-horizontal';
+import IconClear from '~icons/ant-design/minus-outlined'
+import IconArrowDown from '~icons/ion/chevron-down-sharp'
+import IconClose from '~icons/ion/close-outline'
+import IconRefresh from '~icons/ion/md-refresh'
+import IconLeft from '~icons/mdi/arrow-collapse-left'
+import IconRight from '~icons/mdi/arrow-collapse-right'
+import IconExpend from '~icons/mdi/arrow-expand-horizontal'
 
 const getNames = (routes: RouteOption[]) =>
-    Object.fromEntries(routes.map((route) => [route.id, route.meta?.name ?? route.id]));
+    Object.fromEntries(routes.map((route) => [route.id, route.meta?.name ?? route.id]))
 const ExtraButtons: FC<{ actived: string }> = memo(({ actived }) => {
-    const data = useKeepAlives();
-    const { removeAlive, removeAlives, clearAlives, refreshAlive } = useKeepAliveDispath();
-    const activedIndex = useMemo(
-        () => findIndex(data, (item) => item === actived),
-        [data, actived],
-    );
+    const data = useKeepAlives()
+    const { removeAlive, removeAlives, clearAlives, refreshAlive } = useKeepAliveDispath()
+    const activedIndex = useMemo(() => findIndex(data, (item) => item === actived), [data, actived])
     const disabledRemoveOthers = useMemo(
         () => filter(data, (item) => item !== actived).length <= 0,
         [activedIndex, data],
-    );
-    const disabledLeftRemove = useMemo(() => activedIndex < 1, [activedIndex]);
-    const disabledRightRemove = useMemo(
-        () => activedIndex >= data.length - 1,
-        [activedIndex, data],
-    );
-    const refreshActived = useCallback(() => refreshAlive(actived), [actived]);
-    const removeActived = useCallback(() => removeAlive(actived), [actived]);
+    )
+    const disabledLeftRemove = useMemo(() => activedIndex < 1, [activedIndex])
+    const disabledRightRemove = useMemo(() => activedIndex >= data.length - 1, [activedIndex, data])
+    const refreshActived = useCallback(() => refreshAlive(actived), [actived])
+    const removeActived = useCallback(() => removeAlive(actived), [actived])
     const removeOthers = useCallback(
         () => removeAlives(filter(data, (item) => item !== actived)),
         [data, actived],
-    );
+    )
     const removeLeft = useCallback(
         () => removeAlives(filter(data, (_, index) => index < activedIndex)),
         [data, disabledLeftRemove, activedIndex],
-    );
+    )
     const removeRight = useCallback(
         () => removeAlives(filter(data, (_, index) => index > activedIndex)),
         [data, disabledRightRemove, activedIndex],
-    );
+    )
     const menus = useMemo<MenuProps['items']>(
         () => [
             {
@@ -98,34 +92,34 @@ const ExtraButtons: FC<{ actived: string }> = memo(({ actived }) => {
             },
         ],
         [],
-    );
+    )
     return (
         <Dropdown menu={{ items: menus }} placement="bottomRight" trigger={['click']}>
             <span className="tw-bg-white dark:tw-bg-slate-900 tw-flex tw-py-1 tw-px-1 tw-cursor-pointer">
                 <Icon component={IconArrowDown} />
             </span>
         </Dropdown>
-    );
-});
+    )
+})
 const KeepLiveTabs = () => {
-    const routes = useRouterStore((state) => state.flat);
-    const actived = useActivedAlive();
-    const data = useKeepAlives();
-    const { changeAlive, removeAlive } = useKeepAliveDispath();
+    const routes = useRouterStore((state) => state.flat)
+    const actived = useActivedAlive()
+    const data = useKeepAlives()
+    const { changeAlive, removeAlive } = useKeepAliveDispath()
     const {
         token: { colorBgContainer, colorBorderSecondary, controlItemBgActive },
-    } = AntdTheme.useToken();
+    } = AntdTheme.useToken()
 
-    const [tabs, setTabs] = useState<TabsProps['items']>([]);
+    const [tabs, setTabs] = useState<TabsProps['items']>([])
 
     const remove: NonNullable<TabsProps['onEdit']> = useCallback((id, action: 'add' | 'remove') => {
-        if (action !== 'remove' || typeof id !== 'string') return;
-        removeAlive(id);
-    }, []);
-    const [names, setNames] = useState(() => getNames(routes));
+        if (action !== 'remove' || typeof id !== 'string') return
+        removeAlive(id)
+    }, [])
+    const [names, setNames] = useState(() => getNames(routes))
     useDeepCompareUpdateEffect(() => {
-        setNames(() => getNames(routes));
-    }, [routes]);
+        setNames(() => getNames(routes))
+    }, [routes])
     useDeepCompareEffect(() => {
         setTabs(
             data.map((id) => ({
@@ -133,8 +127,8 @@ const KeepLiveTabs = () => {
                 label: names[id],
                 closable: true,
             })) as TabsProps['items'],
-        );
-    }, [data]);
+        )
+    }, [data])
     return actived ? (
         <div
             className={$styles.container}
@@ -159,6 +153,6 @@ const KeepLiveTabs = () => {
                 animated={{ inkBar: true, tabPane: true }}
             />
         </div>
-    ) : null;
-};
-export default KeepLiveTabs;
+    ) : null
+}
+export default KeepLiveTabs

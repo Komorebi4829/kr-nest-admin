@@ -1,4 +1,4 @@
-import { RouteOption } from '@/components/router/types';
+import { RouteOption } from '@/components/router/types'
 
 export const account: RouteOption = {
     id: 'account',
@@ -19,4 +19,4 @@ export const account: RouteOption = {
             page: 'account/setting/index',
         },
     ],
-};
+}

@@ -1,4 +1,4 @@
-import { ThemeState } from './types';
+import { ThemeState } from './types'
 
 /**
  * 默认配置
@@ -6,4 +6,4 @@ import { ThemeState } from './types';
 export const defaultTheme: ThemeState = {
     mode: 'light',
     compact: false,
-};
+}

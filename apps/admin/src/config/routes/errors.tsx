@@ -1,6 +1,6 @@
-import { redirect } from 'react-router';
+import { redirect } from 'react-router'
 
-import { RouteOption } from '@/components/router/types';
+import { RouteOption } from '@/components/router/types'
 
 export const errors: RouteOption = {
     id: 'errors',
@@ -12,7 +12,7 @@ export const errors: RouteOption = {
             menu: false,
             index: true,
             loader: () => {
-                return redirect('/errors/404');
+                return redirect('/errors/404')
             },
         },
         {
@@ -34,4 +34,4 @@ export const errors: RouteOption = {
             page: 'errors/500',
         },
     ],
-};
+}

@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react';
+import type { CSSProperties } from 'react'
 
 export const defaultStyle: CSSProperties = {
     margin: 'auto',
@@ -7,4 +7,4 @@ export const defaultStyle: CSSProperties = {
     right: 0,
     top: 0,
     bottom: 0,
-};
+}

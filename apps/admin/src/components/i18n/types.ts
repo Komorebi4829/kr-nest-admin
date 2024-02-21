@@ -1,12 +1,12 @@
-import { Locale } from 'antd/es/locale';
+import { Locale } from 'antd/es/locale'
 
-export type LocaleState = ReRequired<LocaleConfig>;
+export type LocaleState = ReRequired<LocaleConfig>
 
 export type LocaleConfig = {
-    name: string;
-    label: string;
-};
+    name: string
+    label: string
+}
 
 export type LangItem = LocaleConfig & {
-    antdData: Locale;
-};
+    antdData: Locale
+}
