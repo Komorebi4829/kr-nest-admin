@@ -1,0 +1,13 @@
+{
+    "extends": "@3rapp/ts-config/react.json",
+    "compilerOptions": {
+        "baseUrl": ".",
+        "outDir": "./dist",
+        "paths": {
+            "@/*": ["src/*"]
+        },
+        "types": ["unplugin-icons/types/react", "@types/node"]
+    },
+    "include": ["./src", "./typings/**/*.d.ts"],
+    "references": [{ "path": "./tsconfig.node.json" }]
+}
