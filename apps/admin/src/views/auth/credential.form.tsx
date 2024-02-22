@@ -42,7 +42,7 @@ const CredentialForm: FC = () => {
                     try {
                         const {
                             data: { token },
-                        } = await fetcher.post('/auth/login', values)
+                        } = await fetcher.post('/user/account/login', values)
                         if (!isNil(token)) {
                             FetcherStore.setState((state) => {
                                 state.token = token
@@ -72,6 +72,7 @@ const CredentialForm: FC = () => {
                         size: 'large',
                         // prefix: <MobileOutlined />,
                     }}
+                    initialValue="superAdmin"
                     name="credential"
                     placeholder="请输入用户名,手机号或邮箱地址"
                     rules={[
@@ -89,7 +90,14 @@ const CredentialForm: FC = () => {
                         size: 'large',
                     }}
                     name="password"
+                    initialValue="123456aA$"
                     placeholder="请输入密码"
+                    rules={[
+                        {
+                            required: true,
+                            message: '请输入密码',
+                        },
+                    ]}
                 />
             </ProForm>
         </div>

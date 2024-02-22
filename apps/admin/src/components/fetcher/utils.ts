@@ -33,7 +33,7 @@ export const createRequest: (config?: Omit<FetcherConfig, 'swr'>) => AxiosInstan
                 if (configed.cancel_repeat) pendingMap = addPending(params, pendingMap)
                 // 添加token
                 if (configed.token && typeof window !== 'undefined') {
-                    params.headers.set('Authorization', configed.token)
+                    params.headers.set('Authorization', `Bearer ${configed.token}`)
                 }
                 return params
             },

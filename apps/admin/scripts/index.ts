@@ -23,7 +23,7 @@ export const createConfig = (params: ConfigEnv, configure?: Configure): UserConf
                 port: 5601,
                 proxy: {
                     '/api': {
-                        target: 'http://localhost:5600/api',
+                        target: 'http://127.0.0.1:5600/api',
                         changeOrigin: true,
                         rewrite: (path) => path.replace(/^\/api/, ''),
                     },
