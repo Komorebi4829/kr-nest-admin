@@ -1,5 +1,5 @@
-import { deepMerge } from '@repo/utils'
 import { StyleProvider } from '@ant-design/cssinjs'
+import { deepMerge } from '@repo/utils'
 import { ConfigProvider, theme, App as AntdApp } from 'antd'
 import { MappingAlgorithm, ThemeConfig } from 'antd/es/config-provider/context'
 import { Locale } from 'antd/es/locale'
