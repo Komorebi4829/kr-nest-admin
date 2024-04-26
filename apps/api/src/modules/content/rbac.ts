@@ -1,8 +1,9 @@
 import { Injectable, OnModuleInit } from '@nestjs/common'
 import { ModuleRef } from '@nestjs/core'
 
+import { RbacBootstrap } from '@/modules/rbac/rbac.bootstrap'
+
 import { PermissionAction, SystemRoles } from '../rbac/constants'
-import { RbacResolver } from '../rbac/rbac.resolver'
 
 import { CategoryEntity, CommentEntity, PostEntity, TagEntity } from './entities'
 
@@ -11,7 +12,7 @@ export class ContentRbac implements OnModuleInit {
     constructor(private moduleRef: ModuleRef) {}
 
     onModuleInit() {
-        const resolver = this.moduleRef.get(RbacResolver, { strict: false })
+        const resolver = this.moduleRef.get(RbacBootstrap, { strict: false })
         resolver.addPermissions([
             {
                 name: 'post.create',

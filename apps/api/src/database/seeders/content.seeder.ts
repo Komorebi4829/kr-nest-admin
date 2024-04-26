@@ -1,17 +1,12 @@
-import fs from 'fs'
-
-import path from 'path'
-
 import { faker } from '@faker-js/faker'
-import { existsSync } from 'fs-extra'
 import { isNil } from 'lodash'
 import { DataSource, EntityManager, In } from 'typeorm'
 
+import { getRandItemData, getRandListData } from '@/bootstrap/utils'
+import { BaseSeeder } from '@/helpers/BaseClass'
 import { CategoryEntity, CommentEntity, PostEntity, TagEntity } from '@/modules/content/entities'
 import { CategoryRepository, TagRepository } from '@/modules/content/repositories'
 
-import { getRandItemData, getRandListData, panic } from '@/modules/core/helpers'
-import { BaseSeeder } from '@/modules/database/base/seeder'
 import { DbFactory } from '@/modules/database/types'
 
 import { SystemRoles } from '@/modules/rbac/constants'
@@ -101,16 +96,16 @@ export default class ContentSeeder extends BaseSeeder {
         const allCategories = await this.em.find(CategoryEntity)
         const allTags = await this.em.find(TagEntity)
         for (const item of data) {
-            const filePath = path.join(__dirname, '../../assets/posts', item.contentFile)
-            if (!existsSync(filePath)) {
-                panic({
-                    spinner: this.spinner,
-                    message: `post content file ${filePath} not exits!`,
-                })
-            }
+            // const filePath = path.join(__dirname, '../../assets/posts', item.contentFile)
+            // if (!existsSync(filePath)) {
+            //     panic({
+            //         spinner: this.spinner,
+            //         message: `post content file ${filePath} not exits!`,
+            //     })
+            // }
             const options: IPostFactoryOptions = {
                 title: item.title,
-                body: fs.readFileSync(filePath, 'utf8'),
+                body: faker.lorem.paragraph(Math.floor(Math.random() * 18) + 1),
                 isPublished: true,
                 author,
             }

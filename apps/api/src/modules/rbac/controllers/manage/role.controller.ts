@@ -2,8 +2,9 @@ import { Body, Controller, Delete, Patch, Post, SerializeOptions } from '@nestjs
 
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
-import { Depends } from '@/modules/restful/decorators'
-import { DeleteWithTrashDto, RestoreDto } from '@/modules/restful/dtos'
+import { Depends } from '@/helpers/decorators'
+
+import { DeleteWithTrashDto, RestoreDto } from '@/helpers/dtos'
 
 import { PermissionAction } from '../../constants'
 import { Permission } from '../../decorators'
@@ -22,10 +23,6 @@ const permission: PermissionChecker = async (ab) => ab.can(PermissionAction.MANA
 export class RoleController {
     constructor(protected service: RoleService) {}
 
-    /**
-     * 新增角色
-     * @param data
-     */
     @Post()
     @SerializeOptions({ groups: ['role-detail'] })
     @Permission(permission)
@@ -36,10 +33,6 @@ export class RoleController {
         return this.service.create(data)
     }
 
-    /**
-     * 更新角色
-     * @param data
-     */
     @Patch()
     @SerializeOptions({ groups: ['role-detail'] })
     @Permission(permission)
@@ -50,10 +43,6 @@ export class RoleController {
         return this.service.update(data)
     }
 
-    /**
-     * 批量删除角色
-     * @param data
-     */
     @Delete()
     @SerializeOptions({ groups: ['role-list'] })
     @Permission(permission)
@@ -65,10 +54,6 @@ export class RoleController {
         return this.service.delete(ids, trash)
     }
 
-    /**
-     * 批量恢复角色
-     * @param data
-     */
     @Patch('restore')
     @SerializeOptions({ groups: ['role-list'] })
     @Permission(permission)

@@ -3,23 +3,20 @@ import { Injectable } from '@nestjs/common'
 import { isNil } from 'lodash'
 import { SelectQueryBuilder } from 'typeorm'
 
-import { BaseService } from '@/modules/database/base'
+import { BaseService } from '@/helpers/BaseClass'
+
 import { QueryHook } from '@/modules/database/types'
 
-import { QueryPermssionDto } from '../dtos'
+import { QueryPermissionDto } from '../dtos'
 import { PermissionEntity } from '../entities'
 import { PermissionRepository } from '../repositories'
 
 type FindParams = {
-    [key in keyof Omit<QueryPermssionDto, 'limit' | 'page'>]: QueryPermssionDto[key]
+    [key in keyof Omit<QueryPermissionDto, 'limit' | 'page'>]: QueryPermissionDto[key]
 }
 
 @Injectable()
-export class PermissionService extends BaseService<
-    PermissionEntity,
-    PermissionRepository,
-    FindParams
-> {
+export class PermissionService extends BaseService<PermissionEntity, PermissionRepository> {
     constructor(protected permissionRepository: PermissionRepository) {
         super(permissionRepository)
     }
@@ -35,6 +32,5 @@ export class PermissionService extends BaseService<
                 roles: [options.role],
             })
         }
-        return qb
     }
 }

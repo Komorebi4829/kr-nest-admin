@@ -31,12 +31,11 @@ export class UniqueTreeConstraint implements ValidatorConstraintInterface {
                   ...config,
                   entity: args.constraints[0],
               }) as unknown as Required<Condition>
-        // 需要查询的属性名,默认为当前验证的属性
+
         const argsObj = args.object as any
         if (!condition.entity) return false
 
         try {
-            // 获取repository
             const repo = this.dataSource.getTreeRepository(condition.entity)
 
             if (isNil(value)) return true
@@ -48,7 +47,7 @@ export class UniqueTreeConstraint implements ValidatorConstraintInterface {
                 },
                 withDeleted: true,
             })
-            // 对比每个子分类的queryProperty值是否与当前验证的dto属性相同,如果有相同的则验证失败
+
             return collection.every((item) => item[condition.property] !== value)
         } catch (err) {
             return false

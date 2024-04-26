@@ -1,6 +1,6 @@
 import { Arguments } from 'yargs'
 
-import { CommandItem } from '@/modules/core/types'
+import { CommandItem } from '@/bootstrap/types'
 
 import { SeederArguments } from '../types'
 

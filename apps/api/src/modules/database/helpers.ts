@@ -1,5 +1,3 @@
-import { resolve } from 'path'
-
 import * as fakerjs from '@faker-js/faker'
 import { Type } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
@@ -17,17 +15,12 @@ import {
     SelectQueryBuilder,
 } from 'typeorm'
 
+import { AppConfig } from '@/bootstrap/types'
+
 import { Configure } from '../config/configure'
-import { createConnectionOptions } from '../config/helpers'
-import { ConfigureFactory, ConfigureRegister } from '../config/types'
-
-import { deepMerge } from '../core/helpers'
-
-import { AppConfig } from '../core/types'
 
 import { CUSTOM_REPOSITORY_METADATA } from './constants'
 import { DataFactory } from './resolver/data.factory'
-import { SeedRunner } from './resolver/seed.runner'
 import {
     DbConfig,
     DbFactoryBuilder,
@@ -127,55 +120,6 @@ export const getCustomRepository = <T extends Repository<E>, E extends ObjectLit
     const base = dataSource.getRepository<ObjectType<any>>(entity)
     return new Repo(base.target, base.manager, base.queryRunner) as T
 }
-
-export const createDbOptions = (options: DbConfig) => {
-    const newOptions: DbOptions = {
-        common: deepMerge(
-            {
-                charset: 'utf8mb4',
-                logging: ['error'],
-                autoMigrate: true,
-                paths: {
-                    migration: resolve(__dirname, '../../database/migrations'),
-                },
-            },
-            options.common ?? {},
-            'replace',
-        ),
-        connections: createConnectionOptions(options.connections ?? []),
-    }
-    newOptions.connections = newOptions.connections.map((connection) => {
-        const entities = connection.entities ?? []
-        const newOption = { ...connection, entities }
-        return deepMerge(
-            newOptions.common,
-            {
-                ...newOption,
-                autoLoadEntities: true,
-                synchronize: false,
-            } as any,
-            'replace',
-        ) as TypeormOption
-    })
-    return newOptions
-}
-
-export const createDbConfig: (
-    register: ConfigureRegister<RePartial<DbConfig>>,
-) => ConfigureFactory<DbConfig, DbOptions> = (register) => ({
-    register,
-    hook: (configure, value) => createDbOptions(value),
-    defaultRegister: () => ({
-        common: {
-            charset: 'utf8mb4',
-            logging: ['error'],
-            seedRunner: SeedRunner,
-            seeders: [],
-            factories: [],
-        },
-        connections: [],
-    }),
-})
 
 export const addEntities = async (
     configure: Configure,

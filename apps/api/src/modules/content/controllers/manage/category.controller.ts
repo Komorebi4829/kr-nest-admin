@@ -13,12 +13,11 @@ import {
 
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
+import { Depends } from '@/helpers/decorators'
+import { DeleteWithTrashDto, PaginateDto } from '@/helpers/dtos'
 import { PermissionAction } from '@/modules/rbac/constants'
 import { Permission } from '@/modules/rbac/decorators'
 import { PermissionChecker } from '@/modules/rbac/types'
-import { Depends } from '@/modules/restful/decorators'
-
-import { DeleteWithTrashDto, PaginateDto } from '@/modules/restful/dtos'
 
 import { ContentModule } from '../../content.module'
 import { CreateCategoryDto, UpdateCategoryDto } from '../../dtos'
@@ -35,10 +34,6 @@ const permission: PermissionChecker = async (ab) =>
 export class CategoryController {
     constructor(protected service: CategoryService) {}
 
-    /**
-     * 查询分类列表
-     * @param options
-     */
     @Get()
     @Permission(permission)
     @SerializeOptions({ groups: ['category-list'] })
@@ -46,10 +41,6 @@ export class CategoryController {
         return this.service.paginate(options)
     }
 
-    /**
-     * 分页详解查询
-     * @param id
-     */
     @Get(':id')
     @Permission(permission)
     @SerializeOptions({ groups: ['category-detail'] })
@@ -60,10 +51,6 @@ export class CategoryController {
         return this.service.detail(id)
     }
 
-    /**
-     * 新增分类
-     * @param data
-     */
     @Post()
     @Permission(permission)
     @SerializeOptions({ groups: ['category-detail'] })
@@ -71,10 +58,6 @@ export class CategoryController {
         return this.service.create(data)
     }
 
-    /**
-     * 更新分类
-     * @param data
-     */
     @Patch()
     @Permission(permission)
     @SerializeOptions({ groups: ['category-detail'] })
@@ -85,10 +68,6 @@ export class CategoryController {
         return this.service.update(data)
     }
 
-    /**
-     * 批量删除分类
-     * @param data
-     */
     @Delete()
     @Permission(permission)
     @SerializeOptions({ groups: ['category-list'] })

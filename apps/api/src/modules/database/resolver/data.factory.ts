@@ -3,8 +3,8 @@ import { isPromise } from 'util/types'
 import { isNil } from 'lodash'
 import { EntityManager, EntityTarget } from 'typeorm'
 
+import { panic } from '@/bootstrap/app'
 import { Configure } from '@/modules/config/configure'
-import { panic } from '@/modules/core/helpers'
 
 import { DbFactoryHandler, FactoryOverride } from '../types'
 

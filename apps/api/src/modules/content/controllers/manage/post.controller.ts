@@ -12,13 +12,14 @@ import {
 } from '@nestjs/common'
 
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
+
 import { isNil } from 'lodash'
 
+import { Depends } from '@/helpers/decorators'
+import { DeleteWithTrashDto, RestoreDto } from '@/helpers/dtos'
 import { PermissionAction } from '@/modules/rbac/constants'
 import { Permission } from '@/modules/rbac/decorators'
 import { PermissionChecker } from '@/modules/rbac/types'
-import { Depends } from '@/modules/restful/decorators'
-import { DeleteWithTrashDto, RestoreDto } from '@/modules/restful/dtos'
 
 import { ReqUser } from '@/modules/user/decorators'
 
@@ -38,10 +39,6 @@ const permission: PermissionChecker = async (ab) => ab.can(PermissionAction.MANA
 export class PostController {
     constructor(protected service: PostService) {}
 
-    /**
-     * 查询文章列表
-     * @param options
-     */
     @Get()
     @SerializeOptions({ groups: ['post-list'] })
     @Permission(permission)
@@ -52,10 +49,6 @@ export class PostController {
         return this.service.paginate(options)
     }
 
-    /**
-     * 查询文章详情
-     * @param id
-     */
     @Get(':id')
     @SerializeOptions({ groups: ['post-detail'] })
     @Permission(permission)
@@ -66,10 +59,6 @@ export class PostController {
         return this.service.detail(id)
     }
 
-    /**
-     * 新增文章
-     * @param data
-     */
     @Post()
     @SerializeOptions({ groups: ['post-detail'] })
     @Permission(permission)
@@ -83,10 +72,6 @@ export class PostController {
         } as ClassToPlain<UserEntity>)
     }
 
-    /**
-     * 更新文章
-     * @param data
-     */
     @Patch()
     @SerializeOptions({ groups: ['post-detail'] })
     @Permission(permission)
@@ -97,10 +82,6 @@ export class PostController {
         return this.service.update(data)
     }
 
-    /**
-     * 批量删除文章
-     * @param data
-     */
     @Delete()
     @SerializeOptions({ groups: ['post-list'] })
     @Permission(permission)
@@ -112,10 +93,6 @@ export class PostController {
         return this.service.delete(ids, trash)
     }
 
-    /**
-     * 批量恢复文章
-     * @param data
-     */
     @Patch('restore')
     @ApiBearerAuth()
     @SerializeOptions({ groups: ['post-list'] })

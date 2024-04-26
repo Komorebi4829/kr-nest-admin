@@ -2,32 +2,24 @@ import { PickType } from '@nestjs/swagger'
 
 import { Length } from 'class-validator'
 
-import { IsPassword } from '@/modules/core/constraints'
-import { DtoValidation } from '@/modules/core/decorators'
+import { IsPassword } from '@/helpers/constraints'
+
+import { DtoValidation } from '@/helpers/decorators'
 
 import { UserValidateGroups } from '../constants'
 
 import { UserCommonDto } from './common.dto'
 
-/**
- * 更新用户信息
- */
 @DtoValidation({
     groups: [UserValidateGroups.ACCOUNT_UPDATE],
     whitelist: false,
 })
 export class UpdateAccountDto extends PickType(UserCommonDto, ['username', 'nickname']) {}
 
-/**
- * 更改用户密码
- */
 @DtoValidation({
     groups: [UserValidateGroups.ACCOUNT_CHANGE_PASSWORD],
 })
 export class UpdatePasswordDto extends PickType(UserCommonDto, ['password', 'plainPassword']) {
-    /**
-     * 旧密码:用户在更改密码时需要输入的原密码
-     */
     @IsPassword(5, {
         message: '密码必须由小写字母,大写字母,数字以及特殊字符组成',
         always: true,

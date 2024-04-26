@@ -3,8 +3,8 @@ import { JwtModule, JwtModuleOptions } from '@nestjs/jwt'
 import { FastifyRequest as Request } from 'fastify'
 import { ExtractJwt } from 'passport-jwt'
 
+import { getTime } from '@/bootstrap/utils'
 import { Configure } from '@/modules/config/configure'
-import { getTime } from '@/modules/core/helpers'
 
 import { RegisterDto, UpdatePasswordDto } from '../dtos'
 import { UserEntity } from '../entities/user.entity'
@@ -16,9 +16,6 @@ import { UserConfig } from '../types'
 import { TokenService } from './token.service'
 import { UserService } from './user.service'
 
-/**
- * 账户与认证服务
- */
 @Injectable()
 export class AuthService {
     constructor(
@@ -28,11 +25,6 @@ export class AuthService {
         protected userRepository: UserRepository,
     ) {}
 
-    /**
-     * 用户登录验证
-     * @param credential
-     * @param password
-     */
     async validateUser(credential: string, password: string) {
         const user = await this.userService.findOneByCredential(credential, async (query) =>
             query.addSelect('user.password'),
@@ -43,20 +35,12 @@ export class AuthService {
         return false
     }
 
-    /**
-     * 登录用户,并生成新的token和refreshToken
-     * @param user
-     */
     async login(user: UserEntity) {
         const now = await getTime(this.configure)
         const { accessToken } = await this.tokenService.generateAccessToken(user, now)
         return accessToken.value
     }
 
-    /**
-     * 注销登录
-     * @param req
-     */
     async logout(req: Request) {
         const accessToken = ExtractJwt.fromAuthHeaderAsBearerToken()(req as any)
         if (accessToken) {
@@ -68,10 +52,6 @@ export class AuthService {
         }
     }
 
-    /**
-     * 登录用户后生成新的token和refreshToken
-     * @param id
-     */
     async createToken(id: string) {
         const now = await getTime(this.configure)
         let user: UserEntity
@@ -84,10 +64,6 @@ export class AuthService {
         return accessToken.value
     }
 
-    /**
-     * 使用用户名密码注册用户
-     * @param data
-     */
     async register(data: RegisterDto) {
         const { username, nickname, password } = data
         const user = await this.userService.create({
@@ -99,11 +75,6 @@ export class AuthService {
         return this.userService.findOneByCondition({ id: user.id })
     }
 
-    /**
-     * 更新用户密码
-     * @param user
-     * @param param1
-     */
     async updatePassword(user: UserEntity, { password, oldPassword }: UpdatePasswordDto) {
         const item = await this.userRepository.findOneOrFail({
             select: ['password'],
@@ -115,9 +86,6 @@ export class AuthService {
         return this.userService.detail(user.id)
     }
 
-    /**
-     * 导入Jwt模块
-     */
     static jwtModuleFactory(configure: Configure) {
         return JwtModule.registerAsync({
             useFactory: async (): Promise<JwtModuleOptions> => {

@@ -4,19 +4,15 @@ import { isNil } from 'lodash'
 
 import { EntityNotFoundError, SelectQueryBuilder } from 'typeorm'
 
-import { BaseService } from '@/modules/database/base'
+import { BaseService } from '@/helpers/BaseClass'
 
 import { UserEntity } from '@/modules/user/entities'
-
 import { UserRepository } from '@/modules/user/repositories'
 
 import { CreateCommentDto, QueryCommentDto, QueryCommentTreeDto } from '../dtos'
 import { CommentEntity } from '../entities'
 import { CommentRepository, PostRepository } from '../repositories'
 
-/**
- * 评论数据操作
- */
 @Injectable()
 export class CommentService extends BaseService<CommentEntity, CommentRepository> {
     constructor(
@@ -27,10 +23,6 @@ export class CommentService extends BaseService<CommentEntity, CommentRepository
         super(repository)
     }
 
-    /**
-     * 直接查询评论树
-     * @param options
-     */
     async findTrees(options: QueryCommentTreeDto = {}) {
         return this.repository.findTrees({
             addQuery: async (qb) => {
@@ -39,10 +31,6 @@ export class CommentService extends BaseService<CommentEntity, CommentRepository
         })
     }
 
-    /**
-     * 查找一篇文章的评论并分页
-     * @param dto
-     */
     async paginate(options: QueryCommentDto) {
         const { post } = options
         const addQuery = (qb: SelectQueryBuilder<CommentEntity>) => {
@@ -56,11 +44,6 @@ export class CommentService extends BaseService<CommentEntity, CommentRepository
         })
     }
 
-    /**
-     * 新增评论
-     * @param data
-     * @param user
-     */
     async create(data: CreateCommentDto, author: ClassToPlain<UserEntity>) {
         const parent = await this.getParent(undefined, data.parent)
         if (!isNil(parent) && parent.post.id !== data.post) {
@@ -75,19 +58,10 @@ export class CommentService extends BaseService<CommentEntity, CommentRepository
         return this.repository.findOneOrFail({ where: { id: item.id } })
     }
 
-    /**
-     * 获取评论所属文章实例
-     * @param id
-     */
     protected async getPost(id: string) {
         return !isNil(id) ? this.postRepository.findOneOrFail({ where: { id } }) : id
     }
 
-    /**
-     * 获取请求传入的父分类
-     * @param current 当前分类的ID
-     * @param id
-     */
     protected async getParent(current?: string, id?: string) {
         if (current === id) return undefined
         let parent: CommentEntity | undefined

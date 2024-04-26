@@ -1,4 +1,4 @@
-import { RouteOption, TagOption } from '../restful/types'
+import { RouteOption, TagOption } from '@/helpers/types'
 
 import * as controllers from './controllers'
 import * as manageControllers from './controllers/manage'

@@ -1,18 +1,14 @@
-import { ApiPropertyOptional, PartialType } from '@nestjs/swagger'
+import { PartialType } from '@nestjs/swagger'
 import { IsDefined, IsNotEmpty, IsOptional, IsUUID, MaxLength } from 'class-validator'
 
-import { DtoValidation } from '@/modules/core/decorators'
-
+import { DtoValidation } from '@/helpers/decorators'
+import { PaginateWithTrashedDto } from '@/helpers/dtos'
 import { IsDataExist } from '@/modules/database/constraints'
-import { PaginateWithTrashedDto } from '@/modules/restful/dtos'
 import { UserEntity } from '@/modules/user/entities'
 
-import { PermissionEntity } from '../entities/permission.entity'
+import { PermissionEntity } from '../entities'
 
 export class QueryRoleDto extends PaginateWithTrashedDto {
-    @ApiPropertyOptional({
-        description: '用户ID:通过用户过滤角色列表',
-    })
     @IsDataExist(UserEntity, {
         groups: ['update'],
         message: '指定的用户不存在',
@@ -22,11 +18,7 @@ export class QueryRoleDto extends PaginateWithTrashedDto {
     user?: string
 }
 
-@DtoValidation({ groups: ['create'] })
 export class CreateRoleDto {
-    /**
-     * 权限名称
-     */
     @MaxLength(100, {
         always: true,
         message: '名称长度最大为$constraint1',
@@ -35,19 +27,12 @@ export class CreateRoleDto {
     @IsOptional({ groups: ['update'] })
     name: string
 
-    /**
-     * 权限标识:如果没有设置则在查询后为权限名称
-     */
     @MaxLength(100, {
         always: true,
-        message: 'Label长度最大为$constraint1',
+        message: '名称长度最大为$constraint1',
     })
-    @IsOptional({ always: true })
-    label?: string
+    label: string
 
-    /**
-     * 关联权限ID列表:一个角色可以关联多个权限,一个权限也可以属于多个角色
-     */
     @IsDataExist(PermissionEntity, {
         each: true,
         always: true,
@@ -64,9 +49,6 @@ export class CreateRoleDto {
 
 @DtoValidation({ groups: ['update'] })
 export class UpdateRoleDto extends PartialType(CreateRoleDto) {
-    /**
-     * 待更新的角色ID
-     */
     @IsUUID(undefined, { groups: ['update'], message: 'ID格式错误' })
     @IsDefined({ groups: ['update'], message: 'ID必须指定' })
     id: string

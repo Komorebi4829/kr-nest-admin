@@ -1,8 +1,6 @@
 import { Configure } from './configure'
 
 export interface ConfigStorageOption {
-    enabled?: boolean
-
     filePath?: string
 }
 

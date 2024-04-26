@@ -3,7 +3,7 @@ import { UserFactory } from '@/database/factories/user.factory'
 import ContentSeeder from '@/database/seeders/content.seeder'
 import UserSeeder from '@/database/seeders/user.seeder'
 import { Configure } from '@/modules/config/configure'
-import { createDbConfig } from '@/modules/database/helpers'
+import { createDbConfig } from '@/modules/database/config'
 
 export const database = createDbConfig((configure: Configure) => {
     return {

@@ -2,7 +2,7 @@ import { isNil } from 'lodash'
 
 import { EventSubscriber } from 'typeorm'
 
-import { BaseSubscriber } from '@/modules/database/base'
+import { BaseSubscriber } from '@/helpers/BaseClass'
 
 import { RoleEntity } from '../entities/role.entity'
 

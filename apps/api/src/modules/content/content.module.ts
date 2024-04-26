@@ -1,4 +1,6 @@
-import { Module, ModuleMetadata } from '@nestjs/common'
+import { DynamicModule, Module, ModuleMetadata } from '@nestjs/common'
+
+import { UserRepository } from '@/modules/user/repositories'
 
 import { Configure } from '../config/configure'
 import { DatabaseModule } from '../database/database.module'
@@ -6,8 +8,6 @@ import { DatabaseModule } from '../database/database.module'
 import { addEntities, addSubscribers } from '../database/helpers'
 
 import { RbacModule } from '../rbac/rbac.module'
-import { UserRepository } from '../user/repositories/user.repository'
-
 import { UserModule } from '../user/user.module'
 
 import * as entities from './entities'
@@ -22,7 +22,7 @@ import { ContentConfig } from './types'
 
 @Module({})
 export class ContentModule {
-    static async forRoot(configure: Configure) {
+    static async forRoot(configure: Configure): Promise<DynamicModule> {
         const config = await configure.get<ContentConfig>('content', defaultContentConfig)
         const providers: ModuleMetadata['providers'] = [
             ...Object.values(services),
@@ -35,6 +35,7 @@ export class ContentModule {
                     repositories.CategoryRepository,
                     services.CategoryService,
                     repositories.TagRepository,
+                    UserRepository,
                     { token: services.SearchService, optional: true },
                 ],
                 useFactory(
@@ -64,7 +65,7 @@ export class ContentModule {
             imports: [
                 UserModule,
                 RbacModule,
-                addEntities(configure, Object.values(entities)),
+                await addEntities(configure, Object.values(entities)),
                 DatabaseModule.forRepository(Object.values(repositories)),
             ],
             providers,

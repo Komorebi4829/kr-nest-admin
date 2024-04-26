@@ -12,7 +12,6 @@ export const createConnectionOptions = <T extends Record<string, any>>(
     const names = options.map(({ name }) => name)
     if (!names.includes('default')) options[0].name = 'default'
 
-    // 去重
     return options
         .filter(({ name }) => !isNil(name))
         .reduce((o, n) => {

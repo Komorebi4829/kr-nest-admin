@@ -13,12 +13,11 @@ import {
 
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
+import { Depends } from '@/helpers/decorators'
+import { DeleteWithTrashDto, PaginateDto } from '@/helpers/dtos'
 import { PermissionAction } from '@/modules/rbac/constants'
 import { Permission } from '@/modules/rbac/decorators'
 import { PermissionChecker } from '@/modules/rbac/types'
-import { Depends } from '@/modules/restful/decorators'
-
-import { DeleteWithTrashDto, PaginateDto } from '@/modules/restful/dtos'
 
 import { ContentModule } from '../../content.module'
 import { CreateTagDto, UpdateTagDto } from '../../dtos'
@@ -34,10 +33,6 @@ const permission: PermissionChecker = async (ab) => ab.can(PermissionAction.MANA
 export class TagController {
     constructor(protected service: TagService) {}
 
-    /**
-     * 分页查询标签列表
-     * @param options
-     */
     @Get()
     @SerializeOptions({})
     @Permission(permission)
@@ -48,10 +43,6 @@ export class TagController {
         return this.service.paginate(options)
     }
 
-    /**
-     * 查询标签详情
-     * @param id
-     */
     @Get(':id')
     @SerializeOptions({})
     @Permission(permission)
@@ -62,10 +53,6 @@ export class TagController {
         return this.service.detail(id)
     }
 
-    /**
-     * 添加新标签
-     * @param data
-     */
     @Post()
     @SerializeOptions({})
     @Permission(permission)
@@ -76,10 +63,6 @@ export class TagController {
         return this.service.create(data)
     }
 
-    /**
-     * 更新标签
-     * @param data
-     */
     @Patch()
     @SerializeOptions({})
     @Permission(permission)
@@ -90,10 +73,6 @@ export class TagController {
         return this.service.update(data)
     }
 
-    /**
-     * 批量删除标签
-     * @param data
-     */
     @Delete()
     @SerializeOptions({})
     @Permission(permission)

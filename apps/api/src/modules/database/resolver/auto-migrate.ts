@@ -4,9 +4,8 @@ import { Injectable } from '@nestjs/common'
 import { ModuleRef } from '@nestjs/core'
 import { DataSource, DataSourceOptions } from 'typeorm'
 
+import { panic } from '@/bootstrap/app'
 import { Configure } from '@/modules/config/configure'
-
-import { panic } from '@/modules/core/helpers'
 
 import { TypeormMigrationRun } from '../commands/tyeporm-migration-run'
 import { DbConfig } from '../types'
@@ -30,7 +29,10 @@ export class AutoMigrate {
                         synchronize: false,
                         migrationsRun: false,
                         logging: ['error'],
-                        migrations: [join(connect.paths.migration, '***.js')],
+                        migrations: [
+                            join(connect.paths.migration, '**/*.ts'),
+                            join(connect.paths.migration, '**/*.js'),
+                        ],
                         dropSchema: false,
                     })
                     await dataSource.initialize()

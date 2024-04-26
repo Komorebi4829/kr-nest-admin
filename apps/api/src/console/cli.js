@@ -13,8 +13,9 @@ if (existsSync(projectPath)) {
         project: projectPath,
     })
     require('tsconfig-paths/register')
-    const { createOptions } = require('../constants')
-    const { buildCli, createApp } = require('../modules/core/helpers')
+    const { createOptions } = require('../appConfigs')
+    const { createApp } = require('../bootstrap/app')
+    const { buildCli } = require('../bootstrap/command')
 
     buildCli(createApp(createOptions))
 }

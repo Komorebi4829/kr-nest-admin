@@ -4,11 +4,10 @@ import { isNil, omit } from 'lodash'
 
 import { EntityNotFoundError } from 'typeorm'
 
-import { BaseService } from '@/modules/database/base'
+import { BaseService } from '@/helpers/BaseClass'
+import { PaginateWithTrashedDto } from '@/helpers/dtos'
 import { SelectTrashMode } from '@/modules/database/constants'
 import { treePaginate } from '@/modules/database/helpers'
-
-import { PaginateWithTrashedDto } from '@/modules/restful/dtos'
 
 import { CreateCategoryDto, QueryCategoryTreeDto, UpdateCategoryDto } from '../dtos'
 import { CategoryEntity } from '../entities'
@@ -20,9 +19,6 @@ export class CategoryService extends BaseService<CategoryEntity, CategoryReposit
         super(repository)
     }
 
-    /**
-     * 查询分类树
-     */
     async findTrees(options: QueryCategoryTreeDto) {
         const { trashed = SelectTrashMode.NONE } = options
         return this.repository.findTrees({
@@ -31,10 +27,6 @@ export class CategoryService extends BaseService<CategoryEntity, CategoryReposit
         })
     }
 
-    /**
-     * 获取分页数据
-     * @param options 分页选项
-     */
     async paginate(options: PaginateWithTrashedDto) {
         const { trashed = SelectTrashMode.NONE } = options
         const tree = await this.repository.findTrees({
@@ -45,10 +37,6 @@ export class CategoryService extends BaseService<CategoryEntity, CategoryReposit
         return treePaginate(options, data)
     }
 
-    /**
-     * 获取数据详情
-     * @param id
-     */
     async detail(id: string) {
         return this.repository.findOneOrFail({
             where: { id },
@@ -56,10 +44,6 @@ export class CategoryService extends BaseService<CategoryEntity, CategoryReposit
         })
     }
 
-    /**
-     * 新增分类
-     * @param data
-     */
     async create(data: CreateCategoryDto) {
         const item = await this.repository.save({
             ...data,
@@ -68,10 +52,6 @@ export class CategoryService extends BaseService<CategoryEntity, CategoryReposit
         return this.detail(item.id)
     }
 
-    /**
-     * 更新分类
-     * @param data
-     */
     async update(data: UpdateCategoryDto) {
         await this.repository.update(data.id, omit(data, ['id', 'parent']))
         await this.detail(data.id)
@@ -84,7 +64,7 @@ export class CategoryService extends BaseService<CategoryEntity, CategoryReposit
             (!isNil(item.parent) && !isNil(parent) && item.parent.id !== parent.id) ||
             (isNil(item.parent) && !isNil(parent)) ||
             (!isNil(item.parent) && isNil(parent))
-        // 父分类单独更新
+
         if (parent !== undefined && shouldUpdateParent) {
             item.parent = parent
             await this.repository.save(item, { reload: true })
@@ -92,11 +72,6 @@ export class CategoryService extends BaseService<CategoryEntity, CategoryReposit
         return item
     }
 
-    /**
-     * 获取请求传入的父分类
-     * @param current 当前分类的ID
-     * @param id
-     */
     protected async getParent(current?: string, parentId?: string) {
         if (current === parentId) return undefined
         let parent: CategoryEntity | undefined

@@ -53,9 +53,8 @@ export class PostEntity extends BaseEntity {
     @Expose()
     @Column({
         comment: '文章类型',
-        type: 'varchar',
-        // 如果是mysql或者postgresql你可以使用enum类型
-        // enum: PostBodyType,
+        type: 'enum',
+        enum: PostBodyType,
         default: PostBodyType.MD,
     })
     type: PostBodyType
@@ -91,9 +90,6 @@ export class PostEntity extends BaseEntity {
     })
     deletedAt: Date
 
-    /**
-     * 通过queryBuilder生成的评论数量(虚拟字段)
-     */
     @Expose()
     commentCount: number
 

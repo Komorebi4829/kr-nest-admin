@@ -2,9 +2,9 @@ import { Controller, Get, Query, SerializeOptions, Param, ParseUUIDPipe } from '
 
 import { ApiTags } from '@nestjs/swagger'
 
-import { Depends } from '@/modules/restful/decorators'
+import { Depends } from '@/helpers/decorators'
 
-import { PaginateDto } from '@/modules/restful/dtos'
+import { PaginateDto } from '@/helpers/dtos'
 
 import { Guest } from '@/modules/user/decorators'
 
@@ -17,10 +17,6 @@ import { TagService } from '../services'
 export class TagController {
     constructor(protected service: TagService) {}
 
-    /**
-     * 分页查询标签列表
-     * @param options
-     */
     @Get()
     @SerializeOptions({})
     @Guest()
@@ -31,10 +27,6 @@ export class TagController {
         return this.service.paginate(options)
     }
 
-    /**
-     * 查询标签详情
-     * @param id
-     */
     @Get(':id')
     @SerializeOptions({})
     @Guest()

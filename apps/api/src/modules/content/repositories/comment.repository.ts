@@ -1,7 +1,7 @@
 import { isNil } from 'lodash'
 import { FindTreeOptions, SelectQueryBuilder } from 'typeorm'
 
-import { BaseTreeRepository } from '@/modules/database/base'
+import { BaseTreeRepository } from '@/helpers/BaseClass'
 import { CustomRepository } from '@/modules/database/decorators'
 
 import { QueryParams } from '@/modules/database/types'
@@ -14,9 +14,6 @@ export class CommentRepository extends BaseTreeRepository<CommentEntity> {
 
     protected orderBy = 'createdAt'
 
-    /**
-     * 构建基础查询器
-     */
     buildBaseQB(qb: SelectQueryBuilder<CommentEntity>): SelectQueryBuilder<CommentEntity> {
         return super
             .buildBaseQB(qb)

@@ -1,5 +1,4 @@
-import { createOptions } from './constants'
-import { listened } from './modules/core/constants'
-import { createApp, startApp } from './modules/core/helpers/app'
+import { createOptions } from './appConfigs'
+import { startApp, createApp, listened } from './bootstrap/app'
 
 startApp(createApp(createOptions), listened)

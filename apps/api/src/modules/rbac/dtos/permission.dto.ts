@@ -1,18 +1,13 @@
 import { IsOptional, IsUUID } from 'class-validator'
 
-import { DtoValidation } from '@/modules/core/decorators'
-
+import { DtoValidation } from '@/helpers/decorators'
+import { PaginateDto } from '@/helpers/dtos'
 import { IsDataExist } from '@/modules/database/constraints'
-
-import { PaginateDto } from '@/modules/restful/dtos'
 
 import { RoleEntity } from '../entities'
 
 @DtoValidation({ type: 'query' })
-export class QueryPermssionDto extends PaginateDto {
-    /**
-     * 角色ID:通过角色过滤权限列表
-     */
+export class QueryPermissionDto extends PaginateDto {
     @IsDataExist(RoleEntity, {
         groups: ['update'],
         message: '指定的角色不存在',

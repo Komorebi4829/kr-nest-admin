@@ -39,27 +39,27 @@ export class UniqueTreeExistConstraint implements ValidatorConstraintInterface {
             condition.findKey = condition.ignore
         }
         if (!condition.entity) return false
-        // 在传入的dto数据中获取需要忽略的字段的值
+
         const ignoreValue = (args.object as any)[condition.ignore]
-        // 查询条件字段的值
+
         const keyValue = (args.object as any)[condition.findKey]
         if (!ignoreValue || !keyValue) return false
         const repo = this.dataSource.getTreeRepository(condition.entity)
-        // 根据查询条件查询出当前验证的数据
+
         const item = await repo.findOne({
             where: { [condition.findKey]: keyValue },
             relations: ['parent'],
         })
-        // 没有此数据则验证失败
+
         if (!item) return false
-        // 如果验证数据没有parent则把所有顶级分类作为验证数据否则就把同一个父分类下的子分类作为验证数据
+
         const rows: any[] = await repo.find({
             where: {
                 parent: !item.parent ? null : { id: item.parent.id },
             },
             withDeleted: true,
         })
-        // 在忽略本身数据后如果同级别其它数据与验证的queryProperty的值相同则验证失败
+
         return !rows.find(
             (row) => row[condition.property] === value && row[condition.ignore] !== ignoreValue,
         )

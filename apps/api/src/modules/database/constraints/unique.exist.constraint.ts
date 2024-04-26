@@ -36,15 +36,15 @@ export class UniqueExistContraint implements ValidatorConstraintInterface {
                   entity: args.constraints[0],
               }) as unknown as Required<Condition>
         if (!condition.entity) return false
-        // 在传入的dto数据中获取需要忽略的字段的值
+
         const ignoreValue = (args.object as any)[
             isNil(condition.ignoreKey) ? condition.ignore : condition.ignoreKey
         ]
-        // 如果忽略字段不存在则验证失败
+
         if (ignoreValue === undefined) return false
-        // 通过entity获取repository
+
         const repo = this.dataSource.getRepository(condition.entity)
-        // 查询忽略字段之外的数据是否对queryProperty的值唯一
+
         return isNil(
             await repo.findOne({
                 where: {

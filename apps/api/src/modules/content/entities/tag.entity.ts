@@ -21,9 +21,6 @@ export class TagEntity {
     @Column({ comment: '标签描述', nullable: true })
     description?: string
 
-    /**
-     * 通过queryBuilder生成的文章数量(虚拟字段)
-     */
     @Expose()
     postCount: number
 

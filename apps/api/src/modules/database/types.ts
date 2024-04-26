@@ -14,9 +14,10 @@ import {
 
 import { Arguments } from 'yargs'
 
+import { BaseRepository, BaseTreeRepository } from '@/helpers/BaseClass'
+
 import { Configure } from '../config/configure'
 
-import { BaseRepository, BaseTreeRepository } from './base'
 import { OrderType, SelectTrashMode } from './constants'
 import { DataFactory } from './resolver/data.factory'
 

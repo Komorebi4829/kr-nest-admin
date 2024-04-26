@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common'
 
-import { Configure } from '../config/configure'
+import { panic } from '@/bootstrap/app'
 
-import { panic } from '../core/helpers'
+import { Configure } from '../config/configure'
 
 import { MeilliService } from './meilli.service'
 

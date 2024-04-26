@@ -19,9 +19,6 @@ import { PermissionEntity, RoleEntity } from '@/modules/rbac/entities'
 
 import { AccessTokenEntity } from './access-token.entity'
 
-/**
- * 用户模型
- */
 @Exclude()
 @Entity('users')
 export class UserEntity {

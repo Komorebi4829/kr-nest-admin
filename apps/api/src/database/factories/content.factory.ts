@@ -1,9 +1,9 @@
 import * as fakerjs from '@faker-js/faker'
 
+import { getTime } from '@/bootstrap/utils'
 import { Configure } from '@/modules/config/configure'
 
 import { CategoryEntity, CommentEntity, PostEntity, TagEntity } from '@/modules/content/entities'
-import { getTime } from '@/modules/core/helpers'
 import { defineFactory, getFakerLocales } from '@/modules/database/helpers'
 import { UserEntity } from '@/modules/user/entities'
 

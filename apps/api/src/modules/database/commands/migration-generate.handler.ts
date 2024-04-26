@@ -5,8 +5,9 @@ import { DataSource, DataSourceOptions } from 'typeorm'
 
 import { Arguments } from 'yargs'
 
+import { panic } from '@/bootstrap/app'
+import { getRandomCharString } from '@/bootstrap/utils'
 import { Configure } from '@/modules/config/configure'
-import { getRandomCharString, panic } from '@/modules/core/helpers'
 
 import { DbConfig, MigrationGenerateArguments } from '../types'
 

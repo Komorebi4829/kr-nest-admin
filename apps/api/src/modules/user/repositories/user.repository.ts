@@ -1,4 +1,4 @@
-import { BaseRepository } from '@/modules/database/base'
+import { BaseRepository } from '@/helpers/BaseClass'
 import { CustomRepository } from '@/modules/database/decorators'
 
 import { UserEntity } from '../entities/user.entity'

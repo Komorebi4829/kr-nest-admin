@@ -2,11 +2,11 @@ import { Body, Controller, Delete, Get, Query, SerializeOptions } from '@nestjs/
 
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
+import { Depends } from '@/helpers/decorators'
+import { DeleteDto } from '@/helpers/dtos'
 import { PermissionAction } from '@/modules/rbac/constants'
 import { Permission } from '@/modules/rbac/decorators'
 import { PermissionChecker } from '@/modules/rbac/types'
-import { Depends } from '@/modules/restful/decorators'
-import { DeleteDto } from '@/modules/restful/dtos'
 
 import { ContentModule } from '../../content.module'
 import { QueryCommentDto } from '../../dtos'
@@ -15,6 +15,7 @@ import { CommentService } from '../../services'
 
 const permission: PermissionChecker = async (ab) =>
     ab.can(PermissionAction.MANAGE, CommentEntity.name)
+
 @ApiTags('评论管理')
 @ApiBearerAuth()
 @Depends(ContentModule)
@@ -22,10 +23,6 @@ const permission: PermissionChecker = async (ab) =>
 export class CommentController {
     constructor(protected service: CommentService) {}
 
-    /**
-     * 查询评论列表
-     * @param query
-     */
     @Get()
     @SerializeOptions({ groups: ['comment-list'] })
     @Permission(permission)
@@ -36,10 +33,6 @@ export class CommentController {
         return this.service.paginate(query)
     }
 
-    /**
-     * 批量删除评论
-     * @param data
-     */
     @Delete()
     @SerializeOptions({ groups: ['comment-list'] })
     @Permission(permission)

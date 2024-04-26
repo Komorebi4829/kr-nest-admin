@@ -22,16 +22,16 @@ export class DataExistConstraint implements ValidatorConstraintInterface {
     async validate(value: string, args: ValidationArguments) {
         let repo: Repository<any>
         if (!value) return true
-        // 默认对比字段是id
+
         let map = 'id'
-        // 通过传入的entity获取其repository
+
         if ('entity' in args.constraints[0]) {
             map = args.constraints[0].map ?? 'id'
             repo = this.dataSource.getRepository(args.constraints[0].entity)
         } else {
             repo = this.dataSource.getRepository(args.constraints[0])
         }
-        // 通过查询记录是否存在进行验证
+
         const item = await repo.findOne({ where: { [map]: value } })
         return !!item
     }

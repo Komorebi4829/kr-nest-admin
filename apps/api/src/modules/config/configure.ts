@@ -1,6 +1,6 @@
-import { get, has, isFunction, isNil, isObject, omit, set } from 'lodash'
+import { get, has, isArray, isFunction, isNil, isObject, omit, set } from 'lodash'
 
-import { deepMerge, isAsyncFn } from '../core/helpers'
+import { deepMerge, isAsyncFn } from '@/utils/common'
 
 import { Env } from './env'
 import { Storage } from './storage'
@@ -27,8 +27,8 @@ export class Configure {
         if (this.inited) return this
         this._env = new Env()
         await this._env.load()
-        const { enabled, filePath } = option
-        this.storage = new Storage(enabled, filePath)
+        const { filePath } = option
+        this.storage = new Storage(filePath)
         for (const key in configs) {
             this.add(key, configs[key])
         }
@@ -120,6 +120,9 @@ export class Configure {
         if (!isNil(hook)) {
             value = isAsyncFn(hook) ? await hook(this, value) : hook(this, value)
         }
+        if (this.storage.enabled) {
+            value = deepMerge(value, get(this.storage.config, key, isArray(value) ? [] : {}))
+        }
         this.set(key, value, storage && isNil(await this.get(key, null)), append)
         return this
     }
@@ -128,7 +131,10 @@ export class Configure {
         if (change || !has(this.storage.config, key)) {
             this.storage.set(key, value)
         } else if (isObject(get(this.storage.config, key))) {
-            this.storage.set(key, { ...value, ...get(this.storage.config, key) })
+            this.storage.set(
+                key,
+                deepMerge(value, get(this.storage.config, key), append ? 'merge' : 'replace'),
+            )
         }
         this.config = deepMerge(this.config, this.storage.config, append ? 'merge' : 'replace')
     }

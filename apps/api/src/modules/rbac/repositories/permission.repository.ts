@@ -1,7 +1,7 @@
-import { BaseRepository } from '@/modules/database/base'
+import { BaseRepository } from '@/helpers/BaseClass'
 import { CustomRepository } from '@/modules/database/decorators'
 
-import { PermissionEntity } from '../entities/permission.entity'
+import { PermissionEntity } from '../entities'
 
 @CustomRepository(PermissionEntity)
 export class PermissionRepository extends BaseRepository<PermissionEntity> {

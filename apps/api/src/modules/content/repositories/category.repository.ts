@@ -1,7 +1,7 @@
 import { pick, unset } from 'lodash'
 import { FindOptionsUtils, FindTreeOptions } from 'typeorm'
 
-import { BaseTreeRepository } from '@/modules/database/base'
+import { BaseTreeRepository } from '@/helpers/BaseClass'
 import { OrderType, TreeChildrenResolve } from '@/modules/database/constants'
 import { CustomRepository } from '@/modules/database/decorators'
 
@@ -15,17 +15,10 @@ export class CategoryRepository extends BaseTreeRepository<CategoryEntity> {
 
     protected _childrenResolve = TreeChildrenResolve.UP
 
-    /**
-     * 构建基础查询器
-     */
     buildBaseQB() {
         return this.createQueryBuilder('category').leftJoinAndSelect('category.parent', 'parent')
     }
 
-    /**
-     * 树形结构查询
-     * @param options
-     */
     async findTrees(
         options?: FindTreeOptions & {
             onlyTrashed?: boolean
@@ -37,10 +30,6 @@ export class CategoryRepository extends BaseTreeRepository<CategoryEntity> {
         return roots
     }
 
-    /**
-     * 查询顶级分类
-     * @param options
-     */
     findRoots(
         options?: FindTreeOptions & {
             onlyTrashed?: boolean
@@ -62,11 +51,6 @@ export class CategoryRepository extends BaseTreeRepository<CategoryEntity> {
         return qb.getMany()
     }
 
-    /**
-     * 查询后代分类
-     * @param entity
-     * @param options
-     */
     findDescendants(
         entity: CategoryEntity,
         options?: FindTreeOptions & {
@@ -84,11 +68,6 @@ export class CategoryRepository extends BaseTreeRepository<CategoryEntity> {
         return qb.getMany()
     }
 
-    /**
-     * 查询祖先分类
-     * @param entity
-     * @param options
-     */
     findAncestors(
         entity: CategoryEntity,
         options?: FindTreeOptions & {
@@ -106,11 +85,6 @@ export class CategoryRepository extends BaseTreeRepository<CategoryEntity> {
         return qb.getMany()
     }
 
-    /**
-     * 统计后代元素数量
-     * @param entity
-     * @param options
-     */
     async countDescendants(
         entity: CategoryEntity,
         options?: { withTrashed?: boolean; onlyTrashed?: boolean },
@@ -123,11 +97,6 @@ export class CategoryRepository extends BaseTreeRepository<CategoryEntity> {
         return qb.getCount()
     }
 
-    /**
-     * 统计祖先元素数量
-     * @param entity
-     * @param options
-     */
     async countAncestors(
         entity: CategoryEntity,
         options?: { withTrashed?: boolean; onlyTrashed?: boolean },
@@ -140,12 +109,6 @@ export class CategoryRepository extends BaseTreeRepository<CategoryEntity> {
         return qb.getCount()
     }
 
-    /**
-     * 打平并展开树
-     * @param trees
-     * @param depth
-     * @param parent
-     */
     async toFlatTrees(trees: CategoryEntity[], depth = 0, parent: CategoryEntity | null = null) {
         const data: Omit<CategoryEntity, 'children'>[] = []
         for (const item of trees) {

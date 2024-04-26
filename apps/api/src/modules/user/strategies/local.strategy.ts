@@ -4,9 +4,6 @@ import { Strategy } from 'passport-local'
 
 import { AuthService } from '../services/auth.service'
 
-/**
- * 用户认证本地策略
- */
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
     constructor(protected authService: AuthService) {

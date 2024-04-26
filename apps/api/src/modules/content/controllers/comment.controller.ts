@@ -4,12 +4,12 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
 import { In } from 'typeorm'
 
+import { Depends } from '@/helpers/decorators'
+import { DeleteDto } from '@/helpers/dtos'
 import { PermissionAction } from '@/modules/rbac/constants'
 import { Permission } from '@/modules/rbac/decorators'
 import { checkOwnerPermission } from '@/modules/rbac/helpers'
 import { PermissionChecker } from '@/modules/rbac/types'
-import { Depends } from '@/modules/restful/decorators'
-import { DeleteDto } from '@/modules/restful/dtos'
 
 import { Guest, ReqUser } from '@/modules/user/decorators'
 
@@ -33,16 +33,13 @@ const permissions: Record<'create' | 'owner', PermissionChecker> = {
                 }),
         }),
 }
+
 @ApiTags('评论操作')
 @Depends(ContentModule)
 @Controller('comments')
 export class CommentController {
     constructor(protected service: CommentService) {}
 
-    /**
-     * 查询评论树
-     * @param query
-     */
     @Get('tree')
     @SerializeOptions({ groups: ['comment-tree'] })
     @Guest()
@@ -53,10 +50,6 @@ export class CommentController {
         return this.service.findTrees(query)
     }
 
-    /**
-     * 查询评论列表
-     * @param query
-     */
     @Get()
     @SerializeOptions({ groups: ['comment-list'] })
     @Guest()
@@ -67,10 +60,6 @@ export class CommentController {
         return this.service.paginate(query)
     }
 
-    /**
-     * 新增评论
-     * @param data
-     */
     @Post()
     @ApiBearerAuth()
     @SerializeOptions({ groups: ['comment-detail'] })
@@ -83,10 +72,6 @@ export class CommentController {
         return this.service.create(data, author)
     }
 
-    /**
-     * 批量删除评论
-     * @param data
-     */
     @Delete()
     @ApiBearerAuth()
     @SerializeOptions({ groups: ['comment-list'] })

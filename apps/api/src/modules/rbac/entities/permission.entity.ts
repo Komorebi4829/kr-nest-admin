@@ -1,7 +1,6 @@
 import { AbilityTuple, MongoQuery, RawRuleFrom } from '@casl/ability'
 import { Exclude, Expose } from 'class-transformer'
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm'
-import type { Relation } from 'typeorm'
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, Relation } from 'typeorm'
 
 import { UserEntity } from '@/modules/user/entities'
 

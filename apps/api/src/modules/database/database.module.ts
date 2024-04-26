@@ -4,9 +4,9 @@ import { TypeOrmModule, TypeOrmModuleOptions, getDataSourceToken } from '@nestjs
 
 import { DataSource, ObjectType } from 'typeorm'
 
-import { Configure } from '../config/configure'
+import { panic } from '@/bootstrap/app'
 
-import { panic } from '../core/helpers'
+import { Configure } from '../config/configure'
 
 import { CUSTOM_REPOSITORY_METADATA } from './constants'
 import {

@@ -11,12 +11,11 @@ import {
 } from '@nestjs/common'
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
+import { Depends } from '@/helpers/decorators'
+import { DeleteWithTrashDto, RestoreDto } from '@/helpers/dtos'
 import { PermissionAction } from '@/modules/rbac/constants'
 import { Permission } from '@/modules/rbac/decorators'
 import { PermissionChecker } from '@/modules/rbac/types'
-import { Depends } from '@/modules/restful/decorators'
-
-import { DeleteWithTrashDto, RestoreDto } from '@/modules/restful/dtos'
 
 import { QueryUserDto } from '../../dtos'
 import { UserEntity } from '../../entities'
@@ -32,9 +31,6 @@ const permission: PermissionChecker = async (ab) => ab.can(PermissionAction.MANA
 export class UserController {
     constructor(protected service: UserService) {}
 
-    /**
-     * 查询用户列表
-     */
     @Get()
     @Permission(permission)
     @SerializeOptions({ groups: ['user-list'] })
@@ -45,10 +41,6 @@ export class UserController {
         return this.service.paginate(options)
     }
 
-    /**
-     * 获取用户信息
-     * @param id
-     */
     @Get(':id')
     @Permission(permission)
     @SerializeOptions({ groups: ['user-detail'] })
@@ -59,10 +51,6 @@ export class UserController {
         return this.service.detail(id)
     }
 
-    /**
-     * 批量删除用户
-     * @param data
-     */
     @Delete()
     @SerializeOptions({ groups: ['user-list'] })
     @Permission(permission)
@@ -74,10 +62,6 @@ export class UserController {
         return this.service.delete(ids, trash)
     }
 
-    /**
-     * 批量恢复用户
-     * @param data
-     */
     @Patch('restore')
     @SerializeOptions({ groups: ['user-list'] })
     @Permission(permission)

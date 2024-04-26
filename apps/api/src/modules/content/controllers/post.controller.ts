@@ -15,13 +15,13 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
 import { In, IsNull, Not } from 'typeorm'
 
+import { Depends } from '@/helpers/decorators'
+import { DeleteWithTrashDto, RestoreDto } from '@/helpers/dtos'
 import { SelectTrashMode } from '@/modules/database/constants'
 import { PermissionAction } from '@/modules/rbac/constants'
 import { Permission } from '@/modules/rbac/decorators'
 import { checkOwnerPermission } from '@/modules/rbac/helpers'
 import { PermissionChecker } from '@/modules/rbac/types'
-import { Depends } from '@/modules/restful/decorators'
-import { DeleteWithTrashDto, RestoreDto } from '@/modules/restful/dtos'
 
 import { Guest, ReqUser } from '@/modules/user/decorators'
 
@@ -52,10 +52,6 @@ const permissions: Record<'create' | 'owner', PermissionChecker> = {
 export class PostController {
     constructor(protected service: PostService) {}
 
-    /**
-     * 查询文章列表
-     * @param options
-     */
     @Get()
     @SerializeOptions({ groups: ['post-list'] })
     @Guest()
@@ -70,10 +66,6 @@ export class PostController {
         })
     }
 
-    /**
-     * 分页查询自己发布的文章列表
-     * @param options
-     */
     @Get('onwer')
     @ApiBearerAuth()
     @SerializeOptions({ groups: ['post-list'] })
@@ -88,10 +80,6 @@ export class PostController {
         })
     }
 
-    /**
-     * 查询文章详情
-     * @param id
-     */
     @Get(':id')
     @SerializeOptions({ groups: ['post-detail'] })
     @Guest()
@@ -100,14 +88,10 @@ export class PostController {
         id: string,
     ) {
         return this.service.detail(id, async (qb) =>
-            qb.andWhere({ publishedAt: Not(IsNull()), deletedAt: Not(IsNull()) }),
+            qb.andWhere({ publishedAt: Not(IsNull()), deletedAt: IsNull() }),
         )
     }
 
-    /**
-     * 查询自己发布的文章详情
-     * @param id
-     */
     @Get('owner/:id')
     @ApiBearerAuth()
     @SerializeOptions({ groups: ['post-detail'] })
@@ -119,10 +103,6 @@ export class PostController {
         return this.service.detail(id, async (qb) => qb.withDeleted())
     }
 
-    /**
-     * 新增文章
-     * @param data
-     */
     @Post()
     @ApiBearerAuth()
     @SerializeOptions({ groups: ['post-detail'] })
@@ -135,10 +115,6 @@ export class PostController {
         return this.service.create(data, author)
     }
 
-    /**
-     * 更新自己发布的文章
-     * @param data
-     */
     @Patch()
     @ApiBearerAuth()
     @SerializeOptions({ groups: ['post-detail'] })
@@ -150,10 +126,6 @@ export class PostController {
         return this.service.update(data)
     }
 
-    /**
-     * 批量删除自己发布的文章
-     * @param data
-     */
     @Delete()
     @ApiBearerAuth()
     @SerializeOptions({ groups: ['post-list'] })
@@ -166,10 +138,6 @@ export class PostController {
         return this.service.delete(ids, trash)
     }
 
-    /**
-     * 批量恢复自己发布的文章
-     * @param data
-     */
     @Patch('restore')
     @ApiBearerAuth()
     @SerializeOptions({ groups: ['post-list'] })

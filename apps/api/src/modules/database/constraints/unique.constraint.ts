@@ -21,7 +21,6 @@ export class UniqueConstraint implements ValidatorConstraintInterface {
     constructor(private dataSource: DataSource) {}
 
     async validate(value: any, args: ValidationArguments) {
-        // 获取要验证的模型和字段
         const config: Omit<Condition, 'entity'> = {
             property: args.property,
         }
@@ -33,13 +32,11 @@ export class UniqueConstraint implements ValidatorConstraintInterface {
               }) as unknown as Required<Condition>
         if (!condition.entity) return false
         try {
-            // 查询是否存在数据,如果已经存在则验证失败
             const repo = this.dataSource.getRepository(condition.entity)
             return isNil(
                 await repo.findOne({ where: { [condition.property]: value }, withDeleted: true }),
             )
         } catch (err) {
-            // 如果数据库操作异常则验证失败
             return false
         }
     }

@@ -1,12 +1,12 @@
 import { isNil } from 'lodash'
 import { DataSource, EntityManager } from 'typeorm'
 
-import { BaseSeeder } from '@/modules/database/base/seeder'
+import { BaseSeeder } from '@/helpers/BaseClass'
 import { getCustomRepository } from '@/modules/database/helpers'
 import { DbFactory } from '@/modules/database/types'
 import { SystemRoles } from '@/modules/rbac/constants'
 import { PermissionEntity, RoleEntity } from '@/modules/rbac/entities'
-import { RbacResolver } from '@/modules/rbac/rbac.resolver'
+import { RbacBootstrap } from '@/modules/rbac/rbac.bootstrap'
 import { RoleRepository } from '@/modules/rbac/repositories'
 import { AccessTokenEntity, RefreshTokenEntity, UserEntity } from '@/modules/user/entities'
 import { UserRepository } from '@/modules/user/repositories'
@@ -27,14 +27,14 @@ export default class UserSeeder extends BaseSeeder {
 
     async run(_factorier: DbFactory, _dataSource: DataSource, _em: EntityManager): Promise<any> {
         this.factorier = _factorier
-        const rbac = new RbacResolver(this.dataSource, this.configure)
+        const rbac = new RbacBootstrap(this.dataSource, this.configure)
         await rbac.syncRoles(this.em)
         await rbac.syncPermissions(this.em)
         await this.loadSuperUser(rbac)
         await this.loadUsers()
     }
 
-    private async loadSuperUser(rbac: RbacResolver) {
+    private async loadSuperUser(rbac: RbacBootstrap) {
         const repository = getCustomRepository(this.dataSource, UserRepository)
         const creator = await repository.findOneBy({ username: 'superAdmin' })
         const userFactory = this.factorier(UserEntity)
@@ -42,7 +42,7 @@ export default class UserSeeder extends BaseSeeder {
             await userFactory<IUserFactoryOptions>({
                 username: 'superAdmin',
                 nickname: 'superAdmin',
-                password: '123456aA$',
+                password: '123456sS$',
             }).create({}, 'username')
         }
         await rbac.syncSuperAdmin(this.em)
@@ -58,20 +58,21 @@ export default class UserSeeder extends BaseSeeder {
         const count = await repository.count()
         if (count < 2) {
             await userFactory<IUserFactoryOptions>({
-                username: 'xiaoming',
-                nickname: '小明',
-                phone: '+86.18605850000',
-                password: '123456aA$',
+                username: 'libai',
+                nickname: '李白',
+                phone: '+86.13012345678',
+                password: '123456a!/',
                 roles,
             }).create({}, 'username')
 
             await userFactory<IUserFactoryOptions>({
-                username: 'lige',
-                nickname: '李哥',
-                phone: '+86.15955959999',
-                password: '123456aA$',
+                username: 'sushi',
+                nickname: '苏轼',
+                phone: '+86.13012345679',
+                password: '123456a!/',
                 roles,
             }).create({}, 'username')
+
             await userFactory<IUserFactoryOptions>().createMany(15, { roles }, 'username')
         }
     }

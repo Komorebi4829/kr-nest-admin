@@ -1,9 +1,9 @@
 import { Controller, Get, Param, ParseUUIDPipe, Query, SerializeOptions } from '@nestjs/common'
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
-import { Depends } from '@/modules/restful/decorators'
+import { Depends } from '@/helpers/decorators'
 
-import { PaginateWithTrashedDto } from '@/modules/restful/dtos'
+import { PaginateWithTrashedDto } from '@/helpers/dtos'
 
 import { PermissionAction } from '../../constants'
 import { Permission } from '../../decorators'
@@ -22,10 +22,6 @@ const permission: PermissionChecker = async (ab) =>
 export class PermissionController {
     constructor(protected service: PermissionService) {}
 
-    /**
-     * 分页列表查询
-     * @param options
-     */
     @Get()
     @SerializeOptions({ groups: ['permssion-list'] })
     @Permission(permission)
@@ -36,10 +32,6 @@ export class PermissionController {
         return this.service.paginate(options)
     }
 
-    /**
-     * 分页详解查询
-     * @param id
-     */
     @Get(':id')
     @SerializeOptions({ groups: ['permssion-detail'] })
     @Permission(permission)

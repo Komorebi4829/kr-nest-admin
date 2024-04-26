@@ -7,7 +7,7 @@ import { UserEntity } from '../user/entities'
 import { UserRepository } from '../user/repositories'
 
 import { PermissionEntity, RoleEntity } from './entities'
-import { RbacResolver } from './rbac.resolver'
+import { RbacBootstrap } from './rbac.bootstrap'
 
 export type PermissionChecker = (
     ability: MongoAbility,
@@ -28,7 +28,7 @@ export type PermissionType<A extends AbilityTuple, C extends MongoQuery> = Pick<
         }
     }
 export type CheckerParams = {
-    resolver: RbacResolver
+    resolver: RbacBootstrap
     repository: UserRepository
     checkers: PermissionChecker[]
     moduleRef?: ModuleRef

@@ -4,13 +4,12 @@ import { isArray, isFunction, isNil, omit, pick } from 'lodash'
 
 import { EntityNotFoundError, In, IsNull, Not, SelectQueryBuilder } from 'typeorm'
 
-import { BaseService } from '@/modules/database/base'
+import { BaseService } from '@/helpers/BaseClass'
 import { SelectTrashMode } from '@/modules/database/constants'
 import { paginate } from '@/modules/database/helpers'
 import { QueryHook } from '@/modules/database/types'
 
 import { UserEntity } from '@/modules/user/entities'
-
 import { UserRepository } from '@/modules/user/repositories'
 
 import { PostOrderType } from '../constants'
@@ -23,14 +22,10 @@ import type { SearchType } from '../types'
 import { CategoryService } from './category.service'
 import { SearchService } from './search.service'
 
-// 文章查询接口
 type FindParams = {
     [key in keyof Omit<QueryPostDto, 'limit' | 'page'>]: QueryPostDto[key]
 }
 
-/**
- * 文章数据操作
- */
 @Injectable()
 export class PostService extends BaseService<PostEntity, PostRepository, FindParams> {
     protected enableTrash = true
@@ -47,11 +42,6 @@ export class PostService extends BaseService<PostEntity, PostRepository, FindPar
         super(repository)
     }
 
-    /**
-     * 获取分页数据
-     * @param options 分页选项
-     * @param callback 添加额外的查询
-     */
     async paginate(options: QueryPostDto, callback?: QueryHook<PostEntity>) {
         if (!isNil(this.searchService) && !isNil(options.search) && this.search_type === 'meilli') {
             return this.searchService.search(
@@ -63,11 +53,6 @@ export class PostService extends BaseService<PostEntity, PostRepository, FindPar
         return paginate(qb, options)
     }
 
-    /**
-     * 查询单篇文章
-     * @param id
-     * @param callback 添加额外的查询
-     */
     async detail(id: string, callback?: QueryHook<PostEntity>) {
         let qb = this.repository.buildBaseQB()
         qb.where(`post.id = :id`, { id })
@@ -77,35 +62,37 @@ export class PostService extends BaseService<PostEntity, PostRepository, FindPar
         return item
     }
 
-    /**
-     * 创建文章
-     * @param data
-     */
     async create(data: CreatePostDto, author: ClassToPlain<UserEntity>) {
+        let publishedAt: Date | null
+        // if (!isNil(data.publish)) {
+        //     publishedAt = data.publish ? new Date() : null
+        // }
+        const authorId = isNil((data as CreatePostDto).author)
+            ? author.id
+            : (data as CreatePostDto).author
+
         const createPostDto = {
-            ...data,
-            // 文章作者
-            author: await this.userRepository.findOneByOrFail({ id: author.id }),
-            // 文章所属的分类
+            ...omit(data, ['publish', 'author']),
+
+            author: await this.userRepository.findOneByOrFail({ id: authorId }),
+
             category: !isNil(data.category)
                 ? await this.categoryRepository.findOneOrFail({ where: { id: data.category } })
                 : null,
-            // 文章关联的标签
+
             tags: isArray(data.tags)
                 ? await this.tagRepository.findBy({
                       id: In(data.tags),
                   })
                 : [],
+            publishedAt,
         }
         const item = await this.repository.save(createPostDto)
-        if (!isNil(this.searchService)) await this.searchService.create(item)
-        return this.detail(item.id)
+        const result = await this.detail(item.id)
+        if (!isNil(this.searchService)) await this.searchService.create(result)
+        return result
     }
 
-    /**
-     * 更新文章
-     * @param data
-     */
     async update(data: UpdatePostDto) {
         const post = await this.detail(data.id)
         if (!isNil(data.author)) {
@@ -114,7 +101,6 @@ export class PostService extends BaseService<PostEntity, PostRepository, FindPar
             await this.repository.save(author, { reload: true })
         }
         if (data.category !== undefined) {
-            // 更新分类
             const category = isNil(data.category)
                 ? null
                 : await this.categoryRepository.findOneByOrFail({ id: data.category })
@@ -122,7 +108,6 @@ export class PostService extends BaseService<PostEntity, PostRepository, FindPar
             await this.repository.save(post)
         }
         if (isArray(data.tags)) {
-            // 更新文章关联标签
             await this.repository
                 .createQueryBuilder('post')
                 .relation(PostEntity, 'tags')
@@ -135,10 +120,6 @@ export class PostService extends BaseService<PostEntity, PostRepository, FindPar
         return result
     }
 
-    /**
-     * 删除文章
-     * @param id
-     */
     async delete(ids: string[], trash?: boolean) {
         const items = await this.repository.find({
             where: { id: In(ids) },
@@ -146,7 +127,6 @@ export class PostService extends BaseService<PostEntity, PostRepository, FindPar
         })
         let result: PostEntity[] = []
         if (trash) {
-            // 对已软删除的数据再次删除时直接通过remove方法从数据库中清除
             const directs = items.filter((item) => !isNil(item.deletedAt))
             const softs = items.filter((item) => isNil(item.deletedAt))
             result = [
@@ -166,16 +146,12 @@ export class PostService extends BaseService<PostEntity, PostRepository, FindPar
         return result
     }
 
-    /**
-     * 恢复文章
-     * @param ids
-     */
     async restore(ids: string[]) {
         const items = await this.repository.find({
             where: { id: In(ids) },
             withDeleted: true,
         })
-        // 过滤掉不在回收站中的数据
+
         const trasheds = items.filter((item) => !isNil(item)).map((item) => item.id)
         if (trasheds.length < 1) return []
         await this.repository.restore(trasheds)
@@ -185,12 +161,6 @@ export class PostService extends BaseService<PostEntity, PostRepository, FindPar
         return qb.getMany()
     }
 
-    /**
-     * 构建文章列表查询器
-     * @param qb 初始查询构造器
-     * @param options 排查分页选项后的查询选项
-     * @param callback 添加额外的查询
-     */
     protected async buildListQuery(
         qb: SelectQueryBuilder<PostEntity>,
         options: FindParams,
@@ -204,7 +174,7 @@ export class PostService extends BaseService<PostEntity, PostRepository, FindPar
             isPublished,
             trashed = SelectTrashMode.NONE,
         } = options
-        // 是否查询回收站
+
         if (trashed === SelectTrashMode.ALL || trashed === SelectTrashMode.ONLY) {
             qb.withDeleted()
             if (trashed === SelectTrashMode.ONLY) qb.where(`post.deletedAt is not null`)
@@ -222,7 +192,7 @@ export class PostService extends BaseService<PostEntity, PostRepository, FindPar
         this.queryOrderBy(qb, orderBy)
         if (category) await this.queryByCategory(category, qb)
         if (!isNil(options.search)) this.buildSearchQuery(qb, options.search)
-        // 查询某个标签关联的文章
+
         if (tag) qb.where('tags.id = :id', { id: tag })
         if (author) qb.where('author.id = :id', { id: author })
         if (callback) return callback(qb)
@@ -272,11 +242,6 @@ export class PostService extends BaseService<PostEntity, PostRepository, FindPar
         return qb
     }
 
-    /**
-     *  对文章进行排序的Query构建
-     * @param qb
-     * @param orderBy 排序方式
-     */
     protected queryOrderBy(qb: SelectQueryBuilder<PostEntity>, orderBy?: PostOrderType) {
         switch (orderBy) {
             case PostOrderType.CREATED:
@@ -298,11 +263,6 @@ export class PostService extends BaseService<PostEntity, PostRepository, FindPar
         }
     }
 
-    /**
-     * 查询出分类及其后代分类下的所有文章的Query构建
-     * @param id
-     * @param qb
-     */
     protected async queryByCategory(id: string, qb: SelectQueryBuilder<PostEntity>) {
         const root = await this.categoryService.detail(id)
         const tree = await this.categoryRepository.findDescendantsTree(root)

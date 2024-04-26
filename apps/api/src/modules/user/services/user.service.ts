@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common'
 import { isArray, isNil } from 'lodash'
 import { EntityNotFoundError, SelectQueryBuilder, DataSource } from 'typeorm'
 
+import { BaseService } from '@/helpers/BaseClass'
 import { Configure } from '@/modules/config/configure'
-import { BaseService } from '@/modules/database/base'
 import { QueryHook } from '@/modules/database/types'
 
 import { SystemRoles } from '@/modules/rbac/constants'
@@ -14,9 +14,6 @@ import { CreateUserDto, QueryUserDto, UpdateUserDto } from '../dtos/user.dto'
 import { UserEntity } from '../entities/user.entity'
 import { UserRepository } from '../repositories/user.repository'
 
-/**
- * 用户管理服务
- */
 @Injectable()
 export class UserService extends BaseService<UserEntity, UserRepository> {
     protected enable_trash = true
@@ -30,10 +27,6 @@ export class UserService extends BaseService<UserEntity, UserRepository> {
         super(userRepository)
     }
 
-    /**
-     * 创建用户
-     * @param data
-     */
     async create({ roles, permissions, ...data }: CreateUserDto) {
         const user = await this.userRepository.save(data, { reload: true })
         if (isArray(roles) && roles.length > 0) {
@@ -54,10 +47,6 @@ export class UserService extends BaseService<UserEntity, UserRepository> {
         return this.detail(user.id)
     }
 
-    /**
-     * 更新用户
-     * @param data
-     */
     async update({ roles, permissions, ...data }: UpdateUserDto) {
         const updated = await this.userRepository.save(data, { reload: true })
         const user = await this.detail(updated.id)
@@ -81,11 +70,6 @@ export class UserService extends BaseService<UserEntity, UserRepository> {
         return this.detail(user.id)
     }
 
-    /**
-     * 根据用户用户凭证查询用户
-     * @param credential
-     * @param callback
-     */
     async findOneByCredential(credential: string, callback?: QueryHook<UserEntity>) {
         let query = this.userRepository.buildBaseQB()
         if (callback) {
@@ -98,11 +82,6 @@ export class UserService extends BaseService<UserEntity, UserRepository> {
             .getOne()
     }
 
-    /**
-     * 根据对象条件查找用户,不存在则抛出异常
-     * @param condition
-     * @param callback
-     */
     async findOneByCondition(condition: { [key: string]: any }, callback?: QueryHook<UserEntity>) {
         let query = this.userRepository.buildBaseQB()
         if (callback) {
@@ -143,10 +122,6 @@ export class UserService extends BaseService<UserEntity, UserRepository> {
         return this.userRepository.findOneOrFail({ where: { id: user.id } })
     }
 
-    /**
-     * 根据同步角色权限
-     * @param user
-     */
     protected async syncRoles(user: UserEntity) {
         const roleRelation = this.userRepository.createQueryBuilder().relation('roles').of(user)
         const roleNames = (user.roles ?? []).map(({ name }) => name)
@@ -154,8 +129,7 @@ export class UserService extends BaseService<UserEntity, UserRepository> {
             roleNames.length <= 0 ||
             (!roleNames.includes(SystemRoles.USER) && !roleNames.includes(SystemRoles.SUPER_ADMIN))
         const isSuperAdmin = roleNames.includes(SystemRoles.SUPER_ADMIN)
-        // 为普通用户添加custom-user角色
-        // 为超级管理员添加super-admin角色
+
         if (noRoles) {
             const customRole = await this.roleRepository.findOne({
                 relations: ['users'],

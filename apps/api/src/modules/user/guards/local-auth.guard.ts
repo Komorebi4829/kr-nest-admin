@@ -5,9 +5,6 @@ import { validateOrReject } from 'class-validator'
 
 import { CredentialDto } from '../dtos/auth.dto'
 
-/**
- * 用户登录守卫
- */
 @Injectable()
 export class LocalAuthGuard extends AuthGuard('local') {
     async canActivate(context: ExecutionContext) {

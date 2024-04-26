@@ -2,9 +2,9 @@ import { Controller, Get, Param, ParseUUIDPipe, Query, SerializeOptions } from '
 
 import { ApiTags } from '@nestjs/swagger'
 
-import { Depends } from '@/modules/restful/decorators'
+import { Depends } from '@/helpers/decorators'
 
-import { PaginateDto } from '@/modules/restful/dtos'
+import { PaginateDto } from '@/helpers/dtos'
 import { Guest } from '@/modules/user/decorators'
 
 import { ContentModule } from '../content.module'
@@ -16,10 +16,6 @@ import { CategoryService } from '../services'
 export class CategoryController {
     constructor(protected service: CategoryService) {}
 
-    /**
-     * 查询分类树
-     * @param options
-     */
     @Get('tree')
     @SerializeOptions({ groups: ['category-tree'] })
     @Guest()
@@ -27,10 +23,6 @@ export class CategoryController {
         return this.service.findTrees({})
     }
 
-    /**
-     * 分页查询分类列表
-     * @param options
-     */
     @Get()
     @SerializeOptions({ groups: ['category-list'] })
     @Guest()
@@ -38,10 +30,6 @@ export class CategoryController {
         return this.service.paginate(options)
     }
 
-    /**
-     * 分页详解查询
-     * @param id
-     */
     @Get(':id')
     @SerializeOptions({ groups: ['category-detail'] })
     @Guest()

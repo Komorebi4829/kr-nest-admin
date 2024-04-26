@@ -2,8 +2,8 @@ import chalk from 'chalk'
 import { isNil } from 'lodash'
 import ora from 'ora'
 
+import { panic } from '@/bootstrap/app'
 import { Configure } from '@/modules/config/configure'
-import { panic } from '@/modules/core/helpers'
 
 import { runSeeder } from '../helpers'
 import { DbOptions, SeederOptions } from '../types'

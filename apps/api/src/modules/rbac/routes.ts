@@ -1,4 +1,4 @@
-import { RouteOption, TagOption } from '../restful/types'
+import { RouteOption, TagOption } from '@/helpers/types'
 
 import * as controllers from './controllers'
 import * as manageControllers from './controllers/manage'
@@ -21,10 +21,10 @@ export const createRbacApi = () => {
         ],
     }
     const tags: Record<'app' | 'manage', Array<string | TagOption>> = {
-        app: [{ name: '角色管理', description: '查询角色信息' }],
+        app: [{ name: '角色查询', description: '查询角色信息' }],
         manage: [
             { name: '角色管理', description: '管理角色信息' },
-            { name: '权限信息', description: '查看权限信息' },
+            { name: '权限查询', description: '查询权限信息' },
         ],
     }
     return { routes, tags }

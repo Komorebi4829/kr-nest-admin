@@ -6,8 +6,8 @@ import ora from 'ora'
 import { DataSource, DataSourceOptions } from 'typeorm'
 import { Arguments } from 'yargs'
 
+import { panic } from '@/bootstrap/app'
 import { Configure } from '@/modules/config/configure'
-import { panic } from '@/modules/core/helpers'
 
 import { DbConfig, MigrationRevertArguments } from '../types'
 

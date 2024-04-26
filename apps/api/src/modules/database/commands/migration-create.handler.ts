@@ -3,8 +3,8 @@ import { isNil } from 'lodash'
 import ora from 'ora'
 import { Arguments } from 'yargs'
 
+import { panic } from '@/bootstrap/app'
 import { Configure } from '@/modules/config/configure'
-import { panic } from '@/modules/core/helpers'
 
 import { DbOptions, MigrationCreateArguments, TypeormOption } from '../types'
 

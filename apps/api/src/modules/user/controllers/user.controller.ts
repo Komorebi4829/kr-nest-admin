@@ -3,8 +3,8 @@ import { ApiTags } from '@nestjs/swagger'
 
 import { IsNull, Not } from 'typeorm'
 
+import { Depends } from '@/helpers/decorators'
 import { SelectTrashMode } from '@/modules/database/constants'
-import { Depends } from '@/modules/restful/decorators'
 
 import { Guest } from '../decorators'
 import { AppQueryUserDto } from '../dtos'
@@ -17,9 +17,6 @@ import { UserModule } from '../user.module'
 export class UserQueryController {
     constructor(protected service: UserService) {}
 
-    /**
-     * 查询用户列表
-     */
     @Get()
     @SerializeOptions({ groups: ['user-list'] })
     @Guest()
@@ -34,10 +31,6 @@ export class UserQueryController {
         })
     }
 
-    /**
-     * 查询用户信息
-     * @param id
-     */
     @Get(':id')
     @Guest()
     @SerializeOptions({ groups: ['user-detail'] })

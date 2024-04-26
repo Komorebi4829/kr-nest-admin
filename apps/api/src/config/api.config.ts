@@ -1,9 +1,9 @@
+import { ApiConfig, VersionOption } from '@/helpers/types'
 import { Configure } from '@/modules/config/configure'
 import { ConfigureFactory } from '@/modules/config/types'
 
 import { createContentApi } from '@/modules/content/routes'
 import { createRbacApi } from '@/modules/rbac/routes'
-import { ApiConfig, VersionOption } from '@/modules/restful/types'
 import { createUserApi } from '@/modules/user/routes'
 
 export const api: ConfigureFactory<ApiConfig> = {
@@ -11,8 +11,8 @@ export const api: ConfigureFactory<ApiConfig> = {
         title: configure.env.get('API_TITLE', 'KR Admin'),
         description: configure.env.get('API_DESCRIPTION', 'KR Nest Admin Management System'),
         auth: true,
-        docuri: 'api/docs',
-        default: configure.env.get('API_DEFAULT_VERSION', 'v1'),
+        docuri: 'docs',
+        versionDefault: configure.env.get('API_DEFAULT_VERSION', 'v1'),
         enabled: [],
         versions: { v1: await v1(configure) },
     }),
@@ -37,7 +37,7 @@ export const v1 = async (configure: Configure): Promise<VersionOption> => {
             },
             {
                 name: 'manage',
-                path: 'manage',
+                path: 'manage', // doc uri
                 controllers: [],
                 doc: {
                     title: '管理端接口',

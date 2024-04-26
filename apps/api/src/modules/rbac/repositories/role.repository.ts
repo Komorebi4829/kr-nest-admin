@@ -1,7 +1,7 @@
-import { BaseRepository } from '@/modules/database/base'
+import { BaseRepository } from '@/helpers/BaseClass'
 import { CustomRepository } from '@/modules/database/decorators'
 
-import { RoleEntity } from '../entities/role.entity'
+import { RoleEntity } from '../entities'
 
 @CustomRepository(RoleEntity)
 export class RoleRepository extends BaseRepository<RoleEntity> {
@@ -10,7 +10,7 @@ export class RoleRepository extends BaseRepository<RoleEntity> {
     buildBaseQuery() {
         return this.createQueryBuilder(this.qbName).leftJoinAndSelect(
             `${this.qbName}.permissions`,
-            'permssions',
+            'permissions',
         )
     }
 }

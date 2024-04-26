@@ -1,17 +1,17 @@
 import { DynamicModule, Module, forwardRef } from '@nestjs/common'
 
 import { getDataSourceToken } from '@nestjs/typeorm'
+
 import { DataSource } from 'typeorm'
 
 import { Configure } from '../config/configure'
 import { DatabaseModule } from '../database/database.module'
 import { addEntities, addSubscribers } from '../database/helpers'
-
 import { UserModule } from '../user/user.module'
 
 import * as entities from './entities'
 import { RbacGuard } from './guards'
-import { RbacResolver } from './rbac.resolver'
+import { RbacBootstrap } from './rbac.bootstrap'
 import * as repositories from './repositories'
 import * as services from './services'
 import * as subscribers from './subscribers'
@@ -31,9 +31,9 @@ export class RbacModule {
                 ...(await addSubscribers(configure, Object.values(subscribers))),
                 RbacGuard,
                 {
-                    provide: RbacResolver,
+                    provide: RbacBootstrap,
                     useFactory: async (dataSource: DataSource) => {
-                        const resolver = new RbacResolver(dataSource, configure)
+                        const resolver = new RbacBootstrap(dataSource, configure)
                         resolver.setOptions({})
                         return resolver
                     },
@@ -41,7 +41,7 @@ export class RbacModule {
                 },
             ],
             exports: [
-                RbacResolver,
+                RbacBootstrap,
                 ...Object.values(services),
                 DatabaseModule.forRepository(Object.values(repositories)),
             ],

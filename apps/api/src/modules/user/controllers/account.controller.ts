@@ -12,7 +12,7 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { pick } from 'lodash'
 
-import { Depends } from '@/modules/restful/decorators'
+import { Depends } from '@/helpers/decorators'
 
 import { Guest, ReqUser } from '../decorators'
 import { CredentialDto, RegisterDto, UpdateAccountDto, UpdatePasswordDto } from '../dtos'
@@ -32,10 +32,6 @@ export class AccountController {
         protected userService: UserService,
     ) {}
 
-    /**
-     * 使用用户名密码注册用户
-     * @param data
-     */
     @Post('register')
     @Guest()
     async register(
@@ -45,10 +41,6 @@ export class AccountController {
         return this.authService.register(data)
     }
 
-    /**
-     * 用户登录[凭证(可以是用户名,邮箱,手机号等)+密码登录]
-     * @param user
-     */
     @Post('login')
     @Guest()
     @UseGuards(LocalAuthGuard)
@@ -56,20 +48,12 @@ export class AccountController {
         return { token: await this.authService.createToken(user.id) }
     }
 
-    /**
-     * 注销登录
-     * @param req
-     */
     @Post('logout')
     @ApiBearerAuth()
     async logout(@Request() req: any) {
         return this.authService.logout(req)
     }
 
-    /**
-     * 获取账户信息[只有用户自己才能查询]
-     * @param user
-     */
     @Get('profile')
     @ApiBearerAuth()
     @SerializeOptions({
@@ -79,11 +63,6 @@ export class AccountController {
         return this.userService.detail(user.id)
     }
 
-    /**
-     * 更改账户信息
-     * @param user
-     * @param data
-     */
     @Patch()
     @ApiBearerAuth()
     @SerializeOptions({
@@ -98,11 +77,6 @@ export class AccountController {
         return this.userService.update({ id: user.id, ...pick(data, ['username', 'nickname']) })
     }
 
-    /**
-     * 修改密码[必须知道原密码]
-     * @param user
-     * @param data
-     */
     @Patch('reset-passowrd')
     @ApiBearerAuth()
     @SerializeOptions({
