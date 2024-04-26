@@ -1,0 +1,12 @@
+{
+    "extends": "@repo/ts-config/nestjs.json",
+    "compilerOptions": {
+        "baseUrl": ".",
+        "outDir": "./dist",
+        "module": "ESNext",
+        "paths": {
+            "@/*": ["src/*"]
+        }
+    },
+    "include": ["src", "test", "typings/**/*.d.ts", "**.js"]
+}

@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
+    "@repo/ts-config": "workspace:*",
     "cross-env": "^7.0.3",
     "eslint": "^8.47.0",
     "prettier": "^3.1.1",
