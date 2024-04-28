@@ -42,7 +42,7 @@ const CredentialForm: FC = () => {
                     try {
                         const {
                             data: { token },
-                        } = await fetcher.post('/user/account/login', values)
+                        } = await fetcher.post('/client/user/account/login', values)
                         if (!isNil(token)) {
                             FetcherStore.setState((state) => {
                                 state.token = token

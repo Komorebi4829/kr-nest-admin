@@ -11,7 +11,7 @@ import { media } from './routes/media'
 import { setting } from './routes/setting'
 
 export const config = (): IConfig => ({
-    auth: { api: '/user/account/profile' },
+    auth: { api: '/client/user/account/profile' },
     router: {
         basename: import.meta.env.BASE_URL,
         window: undefined,

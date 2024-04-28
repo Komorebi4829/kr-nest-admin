@@ -20,12 +20,17 @@ export const createConfig = (params: ConfigEnv, configure?: Configure): UserConf
                 },
             },
             server: {
-                port: 5601,
+                port: 2221,
                 proxy: {
-                    '/api': {
-                        target: 'http://127.0.0.1:5600/api',
+                    '/api/client': {
+                        target: 'http://127.0.0.1:2121',
                         changeOrigin: true,
-                        rewrite: (path) => path.replace(/^\/api/, ''),
+                        rewrite: (path) => path.replace(/^\/api\/client/, '/api'),
+                    },
+                    '/api/manage': {
+                        target: 'http://127.0.0.1:2121',
+                        changeOrigin: true,
+                        rewrite: (path) => path.replace(/^\/api\/manage/, '/manage/api'),
                     },
                 },
                 cors: true,
