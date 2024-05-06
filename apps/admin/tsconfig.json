@@ -4,10 +4,12 @@
         "baseUrl": ".",
         "outDir": "./dist",
         "paths": {
-            "@/*": ["src/*"]
+            "@/*": ["src/*"],
+            "#/*": ["typings/*"],
         },
         "types": ["unplugin-icons/types/react", "@types/node"]
     },
-    "include": ["./src", "./typings/**/*.d.ts"],
+    "include": ["./src", "./typings/**/*.d.ts", "./typings/**/*.ts", "**.ts", "*.json", "**.*js"],
+    "exclude": ["node_modules", "dist"],
     "references": [{ "path": "./tsconfig.node.json" }]
 }
