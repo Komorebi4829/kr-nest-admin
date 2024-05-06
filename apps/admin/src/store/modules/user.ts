@@ -60,13 +60,15 @@ export const useSignIn = () => {
 
     const signInMutation = useMutation(userService.signin)
 
+    const DEFAULT_HOMEPAHE = '/dashboard/workbench'
+
     const signIn = async (data: SignInReq) => {
         try {
             const res = await signInMutation.mutateAsync(data)
             const { user, accessToken, refreshToken } = res
             setUserToken({ accessToken, refreshToken })
             setUserInfo(user)
-            navigatge(HOMEPAGE, { replace: true })
+            navigatge(HOMEPAGE || DEFAULT_HOMEPAHE, { replace: true })
 
             notification.success({
                 message: t('sys.login.loginSuccessTitle'),
