@@ -40,7 +40,10 @@ module.exports = {
         'react/jsx-filename-extension': [1, { extensions: ['.jsx', '.tsx'] }],
         'react/function-component-definition': [
             2,
-            { namedComponents: 'arrow-function', unnamedComponents: 'arrow-function' },
+            {
+                namedComponents: ['arrow-function', 'function-declaration'],
+                unnamedComponents: 'arrow-function',
+            },
         ],
         'react-hooks/exhaustive-deps': 0,
         'react-refresh/only-export-components': 0,
@@ -61,4 +64,4 @@ module.exports = {
     settings: {
         extensions: ['.ts', '.tsx', '.d.ts', '.cts', '.mts', '.js', 'jsx', '.cjs', 'mjs', '.json'],
     },
-};
+}

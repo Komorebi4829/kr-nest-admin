@@ -16,6 +16,11 @@ import { UserConfig } from '../types'
 import { TokenService } from './token.service'
 import { UserService } from './user.service'
 
+type LoginResponse = {
+    accessToken: string
+    userId: string
+}
+
 @Injectable()
 export class AuthService {
     constructor(
@@ -35,10 +40,13 @@ export class AuthService {
         return false
     }
 
-    async login(user: UserEntity) {
+    async login(user: UserEntity): Promise<LoginResponse> {
         const now = await getTime(this.configure)
         const { accessToken } = await this.tokenService.generateAccessToken(user, now)
-        return accessToken.value
+        return {
+            accessToken: accessToken.value,
+            userId: user.id,
+        }
     }
 
     async logout(req: Request) {

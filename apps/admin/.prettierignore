@@ -22,3 +22,11 @@ yarn-error.log
 .umi
 .umi-production
 .umi-test
+.vscode
+.idea
+/public
+/docs
+.husky
+.local
+/bin
+pnpm-lock.yaml
