@@ -9,8 +9,10 @@ export interface UserInfo {
     id: string
     email: string
     username: string
+    nickname?: string
     password?: string
     avatar?: string
+    phone?: string
     role?: Role
     status?: BasicStatus
     permissions?: Permission[]

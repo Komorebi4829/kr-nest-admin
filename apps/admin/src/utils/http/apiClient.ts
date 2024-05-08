@@ -4,8 +4,15 @@ import { isEmpty } from 'ramda'
 
 import { t } from '@/locales/i18n'
 
+import { getItem } from '../storage'
+
 import { Result } from '#/api'
-import { ResultEnum } from '#/enum'
+import { StorageEnum } from '#/enum'
+
+type Token = {
+    accessToken: string
+    refreshToken: string
+}
 
 // 创建 axios 实例
 const axiosInstance = axios.create({
@@ -18,7 +25,8 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
     (config) => {
         // 在请求被发送之前做些什么
-        config.headers.Authorization = 'Bearer Token'
+        const token = getItem<Token>(StorageEnum.Token)?.accessToken || ''
+        config.headers.Authorization = `Bearer ${token}`
         return config
     },
     (error) => {
@@ -30,16 +38,13 @@ axiosInstance.interceptors.request.use(
 // 响应拦截
 axiosInstance.interceptors.response.use(
     (res: AxiosResponse<Result>) => {
-        if (!res.data) throw new Error(t('sys.api.apiRequestFailed'))
-
-        const { status, data, message } = res.data
-        // 业务请求成功
-        const hasSuccess = data && Reflect.has(res.data, 'status') && status === ResultEnum.SUCCESS
-        if (hasSuccess) {
-            return data
+        if (String(res.status)[0] === '2') {
+            const data = res.data?.data
+            if (data) return data
+            return res.data
         }
 
-        // 业务请求错误
+        const message: string = res.data?.message
         throw new Error(message || t('sys.api.apiRequestFailed'))
     },
     (error: AxiosError<Result>) => {

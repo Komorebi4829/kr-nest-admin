@@ -4,7 +4,7 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
-import userService, { SignInReq } from '@/api/services/userService'
+import userService, { SignInReq } from '@/api/user'
 import { getItem, removeItem, setItem } from '@/utils/storage'
 
 import { createStore as create } from '../utils'
@@ -59,20 +59,22 @@ export const useSignIn = () => {
     const { setUserToken, setUserInfo } = useUserActions()
 
     const signInMutation = useMutation(userService.signin)
+    const getUserInfoMutation = useMutation(userService.getUserInfo)
 
     const DEFAULT_HOMEPAHE = '/dashboard/workbench'
 
     const signIn = async (data: SignInReq) => {
         try {
             const res = await signInMutation.mutateAsync(data)
-            const { user, accessToken, refreshToken } = res
-            setUserToken({ accessToken, refreshToken })
+            const { accessToken /* refreshToken */ } = res
+            setUserToken({ accessToken /* refreshToken */ })
+            const user = await getUserInfoMutation.mutateAsync()
             setUserInfo(user)
             navigatge(HOMEPAGE || DEFAULT_HOMEPAHE, { replace: true })
 
             notification.success({
                 message: t('sys.login.loginSuccessTitle'),
-                description: `${t('sys.login.loginSuccessDesc')}: ${data.username}`,
+                description: `${t('sys.login.loginSuccessDesc')}: ${data.credential}`,
                 duration: 3,
             })
         } catch (err) {

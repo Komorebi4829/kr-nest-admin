@@ -45,7 +45,7 @@ export class AccountController {
     @Guest()
     @UseGuards(LocalAuthGuard)
     async login(@ReqUser() user: ClassToPlain<UserEntity>, @Body() _data: CredentialDto) {
-        return { token: await this.authService.createToken(user.id) }
+        return this.authService.login(user)
     }
 
     @Post('logout')

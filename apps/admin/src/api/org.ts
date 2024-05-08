@@ -1,4 +1,4 @@
-import apiClient from '../apiClient'
+import apiClient from '@/utils/http/apiClient'
 
 import { Organization } from '#/entity'
 

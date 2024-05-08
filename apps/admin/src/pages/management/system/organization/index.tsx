@@ -17,7 +17,7 @@ import Table, { ColumnsType } from 'antd/es/table'
 import { TableRowSelection } from 'antd/es/table/interface'
 import { useEffect, useState } from 'react'
 
-import orgService from '@/api/services/orgService'
+import orgService from '@/api/org'
 import { IconButton, Iconify } from '@/components/icon'
 import ProTag from '@/theme/antd/components/tag'
 

@@ -48,15 +48,17 @@ export default defineConfig({
         host: true,
         port: 2221,
         proxy: {
-            '/api/client': {
+            /* manage endpoint */
+            '^/api/manage': {
                 target: 'http://127.0.0.1:2121',
                 changeOrigin: true,
-                rewrite: (path) => path.replace(/^\/api\/client/, '/api'),
+                // rewrite: (path) => path.replace(/^\/api\/manage/, '/manage/api'),
             },
-            '/api/manage': {
+            /* client endpoint */
+            '^/api': {
                 target: 'http://127.0.0.1:2121',
                 changeOrigin: true,
-                rewrite: (path) => path.replace(/^\/api\/manage/, '/manage/api'),
+                // rewrite: (path) => path.replace(/^\/api\/client/, '/api'),
             },
         },
         cors: true,

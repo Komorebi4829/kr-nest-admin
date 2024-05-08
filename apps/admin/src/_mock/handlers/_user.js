@@ -1,14 +1,14 @@
 import { faker } from '@faker-js/faker'
 import { delay, http, HttpResponse } from 'msw'
 
-import { UserApi } from '@/api/services/userService'
+import { UserApi } from '@/api/user'
 
 import { USER_LIST } from '../assets'
 
 const signIn = http.post(`/manage/api${UserApi.SignIn}`, async ({ request }) => {
-    const { username, password } = await request.json()
+    const { credential, password } = await request.json()
 
-    const user = USER_LIST.find((item) => item.username === username)
+    const user = USER_LIST.find((item) => item.username === credential)
 
     if (!user || user.password !== password) {
         return HttpResponse.json({

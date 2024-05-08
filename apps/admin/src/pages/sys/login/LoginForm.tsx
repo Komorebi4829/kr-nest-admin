@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { AiFillGithub, AiFillGoogleCircle, AiFillWechat } from 'react-icons/ai'
 
 import { DEFAULT_USER, TEST_USER } from '@/_mock/assets'
-import { SignInReq } from '@/api/services/userService'
+import { SignInReq } from '@/api/user'
 import { useSignIn } from '@/store'
 import ProTag from '@/theme/antd/components/tag'
 import { useThemeToken } from '@/theme/hooks'
@@ -21,10 +21,10 @@ function LoginForm() {
 
     if (loginState !== LoginStateEnum.LOGIN) return null
 
-    const handleFinish = async ({ username, password }: SignInReq) => {
+    const handleFinish = async ({ credential, password }: SignInReq) => {
         setLoading(true)
         try {
-            await signIn({ username, password })
+            await signIn({ credential, password })
         } finally {
             setLoading(false)
         }
@@ -39,7 +39,7 @@ function LoginForm() {
                 size="large"
                 initialValues={{
                     remember: true,
-                    username: DEFAULT_USER.username,
+                    credential: DEFAULT_USER.username,
                     password: DEFAULT_USER.password,
                 }}
                 onFinish={handleFinish}
@@ -91,7 +91,7 @@ function LoginForm() {
                 </div>
 
                 <Form.Item
-                    name="username"
+                    name="credential"
                     rules={[{ required: true, message: t('sys.login.accountPlaceholder') }]}
                 >
                     <Input placeholder={t('sys.login.userName')} />
