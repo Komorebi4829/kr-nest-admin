@@ -237,7 +237,7 @@ export async function runSeeder(
     }
     if (typeof args.transaction === 'boolean' && !args.transaction) {
         const em = await resetForeignKey(dataSource.manager, dataSource.options.type)
-        await seeder.load({
+        await seeder.lazyInit({
             factorier: factoryBuilder(configure, dataSource, factoryMaps),
             factories: factoryMaps,
             dataSource,
@@ -253,7 +253,7 @@ export async function runSeeder(
         await queryRunner.startTransaction()
         try {
             const em = await resetForeignKey(queryRunner.manager, dataSource.options.type)
-            await seeder.load({
+            await seeder.lazyInit({
                 factorier: factoryBuilder(configure, dataSource, factoryMaps),
                 factories: factoryMaps,
                 dataSource,

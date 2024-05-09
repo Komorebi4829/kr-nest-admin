@@ -40,7 +40,7 @@ export abstract class BaseSeeder implements Seeder {
         protected readonly args: SeederOptions,
     ) {}
 
-    async load(params: SeederLoadParams): Promise<any> {
+    async lazyInit(params: SeederLoadParams): Promise<any> {
         const { factorier, factories, dataSource, em, connection, configure, ignoreLock } = params
         this.connection = connection
         this.dataSource = dataSource
@@ -73,7 +73,7 @@ export abstract class BaseSeeder implements Seeder {
 
     protected async call(SubSeeder: SeederConstructor) {
         const subSeeder: Seeder = new SubSeeder(this.spinner, this.args)
-        await subSeeder.load({
+        await subSeeder.lazyInit({
             connection: this.connection,
             factorier: factoryBuilder(this.configure, this.dataSource, this.factories),
             factories: this.factories,

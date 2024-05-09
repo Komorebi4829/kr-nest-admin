@@ -167,7 +167,7 @@ export interface SeederConstructor {
 }
 
 export interface Seeder {
-    load: (params: SeederLoadParams) => Promise<void>
+    lazyInit: (params: SeederLoadParams) => Promise<void>
 }
 
 export interface SeederLoadParams {
