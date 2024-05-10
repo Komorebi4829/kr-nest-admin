@@ -13,3 +13,9 @@ export enum PermissionAction {
     MANAGE = 'manage',
     OWNER = 'onwer',
 }
+
+export enum MenuType {
+    CATALOGUE,
+    MENU,
+    BUTTON,
+}

@@ -15,7 +15,7 @@ import { PermissionChecker } from '../../types'
 const permission: PermissionChecker = async (ab) =>
     ab.can(PermissionAction.MANAGE, PermissionEntity.name)
 
-@ApiTags('权限信息')
+@ApiTags('权限查询')
 @ApiBearerAuth()
 @Depends(RbacModule)
 @Controller('permissions')
