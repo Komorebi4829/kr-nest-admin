@@ -1,6 +1,6 @@
 import { isNil } from 'lodash'
 import { Ora } from 'ora'
-import { DataSource, EntityManager, EntityTarget, ObjectLiteral } from 'typeorm'
+import { DataSource, EntityManager, EntityTarget, ObjectLiteral, QueryRunner } from 'typeorm'
 
 import { panic } from '@/bootstrap/app'
 import { Configure } from '@/modules/config/configure'
@@ -27,6 +27,8 @@ export abstract class BaseSeeder implements Seeder {
 
     protected ignoreLock = false
 
+    protected queryRunner: QueryRunner
+
     // protected
 
     protected factories!: {
@@ -45,6 +47,7 @@ export abstract class BaseSeeder implements Seeder {
         this.connection = connection
         this.dataSource = dataSource
         this.em = em
+        this.queryRunner = params.queryRunner
         this.factories = factories
         this.configure = configure
         this.ignoreLock = ignoreLock
@@ -79,6 +82,7 @@ export abstract class BaseSeeder implements Seeder {
             factories: this.factories,
             dataSource: this.dataSource,
             em: this.em,
+            queryRunner: this.queryRunner,
             configure: this.configure,
             ignoreLock: this.ignoreLock,
         })

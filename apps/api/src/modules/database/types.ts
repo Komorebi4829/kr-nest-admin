@@ -7,6 +7,7 @@ import {
     FindTreeOptions,
     ObjectLiteral,
     ObjectType,
+    QueryRunner,
     Repository,
     SelectQueryBuilder,
     TreeRepository,
@@ -176,6 +177,8 @@ export interface SeederLoadParams {
     dataSource: DataSource
 
     em: EntityManager
+
+    queryRunner?: QueryRunner
 
     factorier?: DbFactory
 

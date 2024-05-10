@@ -250,7 +250,6 @@ export async function runSeeder(
     } else {
         const queryRunner = dataSource.createQueryRunner()
         await queryRunner.connect()
-        await queryRunner.startTransaction()
         try {
             const em = await resetForeignKey(queryRunner.manager, dataSource.options.type)
             await seeder.lazyInit({
@@ -258,12 +257,12 @@ export async function runSeeder(
                 factories: factoryMaps,
                 dataSource,
                 em,
+                queryRunner,
                 configure,
                 connection: args.connection ?? 'default',
                 ignoreLock: args.ignorelock,
             })
             await resetForeignKey(em, dataSource.options.type, false)
-            await queryRunner.commitTransaction()
         } catch (err) {
             console.log('~ file: helpers.ts:324 ~ err:', err)
             await queryRunner.rollbackTransaction()

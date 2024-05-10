@@ -28,10 +28,16 @@ export default class UserSeeder extends BaseSeeder {
     async run(_factorier: DbFactory, _dataSource: DataSource, _em: EntityManager): Promise<any> {
         this.factorier = _factorier
         const rbac = new RbacBootstrap(this.dataSource, this.configure)
+
+        await this.queryRunner.startTransaction()
         await rbac.syncRoles(this.em)
         await rbac.syncPermissions(this.em)
+        await this.queryRunner.commitTransaction()
+
+        await this.queryRunner.startTransaction()
         await this.loadSuperUser(rbac)
         await this.loadUsers()
+        await this.queryRunner.commitTransaction()
     }
 
     private async loadSuperUser(rbac: RbacBootstrap) {

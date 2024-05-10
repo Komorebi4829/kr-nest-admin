@@ -28,6 +28,7 @@ export class SeedRunner extends BaseSeeder {
             seeders = seeders.filter((s) => !lockNames.includes(s.name))
         }
         for (const seeder of seeders) {
+            console.log('\n\t', seeder.name)
             await this.call(seeder)
         }
         set(locked, this.connection, [
