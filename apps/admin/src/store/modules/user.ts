@@ -62,7 +62,8 @@ export const useSignIn = () => {
     const getUserInfoMutation = useMutation(userService.getUserInfo)
     const getMenuTreeMutation = useMutation(userService.getMenuTree)
 
-    const DEFAULT_HOMEPAHE = '/dashboard/workbench'
+    // const DEFAULT_HOMEPAHE = '/dashboard/workbench'
+    const MENU_PAGE = '/management/system/menu'
 
     const signIn = async (data: SignInReq) => {
         try {
@@ -74,7 +75,7 @@ export const useSignIn = () => {
             const menuTree = await getMenuTreeMutation.mutateAsync()
             user.permissions = menuTree
             setUserInfo(user)
-            navigatge(HOMEPAGE || DEFAULT_HOMEPAHE, { replace: true })
+            navigatge(MENU_PAGE, { replace: true })
 
             notification.success({
                 message: t('sys.login.loginSuccessTitle'),

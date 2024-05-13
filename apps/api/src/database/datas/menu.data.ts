@@ -120,6 +120,13 @@ export const MENUS: MenuItem[] = [
                         component: '/management/system/user/detail.tsx',
                         visible: false,
                     },
+                    {
+                        label: 'sys.menu.system.menu',
+                        name: 'Menu',
+                        type: MenuType.MENU,
+                        path: 'menu',
+                        component: '/management/system/menu/index.tsx',
+                    },
                 ],
             },
         ],
