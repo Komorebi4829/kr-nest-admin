@@ -16,7 +16,7 @@ import { UserEntity } from '@/modules/user/entities'
 import { UserRepository } from '@/modules/user/repositories'
 
 import { getCustomRepository } from '../../modules/database/helpers'
-import { categories, CategoryData, tags, PostData, posts, TagData } from '../factories/content.data'
+import { categories, CategoryData, tags, PostData, posts, TagData } from '../datas/content.data'
 import { IPostFactoryOptions } from '../factories/content.factory'
 
 export default class ContentSeeder extends BaseSeeder {

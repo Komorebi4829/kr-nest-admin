@@ -18,6 +18,8 @@ import { PermissionAction } from '@/modules/rbac/constants'
 import { Permission } from '@/modules/rbac/decorators'
 import { PermissionChecker } from '@/modules/rbac/types'
 
+import { Guest } from '@/modules/user/decorators'
+
 import { CreateMenuDto, UpdateMenuDto } from '../../dtos'
 import { MenuEntity } from '../../entities'
 import { RbacModule } from '../../rbac.module'
@@ -31,6 +33,13 @@ const permission: PermissionChecker = async (ab) => ab.can(PermissionAction.MANA
 @Controller('menus')
 export class MenuController {
     constructor(protected service: MenuService) {}
+
+    @Get('tree')
+    @SerializeOptions({ groups: ['menu-tree'] })
+    @Guest()
+    async tree() {
+        return this.service.findTrees({})
+    }
 
     @Get()
     @Permission(permission)

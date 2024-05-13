@@ -1,14 +1,5 @@
 import { Exclude, Expose } from 'class-transformer'
-import {
-    BaseEntity,
-    Column,
-    Entity,
-    Index,
-    PrimaryColumn,
-    Tree,
-    TreeChildren,
-    TreeParent,
-} from 'typeorm'
+import { BaseEntity, Column, Entity, PrimaryColumn, Tree, TreeChildren, TreeParent } from 'typeorm'
 
 import type { Relation } from 'typeorm'
 
@@ -25,11 +16,14 @@ export class MenuEntity extends BaseEntity {
     id: string
 
     @Expose()
+    @Column({ comment: 'i18n 标签' })
+    label: string
+
+    @Expose()
     @Column({ comment: '菜单名称' })
-    @Index({ fulltext: true })
     name: string
 
-    @Expose({ groups: ['menu-detail', 'menu-list'] })
+    @Expose()
     @Column({
         comment: '菜单类型',
         type: 'simple-enum',
@@ -38,45 +32,57 @@ export class MenuEntity extends BaseEntity {
     })
     type: number
 
-    @Expose({ groups: ['menu-detail', 'menu-list'] })
+    @Expose()
     @Column({ comment: '菜单图标', nullable: true })
     icon?: string
 
-    @Expose({ groups: ['menu-tree', 'menu-list', 'menu-detail'] })
+    @Expose()
     @Column({ comment: '显示排序', default: 0 })
     customOrder: number
 
-    @Expose({ groups: ['menu-detail', 'menu-list'] })
+    @Expose()
     @Column({ comment: '是否外链', type: 'boolean', nullable: true })
-    isFrame?: number
+    isFrame?: boolean
 
-    @Expose({ groups: ['menu-detail', 'menu-list'] })
+    @Expose()
+    @Column({ comment: '外链地址', nullable: true })
+    frameSrc?: string
+
+    @Expose()
     @Column({ comment: '是否缓存', type: 'boolean', nullable: true })
-    isCache?: number
+    isCache?: boolean
 
-    @Expose({ groups: ['menu-detail', 'menu-list'] })
+    @Expose()
     @Column({ comment: '路由地址' })
     path: string
 
-    @Expose({ groups: ['menu-detail', 'menu-list'] })
+    @Expose()
     @Column({ comment: '组件路径', nullable: true })
     component?: string
 
-    @Expose({ groups: ['menu-detail', 'menu-list'] })
+    @Expose()
     @Column({ comment: '权限字符', nullable: true })
     perms?: string
 
-    @Expose({ groups: ['menu-detail', 'menu-list'] })
+    @Expose()
     @Column({ comment: '路由参数', nullable: true })
     query?: string
 
-    @Expose({ groups: ['menu-detail', 'menu-list'] })
+    @Expose()
     @Column({ comment: '显示状态', type: 'boolean', nullable: true })
-    visible?: string
+    visible?: boolean
 
-    @Expose({ groups: ['menu-detail', 'menu-list'] })
+    @Expose()
     @Column({ comment: '菜单状态', type: 'boolean', nullable: true })
-    status?: string
+    status?: boolean
+
+    @Expose()
+    @Column({ comment: '是否新特性', type: 'boolean', nullable: true })
+    newFeature?: boolean
+
+    @Expose()
+    @Column({ comment: '是否隐藏tab', type: 'boolean', nullable: true })
+    hideTab?: boolean
 
     @Expose({ groups: ['menu-list'] })
     depth = 0
