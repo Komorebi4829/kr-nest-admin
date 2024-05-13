@@ -60,6 +60,7 @@ export const useSignIn = () => {
 
     const signInMutation = useMutation(userService.signin)
     const getUserInfoMutation = useMutation(userService.getUserInfo)
+    const getMenuTreeMutation = useMutation(userService.getMenuTree)
 
     const DEFAULT_HOMEPAHE = '/dashboard/workbench'
 
@@ -69,6 +70,9 @@ export const useSignIn = () => {
             const { accessToken /* refreshToken */ } = res
             setUserToken({ accessToken /* refreshToken */ })
             const user = await getUserInfoMutation.mutateAsync()
+            // TODO menu-tree -> user-menu-tree
+            const menuTree = await getMenuTreeMutation.mutateAsync()
+            user.permissions = menuTree
             setUserInfo(user)
             navigatge(HOMEPAGE || DEFAULT_HOMEPAHE, { replace: true })
 

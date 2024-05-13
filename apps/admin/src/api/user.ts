@@ -1,6 +1,6 @@
 import apiClient from '@/utils/http/apiClient'
 
-import { UserInfo as UserInfoEntity, UserToken } from '#/entity'
+import { Permission, UserInfo as UserInfoEntity, UserToken } from '#/entity'
 
 export interface SignInReq {
     credential: string
@@ -18,16 +18,19 @@ export enum UserApi {
     Logout = '/api/user/account/logout',
     Refresh = '/auth/refresh',
     UserInfo = '/api/user/account/profile',
+    MenuTree = '/manage/api/rbac/menus/tree',
 }
 
 const signin = (data: SignInReq) => apiClient.post<SignInRes>({ url: UserApi.SignIn, data })
 const signup = (data: SignUpReq) => apiClient.post<SignInRes>({ url: UserApi.SignUp, data })
 const logout = () => apiClient.get({ url: UserApi.Logout })
 const getUserInfo = () => apiClient.get<UserInfoEntity>({ url: `${UserApi.UserInfo}` })
+const getMenuTree = () => apiClient.get<Permission[]>({ url: `${UserApi.MenuTree}` })
 
 export default {
     signin,
     signup,
     getUserInfo,
+    getMenuTree,
     logout,
 }

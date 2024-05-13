@@ -60,7 +60,7 @@ function transformPermissionToMenuRoutes(
 ) {
     return permissions.map((permission) => {
         const {
-            route,
+            path,
             type,
             label,
             icon,
@@ -76,7 +76,7 @@ function transformPermissionToMenuRoutes(
         } = permission
 
         const appRoute: AppRouteObject = {
-            path: route,
+            path,
             meta: {
                 label,
                 key: getCompleteRoute(permission, flattenedPermissions),
@@ -115,7 +115,7 @@ function transformPermissionToMenuRoutes(
             if (!isEmpty(children)) {
                 appRoute.children.unshift({
                     index: true,
-                    element: <Navigate to={children[0].route} replace />,
+                    element: <Navigate to={children[0].path} replace />,
                 })
             }
         } else if (type === PermissionType.MENU) {
@@ -139,12 +139,11 @@ function transformPermissionToMenuRoutes(
  * Splicing from the root permission route to the current permission route
  * @param {Permission} permission - current permission
  * @param {Permission[]} flattenedPermissions - flattened permission array
- * @param {string} route - parent permission route
- * @returns {string} - The complete route after splicing
+ * @param {string} path - parent permission route
+ * @returns {string} - The complete path after splicing
  */
-function getCompleteRoute(permission: Permission, flattenedPermissions: Permission[], route = '') {
-    const currentRoute = route ? `/${permission.route}${route}` : `/${permission.route}`
-
+function getCompleteRoute(permission: Permission, flattenedPermissions: Permission[], path = '') {
+    const currentRoute = path ? `/${permission.path}${path}` : `/${permission.path}`
     if (permission.parentId) {
         const parentPermission = flattenedPermissions.find((p) => p.id === permission.parentId)!
         return getCompleteRoute(parentPermission, flattenedPermissions, currentRoute)

@@ -1,6 +1,6 @@
 export enum BasicStatus {
-    DISABLE,
-    ENABLE,
+    DISABLE = 0,
+    ENABLE = 1,
 }
 
 export enum ResultEnum {

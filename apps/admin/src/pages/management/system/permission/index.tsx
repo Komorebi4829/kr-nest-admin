@@ -20,7 +20,7 @@ const defaultPermissionValue: Permission = {
     parentId: '',
     name: '',
     label: '',
-    route: '',
+    path: '',
     component: '',
     icon: '',
     hide: false,

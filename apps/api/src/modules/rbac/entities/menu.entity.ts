@@ -73,8 +73,8 @@ export class MenuEntity extends BaseEntity {
     visible?: boolean
 
     @Expose()
-    @Column({ comment: '菜单状态', type: 'boolean', nullable: true })
-    status?: boolean
+    @Column({ comment: '菜单状态', type: 'tinyint', nullable: true })
+    status?: number
 
     @Expose()
     @Column({ comment: '是否新特性', type: 'boolean', nullable: true })
@@ -90,6 +90,9 @@ export class MenuEntity extends BaseEntity {
     @Expose({ groups: ['menu-detail', 'menu-list'] })
     @TreeParent({ onDelete: 'NO ACTION' })
     parent: Relation<MenuEntity> | null
+
+    @Expose({ groups: ['menu-tree'] })
+    parentId?: string
 
     @Expose({ groups: ['menu-tree'] })
     @TreeChildren({ cascade: true })

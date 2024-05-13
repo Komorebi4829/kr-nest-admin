@@ -29,6 +29,10 @@ export default class MenuSeeder extends BaseSeeder {
             if (isNil(savedMenu)) {
                 const menuEntity = manager.create<MenuEntity>(MenuEntity, {
                     ...omit(menu, 'children', 'parent'),
+                    isFrame: false,
+                    isCache: true,
+                    visible: true,
+                    status: isNil(menu.status) ? 1 : menu.status,
                     parent: parent || null,
                     customOrder: index,
                 })

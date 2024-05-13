@@ -49,7 +49,7 @@ export default defineConfig({
         port: 2221,
         proxy: {
             /* manage endpoint */
-            '^/api/manage': {
+            '^/manage/api': {
                 target: 'http://127.0.0.1:2121',
                 changeOrigin: true,
                 // rewrite: (path) => path.replace(/^\/api\/manage/, '/manage/api'),

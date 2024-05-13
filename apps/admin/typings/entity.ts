@@ -29,19 +29,23 @@ export interface Organization {
 
 export interface Permission {
     id: string
-    parentId: string
-    name: string
     label: string
+    name: string
     type: PermissionType
-    route: string
-    status?: BasicStatus
-    order?: number
     icon?: string
-    component?: string
-    hide?: boolean
-    hideTab?: boolean
+    customOrder?: number
+    isFrame?: boolean
     frameSrc?: string
+    isCache?: boolean
+    path: string
+    component?: string
+    perms?: string
+    query?: string
+    visible?: boolean
+    status?: BasicStatus
     newFeature?: boolean
+    hideTab?: boolean
+    parentId?: string
     children?: Permission[]
 }
 

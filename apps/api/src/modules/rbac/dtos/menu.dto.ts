@@ -31,6 +31,22 @@ export class QueryMenuTreeDto {
 export class CreateMenuDto {
     @IsTreeUnique(MenuEntity, {
         groups: ['create'],
+        message: '菜单label重复',
+    })
+    @IsTreeUniqueExist(MenuEntity, {
+        groups: ['update'],
+        message: 'label重复',
+    })
+    @MaxLength(100, {
+        always: true,
+        message: '菜单label长度不得超过$constraint1',
+    })
+    @IsNotEmpty({ groups: ['create'], message: '菜单label不得为空' })
+    @IsOptional({ groups: ['update'] })
+    label: string
+
+    @IsTreeUnique(MenuEntity, {
+        groups: ['create'],
         message: '菜单名称重复',
     })
     @IsTreeUniqueExist(MenuEntity, {
@@ -52,6 +68,15 @@ export class CreateMenuDto {
     @IsNotEmpty({ groups: ['create'], message: '路由地址不得为空' })
     @IsOptional({ groups: ['update'] })
     path: string
+
+    @IsOptional({ groups: ['update'] })
+    frameSrc?: string
+
+    @IsOptional({ groups: ['update'] })
+    newFeature?: boolean
+
+    @IsOptional({ groups: ['update'] })
+    hideTab?: boolean
 
     @IsDataExist(MenuEntity, { always: true, message: '父菜单不存在' })
     @ValidateIf((value) => value.parent !== null && value.parent)
