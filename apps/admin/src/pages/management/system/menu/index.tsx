@@ -2,21 +2,22 @@ import { ProTable } from '@ant-design/pro-components'
 import type { ActionType, ProColumns } from '@ant-design/pro-components'
 import { useMutation } from '@tanstack/react-query'
 import { Button, Popconfirm } from 'antd'
-import { unset } from 'lodash'
+import { isNil, unset } from 'lodash'
 import { chain } from 'ramda'
 
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 
 import { useSetState } from 'react-use'
 
 import menuService from '@/api/menu'
-import { IconButton, Iconify } from '@/components/icon'
+import { IconButton, Iconify, SvgIcon } from '@/components/icon'
 import { usePathname, useRouter } from '@/router/hooks'
 import ProTag from '@/theme/antd/components/tag'
 
 import MenuModal from './menu-modal'
 
 import type { Permission } from '#/entity'
+import { BasicStatus, PermissionType } from '#/enum'
 
 type MyMenuItem = Permission
 
@@ -32,53 +33,56 @@ export default function MenuPage() {
     // const { colorTextSecondary } = useThemeToken()
     const { push } = useRouter()
     const pathname = usePathname()
-    // const [menuId, setmenuId] = useState<>()
     // const [modalData, { set, setAll, remove, reset }] = useMap<{
     //     type: 'new' | 'edit'
     //     id: string
     // }>()
-    const [modalData, setmodalData] = useSetState<{ type: 'new' | 'edit'; id: string }>()
+    const [modalData, setmodalData] = useSetState<{ mode: 'new' | 'edit'; id: string }>()
 
     const actionRef = useRef<ActionType>()
 
     const getMenuTreeMutation = useMutation(menuService.getMenuTree)
+    const deleteMenuTreeMutation = useMutation(menuService.deleteMenu)
 
     const columns: ProColumns<MyMenuItem>[] = [
         {
             title: 'Name',
             dataIndex: 'name',
-            width: 300,
+            width: 200,
         },
         {
             title: 'Icon',
             dataIndex: 'icon',
             width: 70,
             search: false,
+            render: (icon: string) => {
+                if (isNil(icon)) return null
+                if (icon.startsWith('ic')) {
+                    return <SvgIcon icon={icon} size={18} className="ant-menu-item-icon" />
+                }
+                return <Iconify icon={icon} size={18} className="ant-menu-item-icon" />
+            },
         },
+        { title: 'Order', dataIndex: 'customOrder', width: 60, search: false },
         {
             title: 'Path',
             dataIndex: 'path',
             search: false,
-            width: 150,
-            copyable: true,
+            width: 100,
             ellipsis: true,
         },
         {
-            title: 'CustomOrder',
-            dataIndex: 'sortOrder',
+            title: 'Permission',
+            dataIndex: 'permission',
             search: false,
-            width: 80,
+            width: 100,
         },
         {
             title: 'Type',
             dataIndex: 'type',
             search: false,
             width: 80,
-            valueEnum: {
-                0: 'CATALOGUE',
-                1: 'MENU',
-                2: 'BUTTON',
-            },
+            valueEnum: PermissionType,
             render: (value, record) => {
                 const d = {
                     0: 'gold',
@@ -93,37 +97,26 @@ export default function MenuPage() {
             dataIndex: 'status',
             search: false,
             width: 80,
-            render: (value) => {
-                return value === '1' ? (
-                    <ProTag color="success">Enabled</ProTag>
-                ) : (
-                    <ProTag color="default">Disabled</ProTag>
-                )
-            },
+            render: (status) => (<ProTag color={status === BasicStatus.DISABLE ? 'error' : 'success'}>
+                {status === BasicStatus.DISABLE ? 'Disable' : 'Enable'}
+            </ProTag>),
         },
-        {
-            title: 'Permission',
-            dataIndex: 'permission',
-            search: false,
-            width: 100,
-            copyable: true,
-        },
+
         {
             title: 'Action',
-            key: 'operation',
+            valueType: 'option',
+            key: 'option',
             align: 'center',
             width: 100,
             fixed: 'right',
             render: (_, record) => (
                 <div className="flex w-full justify-center text-gray">
-                    <IconButton
-                        onClick={() => {
-                            push(`${pathname}/${record.id}`)
-                        }}
-                    >
-                        <Iconify icon="mdi:card-account-details" size={18} />
-                    </IconButton>
-                    <IconButton onClick={() => setmodalData({ type: 'edit', id: record.id })}>
+                    {record?.type === PermissionType.CATALOGUE && (
+                        <IconButton onClick={() => setmodalData({ mode: 'new', id: record.id })}>
+                            <Iconify icon="gridicons:add-outline" size={18} />
+                        </IconButton>
+                    )}
+                    <IconButton onClick={() => setmodalData({ mode: 'edit', id: record.id })}>
                         <Iconify icon="solar:pen-bold-duotone" size={18} />
                     </IconButton>
                     <Popconfirm
@@ -131,7 +124,10 @@ export default function MenuPage() {
                         okText="Yes"
                         cancelText="No"
                         placement="left"
-                        onConfirm={async () => {}}
+                        okButtonProps={{ loading: deleteMenuTreeMutation.isLoading }}
+                        onConfirm={async () => {
+                            await deleteMenuTreeMutation.mutateAsync({ids: [record.id]})
+                        }}
                     >
                         <IconButton>
                             <Iconify
@@ -161,7 +157,6 @@ export default function MenuPage() {
                 scroll={{ x: 'max-content' }}
                 columns={columns}
                 actionRef={actionRef}
-                // dataSource={menus}
                 request={async () => {
                     const res = await getMenuTreeMutation.mutateAsync()
                     normalizeTrees(res)
@@ -172,16 +167,13 @@ export default function MenuPage() {
                     }
                 }}
                 toolBarRender={() => [
-                    <Button type="primary" onClick={() => setmodalData({ type: 'new' })}>
-                        Add
+                    <Button type="primary" onClick={() => setmodalData({ mode: 'new' })}>
+                        New
                     </Button>,
                 ]}
             />
             <MenuModal
-                onCancel={() => {
-                    console.log('index cancel modal')
-                    setmodalData({ type: null })
-                }}
+                onCancel={() => setmodalData({ mode: null })}
                 modalData={modalData}
                 reloadTable={reloadTable}
             />

@@ -69,14 +69,29 @@ export class CreateMenuDto {
     @IsOptional({ groups: ['update'] })
     path: string
 
-    @IsOptional({ groups: ['update'] })
+    @IsOptional({ groups: ['create', 'update'] })
+    isFrame?: boolean
+
+    @IsOptional({ groups: ['create', 'update'] })
     frameSrc?: string
 
-    @IsOptional({ groups: ['update'] })
+    @IsOptional({ groups: ['create', 'update'] })
     newFeature?: boolean
 
-    @IsOptional({ groups: ['update'] })
+    @IsOptional({ groups: ['create', 'update'] })
     hideTab?: boolean
+
+    @IsOptional({ groups: ['create', 'update'] })
+    component?: string
+
+    @IsOptional({ groups: ['create', 'update'] })
+    hide?: boolean
+
+    @IsOptional({ groups: ['create', 'update'] })
+    isCache?: boolean
+
+    @IsOptional({ groups: ['create', 'update'] })
+    status?: number
 
     @IsDataExist(MenuEntity, { always: true, message: '父菜单不存在' })
     @ValidateIf((value) => value.parent !== null && value.parent)
