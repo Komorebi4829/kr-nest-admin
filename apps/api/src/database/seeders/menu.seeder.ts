@@ -14,9 +14,9 @@ export default class MenuSeeder extends BaseSeeder {
 
     async run(_factorier: DbFactory, _dataSource: DataSource, _em: EntityManager): Promise<any> {
         this.factorier = _factorier
-        // await this.queryRunner.startTransaction()
+        await this.queryRunner.startTransaction()
         await this.loadMenus(MENUS, this.em)
-        // await this.queryRunner.commitTransaction()
+        await this.queryRunner.commitTransaction()
     }
 
     private async loadMenus(menus: MenuItem[], manager: EntityManager) {
@@ -25,16 +25,16 @@ export default class MenuSeeder extends BaseSeeder {
 
     private async traverse(menus: MenuItem[], parent: any, manager: EntityManager) {
         for (const [index, menu] of menus.entries()) {
-            let savedMenu = await manager.findOne(MenuEntity, { where: { name: menu.name } })
+            let savedMenu = await manager.findOne(MenuEntity, { where: { label: menu.label } })
             if (isNil(savedMenu)) {
                 const menuEntity = manager.create<MenuEntity>(MenuEntity, {
                     ...omit(menu, 'children', 'parent'),
                     isFrame: false,
                     isCache: true,
-                    visible: true,
+                    hide: isNil(menu.hide) ? false : menu.hide,
                     status: isNil(menu.status) ? 1 : menu.status,
                     parent: parent || null,
-                    customOrder: index,
+                    customOrder: index + 1,
                 })
 
                 savedMenu = await manager.save(MenuEntity, menuEntity)
@@ -43,7 +43,7 @@ export default class MenuSeeder extends BaseSeeder {
             }
 
             if (menu.children && menu.children.length) {
-                this.traverse(menu.children, savedMenu, manager)
+                await this.traverse(menu.children, savedMenu, manager)
             }
         }
     }

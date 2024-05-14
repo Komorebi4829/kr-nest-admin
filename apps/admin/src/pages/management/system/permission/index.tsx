@@ -1,9 +1,7 @@
-import { ProTable } from '@ant-design/pro-components'
-import type { ActionType, ProColumns } from '@ant-design/pro-components'
 import { Button, Card, Popconfirm } from 'antd'
 import Table, { ColumnsType } from 'antd/es/table'
 import { isNil } from 'ramda'
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { IconButton, Iconify, SvgIcon } from '@/components/icon'
@@ -28,54 +26,9 @@ const defaultPermissionValue: Permission = {
     type: PermissionType.CATALOGUE,
 }
 
-export const waitTimePromise = async (time = 100) => {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(true)
-        }, time)
-    })
-}
-
-export const waitTime = async (time = 100) => {
-    await waitTimePromise(time)
-}
-
-type CategoryItem = {
-    isPublished?: boolean
-    id: number
-    // number: number;
-    title: string
-    // labels: {
-    //   name: string;
-    //   color: string;
-    // }[];
-    // state: string;
-    // comments: number;
-    // created_at: string;
-    // updated_at: string;
-    closed_at?: string
-}
-
-const columns222: ProColumns<CategoryItem>[] = [
-    {
-        dataIndex: 'index',
-        valueType: 'index',
-        width: 48,
-    },
-    {
-        title: '标题',
-        dataIndex: 'name',
-        copyable: true,
-        ellipsis: true,
-        tooltip: '标题过长会自动收缩',
-    },
-]
-
 export default function PermissionPage() {
     const permissions = useUserPermission()
     const { t } = useTranslation()
-
-    const actionRef = useRef<ActionType>()
 
     const [permissionModalProps, setPermissionModalProps] = useState<PermissionModalProps>({
         formValue: { ...defaultPermissionValue },
@@ -202,45 +155,6 @@ export default function PermissionPage() {
             />
 
             <PermissionModal {...permissionModalProps} />
-
-            <ProTable<CategoryItem>
-                columns={columns222}
-                actionRef={actionRef}
-                cardBordered
-                request={async (params, sort, filter) => {
-                    await waitTime(2000)
-                    return {
-                        data: [
-                            {
-                                id: '1',
-                                name: 'tag 1',
-                                // title: 'tag 1',
-                                // labels: [{ name: '', color: '' }],
-                            },
-                            {
-                                id: '2',
-                                name: 'tag 2',
-                                // title: 'tag 2',
-                                // labels: [{ name: '', color: '' }],
-                            },
-                            {
-                                id: '3',
-                                name: 'tag 3',
-                                // title: 'tag 3',
-                                // labels: [{ name: '', color: '' }],
-                            },
-                        ],
-                        total: 3,
-                        success: true,
-                    }
-                }}
-                rowKey="id"
-                search={{}}
-                pagination={{
-                    pageSize: 10,
-                }}
-                headerTitle="Tags List"
-            />
         </Card>
     )
 }

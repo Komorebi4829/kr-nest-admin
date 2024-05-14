@@ -70,7 +70,7 @@ export class MenuEntity extends BaseEntity {
 
     @Expose()
     @Column({ comment: '显示状态', type: 'boolean', nullable: true })
-    visible?: boolean
+    hide?: boolean
 
     @Expose()
     @Column({ comment: '菜单状态', type: 'tinyint', nullable: true })

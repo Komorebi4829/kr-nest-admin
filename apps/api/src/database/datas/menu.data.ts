@@ -13,7 +13,7 @@ export type MenuItem = {
     component?: string
     perms?: string
     query?: string
-    visible?: boolean
+    hide?: boolean
     status?: number
     newFeature?: boolean
     hideTab?: boolean
@@ -27,11 +27,7 @@ export const MENUS: MenuItem[] = [
         name: 'Dashboard',
         type: MenuType.CATALOGUE,
         icon: 'ic-analysis',
-        // isFrame: 0,
-        // isCache: 1,
         path: 'dashboard',
-        // visible: true,
-        // status: true,
         children: [
             {
                 label: 'sys.menu.workbench',
@@ -118,7 +114,7 @@ export const MENUS: MenuItem[] = [
                         type: MenuType.MENU,
                         path: 'user/:id',
                         component: '/management/system/user/detail.tsx',
-                        visible: false,
+                        hide: true,
                     },
                     {
                         label: 'sys.menu.system.menu',
@@ -361,7 +357,7 @@ export const MENUS: MenuItem[] = [
     },
     {
         label: 'sys.menu.blank',
-        name: 'Disabled',
+        name: 'Blank',
         icon: 'ic_blank',
         type: MenuType.MENU,
         path: 'blank',

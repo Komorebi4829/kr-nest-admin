@@ -41,7 +41,7 @@ export interface Permission {
     component?: string
     perms?: string
     query?: string
-    visible?: boolean
+    hide?: boolean
     status?: BasicStatus
     newFeature?: boolean
     hideTab?: boolean

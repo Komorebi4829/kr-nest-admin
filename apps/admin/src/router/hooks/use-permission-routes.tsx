@@ -64,7 +64,7 @@ function transformPermissionToMenuRoutes(
             type,
             label,
             icon,
-            order,
+            customOrder: order,
             hide,
             hideTab,
             status,
