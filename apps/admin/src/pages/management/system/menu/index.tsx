@@ -18,6 +18,7 @@ import MenuModal from './menu-modal'
 
 import type { Permission } from '#/entity'
 import { BasicStatus, PermissionType } from '#/enum'
+import { QuestionCircleOutlined } from '@ant-design/icons'
 
 type MyMenuItem = Permission
 
@@ -122,6 +123,7 @@ export default function MenuPage() {
                         okText="Yes"
                         cancelText="No"
                         placement="left"
+                        icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
                         okButtonProps={{ loading: deleteMenuTreeMutation.isLoading }}
                         onConfirm={async () => {
                             await deleteMenuTreeMutation.mutateAsync({ ids: [record.id] })

@@ -10,6 +10,7 @@ import {
     ProFormRadio,
     ProFormDependency,
 } from '@ant-design/pro-components'
+import IconSelect from '@/components/icon-select'
 
 import { Col, Row } from 'antd'
 
@@ -32,7 +33,7 @@ export default function MenuForm() {
     return (
         <>
             <ProFormText name="id" hidden />
-
+            <IconSelect></IconSelect>
             <Row gutter={24}>
                 <Col {...colStyle}>
                     <ProFormRadio.Group

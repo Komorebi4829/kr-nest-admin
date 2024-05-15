@@ -86,7 +86,7 @@ const MenuModal = ({ onCancel, modalData, reloadTable }: MenuModalProps) => {
         console.log('edit', form)
     }
 
-    const onValuesChange = (values) => {}
+    const onValuesChange = (values) => { }
 
     const typeOfNewMenu = () => {
         if (isNew) {
@@ -106,10 +106,13 @@ const MenuModal = ({ onCancel, modalData, reloadTable }: MenuModalProps) => {
 
     const detailRequest = async () => {
         const res = await getMenuDetailMutation.mutateAsync(id)
-        return res
+        return {
+            ...res,
+            hide: !res.hide,
+        }
     }
 
-    const cleanup = () => {}
+    const cleanup = () => { }
 
     return (
         <Modal

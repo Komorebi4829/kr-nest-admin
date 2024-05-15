@@ -27,8 +27,8 @@ type UserStore = {
 
 const useUserStore = create<UserStore>((set) => {
     return {
-        userInfo: getItem<UserInfo>(StorageEnum.UserStore) || {},
-        userToken: getItem<UserToken>(StorageEnum.UserStore) || {},
+        userInfo: getItem<UserInfo>(StorageEnum.User) || {},
+        userToken: getItem<UserToken>(StorageEnum.Token) || {},
         actions: {
             setUserInfo: (userInfo) => {
                 set({ userInfo })

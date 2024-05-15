@@ -12,7 +12,7 @@ const getMenuList = (params: any) => apiClient.get<Permission[]>({ url: `${MenuA
 const createMenu = (data: any) => apiClient.post<Permission[]>({ url: `${MenuApi.Menu}`, data })
 const updateMenu = (data: any) => apiClient.patch<Permission[]>({ url: `${MenuApi.Menu}`, data })
 const deleteMenu = (data: any) => apiClient.delete<Permission[]>({ url: `${MenuApi.Menu}`, data })
-const getMenuDetail = (id: string) => apiClient.get<Permission[]>({ url: `${MenuApi.Menu}/${id}` })
+const getMenuDetail = (id: string) => apiClient.get<Permission>({ url: `${MenuApi.Menu}/${id}` })
 
 export default {
     getMenuTree,
