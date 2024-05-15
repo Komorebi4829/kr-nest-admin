@@ -8,9 +8,12 @@ import {
     ProFormDigit,
     // ProFormCheckbox,
     ProFormRadio,
+    ProFormDependency,
 } from '@ant-design/pro-components'
 
 import { Col, Row } from 'antd'
+
+import { LinkType, PermissionType } from '#/enum'
 
 const colStyle = {
     xs: 24,
@@ -52,10 +55,17 @@ export default function MenuForm() {
                     <ProFormText name="name" label="Name" rules={[ruleRequired]} />
                 </Col>
                 <Col {...colStyle}>
-                    <ProFormText name="label" label="Label" rules={[ruleRequired]} tooltip='I18n label' placeholder='E.g. sys.menu.system.index' />
+                    {/* TODO ProFormSelect */}
+                    <ProFormText
+                        name="label"
+                        label="Label"
+                        rules={[ruleRequired]}
+                        tooltip="I18n label"
+                        placeholder="E.g. sys.menu.system.index"
+                    />
                 </Col>
                 <Col {...colStyle}>
-                    <ProFormText name="icon" label="Icon" tooltip="local icon should start with ic" />
+                    <ProFormText name="icon" label="Icon" />
                 </Col>
                 <Col {...colStyle}>
                     <ProFormDigit name="customOrder" label="Order" min={1} />
@@ -63,24 +73,70 @@ export default function MenuForm() {
                 <Col {...colStyle}>
                     <ProFormText name="path" label="Path" rules={[ruleRequired]} />
                 </Col>
-                <Col {...colStyle}>
-                    <ProFormText name="component" label="Component" rules={[ruleRequired]} placeholder='E.g. /sys/others/blank.tsx' />
-                </Col>
+
+                <ProFormDependency name={['type', 'isFrame']}>
+                    {({ type, isFrame }) => {
+                        if (type === PermissionType.MENU && !isFrame) {
+                            return (
+                                <Col {...colStyle}>
+                                    {/* TODO ProFormSelect */}
+                                    <ProFormText
+                                        name="component"
+                                        label="Component"
+                                        rules={type === PermissionType.MENU && [ruleRequired]}
+                                        placeholder="E.g. /sys/others/blank.tsx"
+                                    />
+                                </Col>
+                            )
+                        }
+                        return null
+                    }}
+                </ProFormDependency>
                 <Col {...colStyle}>
                     <ProFormText name="perms" label="Permission" />
                 </Col>
                 <Col {...colStyle}>
                     <ProFormText name="query" label="Query" />
                 </Col>
+            </Row>
+
+            <Row gutter={24}>
                 <Col {...colStyle}>
-                    <ProFormSwitch
-                        name="isFrame"
-                        label="Is Frame"
-                    />
+                    <ProFormSwitch name="isFrame" label="Is External Link?" />
                 </Col>
-                <Col {...colStyle}>
-                    <ProFormText name="frameSrc" label="Frame Src" />
-                </Col>
+
+                <ProFormDependency name={['isFrame']}>
+                    {({ isFrame }) => {
+                        if (isFrame) {
+                            return (
+                                <>
+                                    <Col {...colStyle}>
+                                        <ProFormRadio.Group
+                                            name="_linkType"
+                                            label="Link Type"
+                                            radioType="button"
+                                            fieldProps={{ buttonStyle: 'solid' }}
+                                            rules={[ruleRequired]}
+                                            initialValue={LinkType.NEW_WINDOW}
+                                            options={[
+                                                { value: LinkType.NEW_WINDOW, label: 'New Window' },
+                                                { value: LinkType.EMBED, label: 'Embed' },
+                                            ]}
+                                        />
+                                    </Col>
+                                    <Col {...colStyle}>
+                                        <ProFormText
+                                            name="frameSrc"
+                                            label="Link URL"
+                                            rules={[ruleRequired]}
+                                        />
+                                    </Col>
+                                </>
+                            )
+                        }
+                        return null
+                    }}
+                </ProFormDependency>
             </Row>
 
             <Row gutter={24}>
@@ -93,7 +149,6 @@ export default function MenuForm() {
                     />
                 </Col>
                 <Col {...colStyle}>
-                    {/* TODO */}
                     <ProFormSwitch
                         checkedChildren="Show"
                         unCheckedChildren="Hide"
@@ -110,18 +165,11 @@ export default function MenuForm() {
                     />
                 </Col>
                 <Col {...colStyle}>
-                    <ProFormSwitch
-                        name="isCache"
-                        label="Cache"
-                    />
+                    <ProFormSwitch name="isCache" label="Cache" />
                 </Col>
                 <Col {...colStyle}>
-                    <ProFormSwitch
-                        name="newFeature"
-                        label="New Feature"
-                    />
+                    <ProFormSwitch name="newFeature" label="New Feature" />
                 </Col>
-
             </Row>
         </>
     )

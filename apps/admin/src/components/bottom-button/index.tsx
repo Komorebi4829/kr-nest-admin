@@ -4,10 +4,10 @@ import { Button, Space, Row } from 'antd'
 export type BottomButtonProps = {
     justify?: 'start' | 'end' | 'center' | 'space-between' | 'space-around' | 'space-evenly'
     submitButtonProps: SubmitterProps & {
-        form?: FormInstance<any>;
+        form?: FormInstance<any>
     } & {
-        submit: () => void;
-        reset: () => void;
+        submit: () => void
+        reset: () => void
     } & {
         loading: boolean
     }
@@ -16,7 +16,7 @@ export type BottomButtonProps = {
 
 const BottomButton = (props: BottomButtonProps) => {
     return (
-        <Row justify={props?.justify}>
+        <Row justify={props?.justify || 'end'}>
             <Space>
                 <Button
                     type="primary"
@@ -26,7 +26,11 @@ const BottomButton = (props: BottomButtonProps) => {
                 >
                     Submit
                 </Button>
-                <Button type="default" key="rest" onClick={() => props?.submitButtonProps?.form?.resetFields()}>
+                <Button
+                    type="default"
+                    key="rest"
+                    onClick={() => props?.submitButtonProps?.form?.resetFields()}
+                >
                     Reset
                 </Button>
                 <Button type="default" key="cancel" onClick={props?.onCancel}>

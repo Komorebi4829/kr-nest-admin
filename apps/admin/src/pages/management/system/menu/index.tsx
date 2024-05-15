@@ -1,11 +1,11 @@
 import { ProTable } from '@ant-design/pro-components'
 import type { ActionType, ProColumns } from '@ant-design/pro-components'
 import { useMutation } from '@tanstack/react-query'
-import { Button, Popconfirm } from 'antd'
+import { Button, Popconfirm, message } from 'antd'
 import { isNil, unset } from 'lodash'
 import { chain } from 'ramda'
 
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 
 import { useSetState } from 'react-use'
 
@@ -33,10 +33,6 @@ export default function MenuPage() {
     // const { colorTextSecondary } = useThemeToken()
     const { push } = useRouter()
     const pathname = usePathname()
-    // const [modalData, { set, setAll, remove, reset }] = useMap<{
-    //     type: 'new' | 'edit'
-    //     id: string
-    // }>()
     const [modalData, setmodalData] = useSetState<{ mode: 'new' | 'edit'; id: string }>()
 
     const actionRef = useRef<ActionType>()
@@ -97,9 +93,11 @@ export default function MenuPage() {
             dataIndex: 'status',
             search: false,
             width: 80,
-            render: (status) => (<ProTag color={status === BasicStatus.DISABLE ? 'error' : 'success'}>
-                {status === BasicStatus.DISABLE ? 'Disable' : 'Enable'}
-            </ProTag>),
+            render: (status) => (
+                <ProTag color={status === BasicStatus.DISABLE ? 'error' : 'success'}>
+                    {status === BasicStatus.DISABLE ? 'Disable' : 'Enable'}
+                </ProTag>
+            ),
         },
 
         {
@@ -126,7 +124,9 @@ export default function MenuPage() {
                         placement="left"
                         okButtonProps={{ loading: deleteMenuTreeMutation.isLoading }}
                         onConfirm={async () => {
-                            await deleteMenuTreeMutation.mutateAsync({ids: [record.id]})
+                            await deleteMenuTreeMutation.mutateAsync({ ids: [record.id] })
+                            message.success('Menu deleted successfully', 1.5)
+                            reloadTable()
                         }}
                     >
                         <IconButton>

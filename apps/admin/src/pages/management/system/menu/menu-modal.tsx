@@ -2,15 +2,17 @@ import { ProForm } from '@ant-design/pro-components'
 import type { ProFormInstance } from '@ant-design/pro-components'
 import { useMutation } from '@tanstack/react-query'
 import { message, Modal } from 'antd'
-import { useState, useRef, useEffect, useMemo } from 'react'
+import { merge, unset } from 'lodash'
+import { useState, useRef, useEffect } from 'react'
 
 import menuService from '@/api/menu'
 
 import BottomButton from '@/components/bottom-button'
 
 import MenuForm from './menu-form'
-import { merge } from 'lodash'
+
 import { Permission } from '#/entity'
+import { LinkType } from '#/enum'
 
 export type MenuModalProps = {
     onCancel: VoidFunction
@@ -19,11 +21,8 @@ export type MenuModalProps = {
 }
 
 const MenuModal = ({ onCancel, modalData, reloadTable }: MenuModalProps) => {
-    console.log('modal data', modalData)
     const { mode, id } = modalData || {}
     const isNew = mode === 'new'
-    const [loading, setLoading] = useState(false)
-    const [submitLoading, setSubmitLoading] = useState(false)
     const [menuTree, setmenuTree] = useState([])
     const formRef = useRef<ProFormInstance>()
 
@@ -54,41 +53,45 @@ const MenuModal = ({ onCancel, modalData, reloadTable }: MenuModalProps) => {
         ],
     )
 
+    const componentByLinkType = (type: LinkType) => {
+        const m = {
+            [LinkType.NEW_WINDOW]: '/sys/others/iframe/external-link.tsx',
+            [LinkType.EMBED]: '/sys/others/iframe/index.tsx',
+        }
+        return m[type]
+    }
+
     const onFinishWhenNew = async (data) => {
-        setSubmitLoading(true)
         const form = {
             ...data,
             hide: !data.hide, // reverse
+            component: componentByLinkType(data._linkType),
         }
-        try {
-            await createMenuMutation.mutateAsync(form)
-        } finally {
-            setSubmitLoading(false)
-        }
-        
-        message.success('Success!', 1.5)
-        setTimeout(() => {
-            onCancel()
-            reloadTable?.()
-        }, 1500);
+        unset(form, '_linkType')
+        await createMenuMutation.mutateAsync(form)
 
+        message.success('Create success', 1.5)
+        onCancel()
+        reloadTable?.()
     }
 
     const onFinishWhenEdit = (data) => {
-        if (data?.parentId === data?.menuId) {
-            message?.error('error')
-            return
+        // if (data?.parentId === data?.menuId) {
+        //     message?.error('error')
+        //     return
+        // }
+        const form = {
+            ...data,
         }
-        setSubmitLoading(true)
-        // TODO
+        console.log('edit', form)
     }
 
-    const onValuesChange = (values) => { }
+    const onValuesChange = (values) => {}
 
     const typeOfNewMenu = () => {
         if (isNew) {
             if (id) return 1
-            else return 0
+            return 0
         }
         return null
     }
@@ -97,7 +100,7 @@ const MenuModal = ({ onCancel, modalData, reloadTable }: MenuModalProps) => {
         type: typeOfNewMenu(),
         isFrame: false,
         isCache: true,
-        hide: true,  // TODO reverse when submit
+        hide: true, // TODO reverse when submit
         status: 1,
     }
 
@@ -106,13 +109,11 @@ const MenuModal = ({ onCancel, modalData, reloadTable }: MenuModalProps) => {
         return res
     }
 
-    const cleanup = () => {
-        setSubmitLoading(false)
-    }
+    const cleanup = () => {}
 
     return (
         <Modal
-            width="60%"
+            width="80%"
             destroyOnClose
             title={isNew ? 'New Menu' : 'Edit Menu'}
             open={!!mode}
@@ -127,7 +128,15 @@ const MenuModal = ({ onCancel, modalData, reloadTable }: MenuModalProps) => {
                 request={isNew ? null : detailRequest}
                 submitter={{
                     render: (props, doms) => {
-                        return <BottomButton submitButtonProps={merge({ loading: submitLoading }, props)} onCancel={onCancel} />
+                        return (
+                            <BottomButton
+                                submitButtonProps={merge(
+                                    { loading: getMenuDetailMutation.isLoading },
+                                    props,
+                                )}
+                                onCancel={onCancel}
+                            />
+                        )
                     },
                 }}
                 formRef={formRef}

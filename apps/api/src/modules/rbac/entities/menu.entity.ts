@@ -12,7 +12,7 @@ import { MenuType } from '../constants'
 @Entity('role_menus')
 export class MenuEntity extends BaseEntity {
     @Expose()
-    @PrimaryColumn({ type: 'int', generated: true })
+    @PrimaryColumn({ type: 'varchar', generated: 'uuid', length: 36 })
     id: string
 
     @Expose()

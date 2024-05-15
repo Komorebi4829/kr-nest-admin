@@ -57,3 +57,8 @@ export enum PermissionType {
     MENU,
     BUTTON,
 }
+
+export enum LinkType {
+    EMBED = 0,
+    NEW_WINDOW = 1,
+}

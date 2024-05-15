@@ -4,6 +4,7 @@ import {
     Delete,
     Get,
     Param,
+    ParseUUIDPipe,
     Patch,
     Post,
     Query,
@@ -52,7 +53,7 @@ export class MenuController {
     @Permission(permission)
     @SerializeOptions({ groups: ['menu-detail'] })
     async detail(
-        @Param('id')
+        @Param('id', new ParseUUIDPipe())
         id: string,
     ) {
         return this.service.detail(id)
