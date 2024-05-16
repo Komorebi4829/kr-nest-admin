@@ -62,7 +62,7 @@ export function getNamesFromPages() {
         },
     )
     Object.keys(modules).forEach((key) => {
-        const match = key.match(/\.\.\/pages\/(.+)\.tsx$/)
+        const match = key.match(/\.\.\/pages(.+)$/)
         const name = match ? match[1] : ''
         pageNames.push(name)
     })
