@@ -9,12 +9,18 @@ import {
     // ProFormCheckbox,
     ProFormRadio,
     ProFormDependency,
+    ProFormSelect,
 } from '@ant-design/pro-components'
-import IconSelect from '@/components/icon-select'
 
 import { Col, Row } from 'antd'
+import { useMemo } from 'react'
+
+import { getNamesFromPages } from '@/router/utils'
+
+import { getI18nOptions } from '@/utils/i18n-options'
 
 import { LinkType, PermissionType } from '#/enum'
+// import IconSelect from '@/components/icon-select'
 
 const colStyle = {
     xs: 24,
@@ -30,10 +36,12 @@ const ruleRequired = {
 }
 
 export default function MenuForm() {
+    const pageNames = useMemo(() => getNamesFromPages(), [])
+    const i18nOptions = useMemo(() => getI18nOptions(), [])
     return (
         <>
             <ProFormText name="id" hidden />
-            <IconSelect></IconSelect>
+
             <Row gutter={24}>
                 <Col {...colStyle}>
                     <ProFormRadio.Group
@@ -56,13 +64,13 @@ export default function MenuForm() {
                     <ProFormText name="name" label="Name" rules={[ruleRequired]} />
                 </Col>
                 <Col {...colStyle}>
-                    {/* TODO ProFormSelect */}
-                    <ProFormText
+                    <ProFormSelect
                         name="label"
                         label="Label"
                         rules={[ruleRequired]}
                         tooltip="I18n label"
                         placeholder="E.g. sys.menu.system.index"
+                        options={i18nOptions}
                     />
                 </Col>
                 <Col {...colStyle}>
@@ -80,12 +88,11 @@ export default function MenuForm() {
                         if (type === PermissionType.MENU && !isFrame) {
                             return (
                                 <Col {...colStyle}>
-                                    {/* TODO ProFormSelect */}
-                                    <ProFormText
+                                    <ProFormSelect
                                         name="component"
                                         label="Component"
                                         rules={type === PermissionType.MENU && [ruleRequired]}
-                                        placeholder="E.g. /sys/others/blank.tsx"
+                                        options={pageNames}
                                     />
                                 </Col>
                             )

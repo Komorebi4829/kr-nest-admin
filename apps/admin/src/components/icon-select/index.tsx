@@ -1,4 +1,6 @@
-import { ProFormSelect } from '@ant-design/pro-components'
+import { Select } from 'antd'
+
+import { SvgIcon } from '../icon'
 
 function getLocalIconNames() {
     const iconNames: string[] = []
@@ -12,8 +14,18 @@ function getLocalIconNames() {
 }
 
 export default function IconSelect() {
-    // https://icon-sets.iconify.design/    
+    // https://icon-sets.iconify.design/
     const iconNames = getLocalIconNames()
-    // TODO
-    return <div></div>
+    return (
+        <Select
+            dropdownRender={(originNode) => {
+                console.log('originNode', originNode)
+                return originNode
+            }}
+            options={iconNames.map((name) => ({
+                label: <SvgIcon icon={name} size={20} />,
+                value: name,
+            }))}
+        />
+    )
 }

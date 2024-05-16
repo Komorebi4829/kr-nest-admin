@@ -51,3 +51,20 @@ export function flattenMenuRoutes(routes: AppRouteObject[]) {
         return prev
     }, [])
 }
+
+export function getNamesFromPages() {
+    const pageNames: string[] = []
+
+    const modules = import.meta.glob(
+        ['../pages/**/*.tsx', '!../pages/components', '!../pages/**/components/*.tsx'],
+        {
+            eager: false,
+        },
+    )
+    Object.keys(modules).forEach((key) => {
+        const match = key.match(/\.\.\/pages\/(.+)\.tsx$/)
+        const name = match ? match[1] : ''
+        pageNames.push(name)
+    })
+    return pageNames
+}
