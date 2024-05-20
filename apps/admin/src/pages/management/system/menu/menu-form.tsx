@@ -15,12 +15,12 @@ import {
 import { Col, Row } from 'antd'
 import { useMemo } from 'react'
 
+import IconSelect from '@/components/icon-select'
 import { getNamesFromPages } from '@/router/utils'
 
 import { getI18nOptions } from '@/utils/i18n-options'
 
 import { LinkType, PermissionType } from '#/enum'
-// import IconSelect from '@/components/icon-select'
 
 const colStyle = {
     xs: 24,
@@ -74,7 +74,8 @@ export default function MenuForm() {
                     />
                 </Col>
                 <Col {...colStyle}>
-                    <ProFormText name="icon" label="Icon" />
+                    {/* <ProFormText name="icon" label="Icon" /> */}
+                    <IconSelect />
                 </Col>
                 <Col {...colStyle}>
                     <ProFormDigit name="customOrder" label="Order" min={1} />

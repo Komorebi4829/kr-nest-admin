@@ -1,6 +1,7 @@
-import { Select } from 'antd'
+import { Popover, Input } from 'antd'
+import { useState } from 'react'
 
-import { SvgIcon } from '../icon'
+import { IconButton, SvgIcon } from '../icon'
 
 function getLocalIconNames() {
     const iconNames: string[] = []
@@ -16,16 +17,27 @@ function getLocalIconNames() {
 export default function IconSelect() {
     // https://icon-sets.iconify.design/
     const iconNames = getLocalIconNames()
+    const [open, setopen] = useState(false)
+    const [iconName, seticonName] = useState<string>()
+
     return (
-        <Select
-            dropdownRender={(originNode) => {
-                console.log('originNode', originNode)
-                return originNode
-            }}
-            options={iconNames.map((name) => ({
-                label: <SvgIcon icon={name} size={20} />,
-                value: name,
-            }))}
-        />
+        <Popover
+            trigger="click"
+            open={open}
+            placement="bottomLeft"
+            overlayStyle={{ maxWidth: 300 }}
+            overlayInnerStyle={{ maxHeight: 260 }}
+            content={
+                <div className="flex flex-wrap overflow-y-auto">
+                    {iconNames.map((name) => (
+                        <IconButton onClick={() => seticonName(name)} className="">
+                            <SvgIcon icon={name} size={18} />
+                        </IconButton>
+                    ))}
+                </div>
+            }
+        >
+            <Input onFocus={() => setopen(true)} onBlur={() => setopen(false)} />
+        </Popover>
     )
 }
