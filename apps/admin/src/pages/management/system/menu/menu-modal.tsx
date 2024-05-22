@@ -18,12 +18,12 @@ export type MenuModalProps = {
     onCancel: VoidFunction
     modalData: { mode: 'new' | 'edit'; id: string }
     reloadTable: VoidFunction
+    treeData: Permission[]
 }
 
-const MenuModal = ({ onCancel, modalData, reloadTable }: MenuModalProps) => {
+const MenuModal = ({ onCancel, modalData, reloadTable, treeData }: MenuModalProps) => {
     const { mode, id } = modalData || {}
     const isNew = mode === 'new'
-    const [menuTree, setmenuTree] = useState([])
     const formRef = useRef<ProFormInstance>()
 
     const getMenuDetailMutation = useMutation(menuService.getMenuDetail)
@@ -109,6 +109,7 @@ const MenuModal = ({ onCancel, modalData, reloadTable }: MenuModalProps) => {
         return {
             ...res,
             hide: !res.hide,
+            parent: res.parent === null && 'null',
         }
     }
 
@@ -145,7 +146,7 @@ const MenuModal = ({ onCancel, modalData, reloadTable }: MenuModalProps) => {
                 formRef={formRef}
                 onValuesChange={onValuesChange}
             >
-                <MenuForm />
+                <MenuForm treeData={treeData} />
             </ProForm>
         </Modal>
     )

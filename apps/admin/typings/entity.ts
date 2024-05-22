@@ -46,6 +46,7 @@ export interface Permission {
     newFeature?: boolean
     hideTab?: boolean
     parentId?: string
+    parent?: string | null
     children?: Permission[]
 }
 
