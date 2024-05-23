@@ -14,30 +14,53 @@ function getLocalIconNames() {
     return iconNames
 }
 
-export default function IconSelect() {
+type IconSelectProps = {
+    onChange?: (value: string) => void
+    value?: string
+}
+
+export default function IconSelect({ onChange, value = '' }: IconSelectProps) {
     // https://icon-sets.iconify.design/
     const iconNames = getLocalIconNames()
     const [open, setopen] = useState(false)
     const [iconName, seticonName] = useState<string>()
 
+    const triggerChange = (changedValue: string) => {
+        onChange?.(changedValue)
+    }
+
     return (
         <Popover
-            trigger="click"
+            trigger={['focus', 'contextMenu']}
             open={open}
             placement="bottomLeft"
             overlayStyle={{ maxWidth: 300 }}
             overlayInnerStyle={{ maxHeight: 260 }}
             content={
-                <div className="flex flex-wrap overflow-y-auto">
+                <div className="flex flex-wrap overflow-y-auto" onBlur={() => setopen(false)}>
                     {iconNames.map((name) => (
-                        <IconButton onClick={() => seticonName(name)} className="">
+                        <IconButton
+                            onClick={() => {
+                                seticonName(name)
+                                triggerChange(name)
+                                setopen(false)
+                            }}
+                            className=""
+                            key={name}
+                        >
                             <SvgIcon icon={name} size={18} />
                         </IconButton>
                     ))}
                 </div>
             }
         >
-            <Input onFocus={() => setopen(true)} onBlur={() => setopen(false)} />
+            <Input
+                onFocus={() => setopen(true)}
+                placeholder="Please select or input"
+                addonBefore={<SvgIcon icon={value} size={18} />}
+                value={value}
+                readOnly
+            />
         </Popover>
     )
 }

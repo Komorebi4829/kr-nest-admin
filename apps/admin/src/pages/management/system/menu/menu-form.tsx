@@ -1,5 +1,3 @@
-import { Form, TreeSelect } from 'antd'
-import type { TreeSelectProps } from 'antd'
 import {
     ProFormText,
     // ProFormDateRangePicker,
@@ -13,14 +11,15 @@ import {
     ProFormDependency,
     ProFormSelect,
 } from '@ant-design/pro-components'
+import { Form, TreeSelect, Col, Row } from 'antd'
 
-import { Col, Row } from 'antd'
 import { useMemo } from 'react'
 
 import IconSelect from '@/components/icon-select'
 import { getNamesFromPages } from '@/router/utils'
 
 import { getI18nOptions } from '@/utils/i18n-options'
+
 import type { Permission } from '#/entity'
 
 import { LinkType, PermissionType } from '#/enum'
@@ -38,7 +37,9 @@ const ruleRequired = {
     required: true,
 }
 
-export default function MenuForm({ treeData }: Permission & {
+export default function MenuForm({
+    treeData,
+}: Permission & {
     children?: Permission[]
     value?: string
     id?: string
@@ -67,8 +68,13 @@ export default function MenuForm({ treeData }: Permission & {
                     />
                 </Col>
                 <Col {...colStyle}>
-                    <Form.Item name="parent" label="Parent" >
-                        <TreeSelect showSearch treeData={treeData} allowClear placeholder='Please select' />
+                    <Form.Item name="parent" label="Parent">
+                        <TreeSelect
+                            showSearch
+                            treeData={treeData}
+                            allowClear
+                            placeholder="Please select"
+                        />
                     </Form.Item>
                 </Col>
                 <Col {...colStyle}>
@@ -85,8 +91,9 @@ export default function MenuForm({ treeData }: Permission & {
                     />
                 </Col>
                 <Col {...colStyle}>
-                    {/* <ProFormText name="icon" label="Icon" /> */}
-                    <IconSelect />
+                    <Form.Item name="icon" label="Icon">
+                        <IconSelect />
+                    </Form.Item>
                 </Col>
                 <Col {...colStyle}>
                     <ProFormDigit name="customOrder" label="Order" min={1} />

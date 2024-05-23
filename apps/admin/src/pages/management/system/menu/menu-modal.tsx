@@ -3,7 +3,7 @@ import type { ProFormInstance } from '@ant-design/pro-components'
 import { useMutation } from '@tanstack/react-query'
 import { message, Modal } from 'antd'
 import { merge, unset } from 'lodash'
-import { useState, useRef, useEffect } from 'react'
+import { useRef, useEffect } from 'react'
 
 import menuService from '@/api/menu'
 
@@ -86,7 +86,7 @@ const MenuModal = ({ onCancel, modalData, reloadTable, treeData }: MenuModalProp
         console.log('edit', form)
     }
 
-    const onValuesChange = (values) => { }
+    const onValuesChange = (values) => {}
 
     const typeOfNewMenu = () => {
         if (isNew) {
@@ -113,7 +113,7 @@ const MenuModal = ({ onCancel, modalData, reloadTable, treeData }: MenuModalProp
         }
     }
 
-    const cleanup = () => { }
+    const cleanup = () => {}
 
     return (
         <Modal
