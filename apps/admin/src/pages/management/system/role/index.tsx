@@ -77,7 +77,7 @@ export default function RolePage() {
             <ProTable
                 rowKey="id"
                 size="small"
-                search={{}}
+                search={false}
                 pagination={{ pageSize: 10 }}
                 headerTitle="Roles"
                 scroll={{ x: 'max-content' }}

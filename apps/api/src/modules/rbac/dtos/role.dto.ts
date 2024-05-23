@@ -29,14 +29,15 @@ export class CreateRoleDto {
 
     @MaxLength(100, {
         always: true,
-        message: '名称长度最大为$constraint1',
+        message: 'label长度最大为$constraint1',
     })
     label: string
 
     @MaxLength(500, {
         always: true,
-        message: '名称长度最大为$constraint1',
+        message: '描述长度最大为$constraint1',
     })
+    @IsOptional({ groups: ['create', 'update'] })
     description?: string
 
     @IsDataExist(PermissionEntity, {

@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query'
 import { message, Modal } from 'antd'
 import { merge } from 'lodash'
 import { useEffect, useRef, useState } from 'react'
-
+import { useTranslation, } from 'react-i18next';
 import menuService from '@/api/menu'
 import roleService from '@/api/role'
 
@@ -13,6 +13,7 @@ import BottomButton from '@/components/bottom-button'
 import RoleForm from './role-form'
 
 import { Permission } from '#/entity'
+import { chain } from 'ramda'
 
 export type RoleModalProps = {
     onCancel: VoidFunction
@@ -20,7 +21,24 @@ export type RoleModalProps = {
     reloadTable: VoidFunction
 }
 
+const traverseTree = <T extends {
+    label: string,
+    id: string,
+    children?: T[],
+    title?: string,
+    name?: string,
+    value?: string
+}>(trees: T[] = [], t: any): T[] => {
+    return chain((node) => {
+        node.title = t(node.label)
+        node.name = t(node.label)
+        node.value = node.id
+        return traverseTree(node.children, t)
+    }, trees)
+}
+
 const RoleModal = ({ onCancel, modalData, reloadTable }: RoleModalProps) => {
+    const { t } = useTranslation()
     const { mode, id } = modalData || {}
     const isNew = mode === 'new'
     const formRef = useRef<ProFormInstance>()
@@ -28,15 +46,18 @@ const RoleModal = ({ onCancel, modalData, reloadTable }: RoleModalProps) => {
 
     const getRoleDetailMutation = useMutation(roleService.getRoleDetail)
     const createRoleMutation = useMutation(roleService.createRole)
+    const updateRoleMutation = useMutation(roleService.updateRole)
     const getMenuTreeMutation = useMutation(menuService.getMenuTree)
 
     useEffect(() => {
+        if (!mode) return () => { }
         getMenuTreeMutation.mutateAsync().then((res) => {
+            traverseTree(res as Permission[], t)
             setmenuData(res as Permission[])
         })
 
-        return () => {}
-    }, [])
+        return () => { }
+    }, [mode])
 
     const onFinishWhenNew = async (data) => {
         const form = {
@@ -44,23 +65,23 @@ const RoleModal = ({ onCancel, modalData, reloadTable }: RoleModalProps) => {
         }
         await createRoleMutation.mutateAsync(form)
 
-        message.success('Create success', 1.5)
+        message.success('Create successfully', 1.5)
         onCancel()
         reloadTable?.()
     }
 
-    const onFinishWhenEdit = (data) => {
-        // if (data?.parentId === data?.roleId) {
-        //     message?.error('error')
-        //     return
-        // }
+    const onFinishWhenEdit = async (data) => {
         const form = {
             ...data,
         }
-        console.log('edit', form)
+        await updateRoleMutation.mutateAsync(form)
+
+        message.success('Update successfully', 1.5)
+        onCancel()
+        reloadTable?.()
     }
 
-    const onValuesChange = (values) => {}
+    const onValuesChange = (values) => { }
 
     const initialValuesNew: Partial<Permission> = {}
 
@@ -69,11 +90,10 @@ const RoleModal = ({ onCancel, modalData, reloadTable }: RoleModalProps) => {
         return res
     }
 
-    const cleanup = () => {}
+    const cleanup = () => { }
 
     return (
         <Modal
-            // width="50%"
             destroyOnClose
             title={isNew ? 'New Role' : 'Edit Role'}
             open={!!mode}
