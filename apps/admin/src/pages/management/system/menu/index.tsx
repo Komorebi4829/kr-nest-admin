@@ -1,3 +1,4 @@
+import { cloneDeep } from 'lodash'
 import { ProTable } from '@ant-design/pro-components'
 import type { ActionType, ProColumns } from '@ant-design/pro-components'
 import { useMutation } from '@tanstack/react-query'
@@ -5,7 +6,7 @@ import { Button, Popconfirm, message } from 'antd'
 import { isNil, unset } from 'lodash'
 import { chain } from 'ramda'
 
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 
 import { useSetState } from 'react-use'
 
@@ -30,11 +31,29 @@ function normalizeTrees<T extends { children?: T[] }>(trees: T[] = []): T[] {
     }, trees)
 }
 
+function normalizeTreeOptions<T extends {
+    children?: T[]
+    value?: string
+    id?: string
+    label?: string
+    name?: string
+}>(trees: T[] = []): T[] {
+    return chain((node) => {
+        const children = node.children || []
+        node.value = node.id
+        node.label = node.name
+        if (!children || children.length === 0) unset(node, 'children')
+        return normalizeTreeOptions(children)
+    }, trees)
+}
+
+
 export default function MenuPage() {
     // const { colorTextSecondary } = useThemeToken()
     const { push } = useRouter()
     const pathname = usePathname()
     const [modalData, setmodalData] = useSetState<{ mode: 'new' | 'edit'; id: string }>()
+    const [treeData, settreeData] = useState<Permission[]>([])
 
     const actionRef = useRef<ActionType>()
 
@@ -161,7 +180,10 @@ export default function MenuPage() {
                 actionRef={actionRef}
                 request={async () => {
                     const res = await getMenuTreeMutation.mutateAsync()
-                    normalizeTrees(res)
+                    normalizeTrees(res as Permission[])
+                    const copyRes = cloneDeep(res)
+                    normalizeTreeOptions(copyRes as Permission[])
+                    settreeData([{ value: 'null', label: 'Root Menu', children: copyRes }] as any)
                     return {
                         success: true,
                         data: res,
@@ -178,6 +200,7 @@ export default function MenuPage() {
                 onCancel={() => setmodalData({ mode: null })}
                 modalData={modalData}
                 reloadTable={reloadTable}
+                treeData={treeData}
             />
         </>
     )

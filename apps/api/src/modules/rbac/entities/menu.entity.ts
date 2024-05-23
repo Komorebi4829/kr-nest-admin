@@ -37,7 +37,7 @@ export class MenuEntity extends BaseEntity {
     icon?: string
 
     @Expose()
-    @Column({ comment: '显示排序', default: 0 })
+    @Column({ comment: '显示排序', default: 1 })
     customOrder: number
 
     @Expose()
@@ -90,9 +90,6 @@ export class MenuEntity extends BaseEntity {
     @Expose({ groups: ['menu-detail', 'menu-list'] })
     @TreeParent({ onDelete: 'NO ACTION' })
     parent: Relation<MenuEntity> | null
-
-    @Expose({ groups: ['menu-tree'] })
-    parentId?: string
 
     @Expose({ groups: ['menu-tree'] })
     @TreeChildren({ cascade: true })

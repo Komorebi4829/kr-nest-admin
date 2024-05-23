@@ -1,3 +1,5 @@
+import { Form, TreeSelect } from 'antd'
+import type { TreeSelectProps } from 'antd'
 import {
     ProFormText,
     // ProFormDateRangePicker,
@@ -19,6 +21,7 @@ import IconSelect from '@/components/icon-select'
 import { getNamesFromPages } from '@/router/utils'
 
 import { getI18nOptions } from '@/utils/i18n-options'
+import type { Permission } from '#/entity'
 
 import { LinkType, PermissionType } from '#/enum'
 
@@ -35,7 +38,13 @@ const ruleRequired = {
     required: true,
 }
 
-export default function MenuForm() {
+export default function MenuForm({ treeData }: Permission & {
+    children?: Permission[]
+    value?: string
+    id?: string
+    label?: string
+    name?: string
+}) {
     const pageNames = useMemo(() => getNamesFromPages(), [])
     const i18nOptions = useMemo(() => getI18nOptions(), [])
     return (
@@ -58,7 +67,9 @@ export default function MenuForm() {
                     />
                 </Col>
                 <Col {...colStyle}>
-                    <ProFormText name="parent" label="Parent" allowClear />
+                    <Form.Item name="parent" label="Parent" >
+                        <TreeSelect showSearch treeData={treeData} allowClear placeholder='Please select' />
+                    </Form.Item>
                 </Col>
                 <Col {...colStyle}>
                     <ProFormText name="name" label="Name" rules={[ruleRequired]} />
