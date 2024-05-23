@@ -1,75 +1,59 @@
-import { Button, Card, Popconfirm } from 'antd'
-import Table, { ColumnsType } from 'antd/es/table'
-import { useState } from 'react'
+import { QuestionCircleOutlined } from '@ant-design/icons'
+import { ProTable } from '@ant-design/pro-components'
+import type { ActionType, ProColumns } from '@ant-design/pro-components'
+import { useMutation } from '@tanstack/react-query'
+import { Button, Popconfirm, message } from 'antd'
 
-import { ROLE_LIST } from '@/_mock/assets'
+import { useRef } from 'react'
+
+import { useSetState } from 'react-use'
+
+import roleService from '@/api/role'
 import { IconButton, Iconify } from '@/components/icon'
-import ProTag from '@/theme/antd/components/tag'
 
-import { RoleModal, RoleModalProps } from './role-modal'
+import RoleModal from './role-modal'
 
 import { Role } from '#/entity'
-import { BasicStatus } from '#/enum'
 
-const ROLES: Role[] = ROLE_LIST
-
-const DEFAULE_ROLE_VALUE: Role = {
-    id: '',
-    name: '',
-    label: '',
-    status: BasicStatus.ENABLE,
-    permission: [],
-}
 export default function RolePage() {
-    const [roleModalPros, setRoleModalProps] = useState<RoleModalProps>({
-        formValue: { ...DEFAULE_ROLE_VALUE },
-        title: 'New',
-        show: false,
-        onOk: () => {
-            setRoleModalProps((prev) => ({ ...prev, show: false }))
-        },
-        onCancel: () => {
-            setRoleModalProps((prev) => ({ ...prev, show: false }))
-        },
-    })
-    const columns: ColumnsType<Role> = [
+    const [modalData, setmodalData] = useSetState<{ mode: 'new' | 'edit'; id: string }>()
+
+    const actionRef = useRef<ActionType>()
+
+    const getRoleListMutation = useMutation(roleService.getRoleList)
+    const deleteRoleTreeMutation = useMutation(roleService.deleteRole)
+
+    const columns: ProColumns<Role>[] = [
         {
             title: 'Name',
-            dataIndex: 'name',
-            width: 300,
-        },
-        {
-            title: 'Label',
             dataIndex: 'label',
+            width: 200,
         },
-        { title: 'Order', dataIndex: 'order', width: 60 },
-        {
-            title: 'Status',
-            dataIndex: 'status',
-            align: 'center',
-            width: 120,
-            render: (status) => (
-                <ProTag color={status === BasicStatus.DISABLE ? 'error' : 'success'}>
-                    {status === BasicStatus.DISABLE ? 'Disable' : 'Enable'}
-                </ProTag>
-            ),
-        },
-        { title: 'Desc', dataIndex: 'desc' },
+        { title: 'Desc', dataIndex: 'description', search: false },
         {
             title: 'Action',
-            key: 'operation',
+            valueType: 'option',
+            key: 'option',
             align: 'center',
             width: 100,
+            fixed: 'right',
             render: (_, record) => (
                 <div className="flex w-full justify-center text-gray">
-                    <IconButton onClick={() => onEdit(record)}>
+                    <IconButton onClick={() => setmodalData({ mode: 'edit', id: record.id })}>
                         <Iconify icon="solar:pen-bold-duotone" size={18} />
                     </IconButton>
                     <Popconfirm
-                        title="Delete the Role"
+                        title="Delete the Role?"
                         okText="Yes"
                         cancelText="No"
                         placement="left"
+                        icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+                        okButtonProps={{ loading: deleteRoleTreeMutation.isLoading }}
+                        onConfirm={async () => {
+                            await deleteRoleTreeMutation.mutateAsync({ ids: [record.id] })
+                            message.success('Role deleted successfully', 1.5)
+                            reloadTable()
+                        }}
                     >
                         <IconButton>
                             <Iconify
@@ -84,46 +68,43 @@ export default function RolePage() {
         },
     ]
 
-    const onCreate = () => {
-        setRoleModalProps((prev) => ({
-            ...prev,
-            show: true,
-            title: 'Create New',
-            formValue: {
-                ...prev.formValue,
-                ...DEFAULE_ROLE_VALUE,
-            },
-        }))
-    }
-
-    const onEdit = (formValue: Role) => {
-        setRoleModalProps((prev) => ({
-            ...prev,
-            show: true,
-            title: 'Edit',
-            formValue,
-        }))
+    const reloadTable = () => {
+        actionRef?.current?.reloadAndRest?.()
     }
 
     return (
-        <Card
-            title="Role List"
-            extra={
-                <Button type="primary" onClick={onCreate}>
-                    New
-                </Button>
-            }
-        >
-            <Table
+        <>
+            <ProTable
                 rowKey="id"
                 size="small"
+                search={{}}
+                pagination={{ pageSize: 10 }}
+                headerTitle="Roles"
                 scroll={{ x: 'max-content' }}
-                pagination={false}
                 columns={columns}
-                dataSource={ROLES}
+                actionRef={actionRef}
+                request={async (params, sorter, filter) => {
+                    const res = await getRoleListMutation.mutateAsync({
+                        page: params.current,
+                        limit: params.pageSize,
+                    })
+                    return {
+                        success: true,
+                        data: res.items,
+                        total: res.meta.itemCount,
+                    }
+                }}
+                toolBarRender={() => [
+                    <Button type="primary" onClick={() => setmodalData({ mode: 'new' })}>
+                        New
+                    </Button>,
+                ]}
             />
-
-            <RoleModal {...roleModalPros} />
-        </Card>
+            <RoleModal
+                onCancel={() => setmodalData({ mode: null })}
+                modalData={modalData}
+                reloadTable={reloadTable}
+            />
+        </>
     )
 }

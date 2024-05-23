@@ -1,74 +1,111 @@
-import { Form, Modal, Input, InputNumber, Radio, Tree } from 'antd'
-import { useEffect } from 'react'
+import { ProForm } from '@ant-design/pro-components'
+import type { ProFormInstance } from '@ant-design/pro-components'
+import { useMutation } from '@tanstack/react-query'
+import { message, Modal } from 'antd'
+import { merge } from 'lodash'
+import { useEffect, useRef, useState } from 'react'
 
-import { PERMISSION_LIST } from '@/_mock/assets'
-import { flattenTrees } from '@/utils/tree'
+import menuService from '@/api/menu'
+import roleService from '@/api/role'
 
-import { Permission, Role } from '#/entity'
-import { BasicStatus } from '#/enum'
+import BottomButton from '@/components/bottom-button'
+
+import RoleForm from './role-form'
+
+import { Permission } from '#/entity'
 
 export type RoleModalProps = {
-    formValue: Role
-    title: string
-    show: boolean
-    onOk: VoidFunction
     onCancel: VoidFunction
+    modalData: { mode: 'new' | 'edit'; id: string }
+    reloadTable: VoidFunction
 }
-const PERMISSIONS: Permission[] = PERMISSION_LIST
-export function RoleModal({ title, show, formValue, onOk, onCancel }: RoleModalProps) {
-    const [form] = Form.useForm()
 
-    const flattenedPermissions = flattenTrees(formValue.permission)
-    const checkedKeys = flattenedPermissions.map((item) => item.id)
+const RoleModal = ({ onCancel, modalData, reloadTable }: RoleModalProps) => {
+    const { mode, id } = modalData || {}
+    const isNew = mode === 'new'
+    const formRef = useRef<ProFormInstance>()
+    const [menuData, setmenuData] = useState<Permission[]>([])
+
+    const getRoleDetailMutation = useMutation(roleService.getRoleDetail)
+    const createRoleMutation = useMutation(roleService.createRole)
+    const getMenuTreeMutation = useMutation(menuService.getMenuTree)
+
     useEffect(() => {
-        form.setFieldsValue({ ...formValue })
-    }, [formValue, form])
+        getMenuTreeMutation.mutateAsync().then((res) => {
+            setmenuData(res as Permission[])
+        })
+
+        return () => {}
+    }, [])
+
+    const onFinishWhenNew = async (data) => {
+        const form = {
+            ...data,
+        }
+        await createRoleMutation.mutateAsync(form)
+
+        message.success('Create success', 1.5)
+        onCancel()
+        reloadTable?.()
+    }
+
+    const onFinishWhenEdit = (data) => {
+        // if (data?.parentId === data?.roleId) {
+        //     message?.error('error')
+        //     return
+        // }
+        const form = {
+            ...data,
+        }
+        console.log('edit', form)
+    }
+
+    const onValuesChange = (values) => {}
+
+    const initialValuesNew: Partial<Permission> = {}
+
+    const detailRequest = async () => {
+        const res = await getRoleDetailMutation.mutateAsync(id)
+        return res
+    }
+
+    const cleanup = () => {}
 
     return (
-        <Modal title={title} open={show} onOk={onOk} onCancel={onCancel}>
-            <Form
-                initialValues={formValue}
-                form={form}
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
-                layout="horizontal"
+        <Modal
+            // width="50%"
+            destroyOnClose
+            title={isNew ? 'New Role' : 'Edit Role'}
+            open={!!mode}
+            onCancel={() => onCancel()}
+            afterClose={cleanup}
+            footer={null}
+            maskClosable={false}
+        >
+            <ProForm
+                onFinish={isNew ? onFinishWhenNew : onFinishWhenEdit}
+                initialValues={isNew && initialValuesNew}
+                request={isNew ? null : detailRequest}
+                submitter={{
+                    render: (props, doms) => {
+                        return (
+                            <BottomButton
+                                submitButtonProps={merge(
+                                    { loading: getRoleDetailMutation.isLoading },
+                                    props,
+                                )}
+                                onCancel={onCancel}
+                            />
+                        )
+                    },
+                }}
+                formRef={formRef}
+                onValuesChange={onValuesChange}
             >
-                <Form.Item<Role> label="Name" name="name" required>
-                    <Input />
-                </Form.Item>
-
-                <Form.Item<Role> label="Label" name="label" required>
-                    <Input />
-                </Form.Item>
-
-                <Form.Item<Role> label="Order" name="order">
-                    <InputNumber style={{ width: '100%' }} />
-                </Form.Item>
-
-                <Form.Item<Role> label="Status" name="status" required>
-                    <Radio.Group optionType="button" buttonStyle="solid">
-                        <Radio value={BasicStatus.ENABLE}> Enable </Radio>
-                        <Radio value={BasicStatus.DISABLE}> Disable </Radio>
-                    </Radio.Group>
-                </Form.Item>
-
-                <Form.Item<Role> label="Desc" name="desc">
-                    <Input.TextArea />
-                </Form.Item>
-
-                <Form.Item<Role> label="Permission" name="permission">
-                    <Tree
-                        checkable
-                        checkedKeys={checkedKeys}
-                        treeData={PERMISSIONS}
-                        fieldNames={{
-                            key: 'id',
-                            children: 'children',
-                            title: 'name',
-                        }}
-                    />
-                </Form.Item>
-            </Form>
+                <RoleForm menuData={menuData} />
+            </ProForm>
         </Modal>
     )
 }
+
+export default RoleModal

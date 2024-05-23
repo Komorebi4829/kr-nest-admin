@@ -33,6 +33,12 @@ export class CreateRoleDto {
     })
     label: string
 
+    @MaxLength(500, {
+        always: true,
+        message: '名称长度最大为$constraint1',
+    })
+    description?: string
+
     @IsDataExist(PermissionEntity, {
         each: true,
         always: true,
