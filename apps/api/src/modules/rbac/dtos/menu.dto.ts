@@ -93,6 +93,9 @@ export class CreateMenuDto {
     @IsOptional({ groups: ['create', 'update'] })
     status?: number
 
+    @IsOptional({ groups: ['create', 'update'] })
+    icon?: string
+
     @IsDataExist(MenuEntity, { always: true, message: '父菜单不存在' })
     @ValidateIf((value) => value.parent !== null && value.parent)
     @IsOptional({ always: true })

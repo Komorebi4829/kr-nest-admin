@@ -24,3 +24,4 @@ dist-ssr
 !.env.example
 
 stats.html
+!src/pages/logs

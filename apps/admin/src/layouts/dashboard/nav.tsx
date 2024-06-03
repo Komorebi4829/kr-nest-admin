@@ -151,6 +151,7 @@ export default function Nav(props: Props) {
             <Scrollbar
                 style={{
                     height: 'calc(100vh - 70px)',
+                    paddingLeft: 16,
                 }}
             >
                 {/* <!-- Sidebar Menu --> */}
@@ -166,7 +167,7 @@ export default function Nav(props: Props) {
                     onClick={onClick}
                     style={menuStyle}
                     inlineCollapsed={collapsed}
-                    inlineIndent={50}
+                    inlineIndent={12}
                 />
             </Scrollbar>
         </div>
