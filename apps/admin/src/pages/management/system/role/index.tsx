@@ -91,7 +91,7 @@ export default function RolePage() {
                     return {
                         success: true,
                         data: res.items,
-                        total: res.meta.itemCount,
+                        total: res.meta.totalItems,
                     }
                 }}
                 toolBarRender={() => [
