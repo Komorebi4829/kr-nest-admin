@@ -53,7 +53,7 @@ export class CreateMenuDto {
         groups: ['update'],
         message: '名称重复',
     })
-    @MaxLength(8, {
+    @MaxLength(24, {
         always: true,
         message: '菜单名称长度不得超过$constraint1',
     })
@@ -103,10 +103,10 @@ export class CreateMenuDto {
     parent?: string
 
     @Transform(({ value }) => toNumber(value))
-    @Min(0, { always: true, message: '排序值必须大于0' })
+    @Min(1, { always: true, message: '排序值必须大于1' })
     @IsNumber(undefined, { always: true })
     @IsOptional({ always: true })
-    customOrder?: number = 0
+    customOrder?: number = 1
 }
 
 @DtoValidation({ groups: ['update'] })

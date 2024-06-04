@@ -2,7 +2,7 @@ import { ProForm } from '@ant-design/pro-components'
 import type { ProFormInstance } from '@ant-design/pro-components'
 import { useMutation } from '@tanstack/react-query'
 import { message, Modal } from 'antd'
-import { merge, unset } from 'lodash'
+import { isNil, merge, unset } from 'lodash'
 import { useRef, useEffect } from 'react'
 
 import menuService from '@/api/menu'
@@ -28,30 +28,9 @@ const MenuModal = ({ onCancel, modalData, reloadTable, treeData }: MenuModalProp
 
     const getMenuDetailMutation = useMutation(menuService.getMenuDetail)
     const createMenuMutation = useMutation(menuService.createMenu)
+    const updateMenuMutation = useMutation(menuService.updateMenu)
 
-    useEffect(
-        () => {
-            // if (isNew) {
-            //     setInitLoading(true)
-            //     requestGetMenuTree().then(() => {
-            //         setInitLoading(false)
-            //     })
-            // } else {
-            //     if (data) {
-            //         setInitLoading(true)
-            //         Promise.all([requestGetMenuTree(), queryMenuById({ id: record?.id })]).then(
-            //             (array) => {
-            //                 setDetailData(array[1])
-            //                 setInitLoading(false)
-            //             },
-            //         )
-            //     }
-            // }
-        },
-        [
-            /* data */
-        ],
-    )
+    useEffect(() => {}, [])
 
     const componentByLinkType = (type: LinkType) => {
         const m = {
@@ -65,7 +44,8 @@ const MenuModal = ({ onCancel, modalData, reloadTable, treeData }: MenuModalProp
         const form = {
             ...data,
             hide: !data.hide, // reverse
-            component: componentByLinkType(data._linkType),
+            hideTab: !data.hide, // reverse
+            component: data.isFrame ? componentByLinkType(data._linkType) : data.component,
         }
         unset(form, '_linkType')
         await createMenuMutation.mutateAsync(form)
@@ -75,15 +55,19 @@ const MenuModal = ({ onCancel, modalData, reloadTable, treeData }: MenuModalProp
         reloadTable?.()
     }
 
-    const onFinishWhenEdit = (data) => {
-        // if (data?.parentId === data?.menuId) {
-        //     message?.error('error')
-        //     return
-        // }
+    const onFinishWhenEdit = async (data) => {
         const form = {
             ...data,
+            hide: !data.hide, // reverse
+            hideTab: !data.hide, // reverse
+            component: data.isFrame ? componentByLinkType(data._linkType) : data.component,
         }
-        console.log('edit', form)
+        unset(form, '_linkType')
+        await updateMenuMutation.mutateAsync(form)
+
+        message.success('Update success', 1.5)
+        onCancel()
+        reloadTable?.()
     }
 
     const onValuesChange = (values) => {}
@@ -100,7 +84,8 @@ const MenuModal = ({ onCancel, modalData, reloadTable, treeData }: MenuModalProp
         type: typeOfNewMenu(),
         isFrame: false,
         isCache: true,
-        hide: true, // TODO reverse when submit
+        hide: false,
+        hideTab: false,
         status: 1,
     }
 
@@ -109,7 +94,9 @@ const MenuModal = ({ onCancel, modalData, reloadTable, treeData }: MenuModalProp
         return {
             ...res,
             hide: !res.hide,
-            parent: res.parent === null && 'null',
+            hideTab: !res.hideTab,
+            parent: isNil(res.parent) ? 'null' : res.parent?.id,
+            _linkType: res.hideTab ? LinkType.NEW_WINDOW : LinkType.EMBED,
         }
     }
 

@@ -1,9 +1,10 @@
-import { cloneDeep } from 'lodash'
+import { QuestionCircleOutlined } from '@ant-design/icons'
 import { ProTable } from '@ant-design/pro-components'
 import type { ActionType, ProColumns } from '@ant-design/pro-components'
 import { useMutation } from '@tanstack/react-query'
 import { Button, Popconfirm, message } from 'antd'
-import { isNil, unset } from 'lodash'
+import { cloneDeep, isNil, unset } from 'lodash'
+
 import { chain } from 'ramda'
 
 import { useRef, useState } from 'react'
@@ -19,7 +20,6 @@ import MenuModal from './menu-modal'
 
 import type { Permission } from '#/entity'
 import { BasicStatus, PermissionType } from '#/enum'
-import { QuestionCircleOutlined } from '@ant-design/icons'
 
 type MyMenuItem = Permission
 
@@ -31,13 +31,15 @@ function normalizeTrees<T extends { children?: T[] }>(trees: T[] = []): T[] {
     }, trees)
 }
 
-function normalizeTreeOptions<T extends {
-    children?: T[]
-    value?: string
-    id?: string
-    label?: string
-    name?: string
-}>(trees: T[] = []): T[] {
+function normalizeTreeOptions<
+    T extends {
+        children?: T[]
+        value?: string
+        id?: string
+        label?: string
+        name?: string
+    },
+>(trees: T[] = []): T[] {
     return chain((node) => {
         const children = node.children || []
         node.value = node.id
@@ -46,7 +48,6 @@ function normalizeTreeOptions<T extends {
         return normalizeTreeOptions(children)
     }, trees)
 }
-
 
 export default function MenuPage() {
     // const { colorTextSecondary } = useThemeToken()
@@ -138,7 +139,7 @@ export default function MenuPage() {
                         <Iconify icon="solar:pen-bold-duotone" size={18} />
                     </IconButton>
                     <Popconfirm
-                        title="Delete the Menu?"
+                        title="Delete the menu?"
                         okText="Yes"
                         cancelText="No"
                         placement="left"

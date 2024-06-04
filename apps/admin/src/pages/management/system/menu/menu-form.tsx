@@ -180,7 +180,7 @@ export default function MenuForm({
                         checkedChildren="Show"
                         unCheckedChildren="Hide"
                         name="hide"
-                        label="Hide In Menu"
+                        label="Show In Menu"
                     />
                 </Col>
                 <Col {...colStyle}>
@@ -188,7 +188,7 @@ export default function MenuForm({
                         checkedChildren="Show"
                         unCheckedChildren="Hide"
                         name="hideTab"
-                        label="Hide Tab"
+                        label="Show Tab"
                     />
                 </Col>
                 <Col {...colStyle}>

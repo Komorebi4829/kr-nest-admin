@@ -133,7 +133,7 @@ export const MENUS: MenuItem[] = [
     {
         label: 'sys.menu.content.index',
         name: 'Content',
-        icon: 'ic-management',
+        icon: 'ic_content',
         type: MenuType.CATALOGUE,
         path: 'content',
         children: [
@@ -213,7 +213,7 @@ export const MENUS: MenuItem[] = [
     {
         label: 'sys.menu.logs.index',
         name: 'Logs',
-        icon: 'ic_external',
+        icon: 'ic_log',
         type: MenuType.CATALOGUE,
         path: 'log',
         children: [

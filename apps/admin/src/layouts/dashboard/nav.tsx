@@ -152,6 +152,8 @@ export default function Nav(props: Props) {
                 style={{
                     height: 'calc(100vh - 70px)',
                     paddingLeft: 16,
+                    paddingBottom: 16,
+                    paddingRight: 4,
                 }}
             >
                 {/* <!-- Sidebar Menu --> */}

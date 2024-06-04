@@ -88,8 +88,8 @@
         "index": "系统",
         "organization": "组织",
         "permission": "权限",
-        "role": "角色",
-        "user": "用户",
+        "role": "角色管理",
+        "user": "用户管理",
         "user_detail": "用户详情",
         "menu": "菜单管理",
         "dict": "字典管理",
@@ -134,7 +134,7 @@
       "frame": "项目外部链接",
       "external_link": "外链",
       "logs": {
-        "index": "日志管理",
+        "index": "日志",
         "login-log": "登录日志",
         "operation-log": "操作日志"
       },
