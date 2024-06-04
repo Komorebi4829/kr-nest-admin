@@ -34,7 +34,7 @@ const List: FC = () => {
     const columns: ProColumns<ContentPostItem>[] = [
         {
             dataIndex: 'index',
-            valueType: 'indexBorder',
+            valueType: 'index',
             width: 48,
         },
         {
@@ -60,7 +60,6 @@ const List: FC = () => {
             dataIndex: 'publishedAt',
             valueType: 'dateTime',
             width: 150,
-            sorter: true,
             hideInSearch: true,
         },
         {

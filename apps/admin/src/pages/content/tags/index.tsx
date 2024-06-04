@@ -36,7 +36,18 @@ const List: FC = () => {
         {
             title: 'Name',
             dataIndex: 'name',
-            width: 150,
+            width: 120,
+            ellipsis: true,
+        },
+        {
+            title: 'Post Count',
+            dataIndex: 'postCount',
+            width: 80,
+        },
+        {
+            title: 'Description',
+            dataIndex: 'description',
+            width: 300,
             ellipsis: true,
         },
         {

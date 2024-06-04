@@ -13,6 +13,7 @@ export enum TagApi {
 
 export enum CategoryApi {
     ClientCategory = '/api/content/categories',
+    ClientCategoryTree = '/api/content/categories/tree',
     ManageCategory = '/manage/api/content/categories',
 }
 
@@ -46,6 +47,8 @@ export const deleteCategory = (data) =>
     apiClient.delete<any>({ url: `${CategoryApi.ManageCategory}`, data })
 export const getCategoryDetail = (id: string) =>
     apiClient.get<any>({ url: `${CategoryApi.ManageCategory}/${id}` })
+export const getCategoryTree = () =>
+    apiClient.get<any>({ url: `${CategoryApi.ClientCategoryTree}` })
 
 export const getCommentList = (params) =>
     apiClient.get<any>({ url: `${CommentApi.ManageComment}`, params })
