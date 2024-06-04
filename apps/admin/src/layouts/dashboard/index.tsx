@@ -76,7 +76,8 @@ export default DashboardLayout
 const StyleWrapper = styled.div<{ $themeMode?: ThemeMode }>`
     /* 设置滚动条的整体样式 */
     ::-webkit-scrollbar {
-        width: 8px; /* 设置滚动条宽度 */
+        width: 8px; /* 设置垂直滚动条的宽度 */
+        height: 8px; /* 设置水平滚动条的厚度 */
     }
 
     /* 设置滚动条轨道的样式 */
