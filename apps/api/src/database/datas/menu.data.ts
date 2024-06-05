@@ -152,7 +152,16 @@ export const MENUS: MenuItem[] = [
                 hide: true,
                 icon: 'ic_dot',
                 path: 'create-post',
-                component: '/content/posts/create.tsx',
+                component: '/content/posts/createOrUpdate.tsx',
+            },
+            {
+                label: 'sys.menu.content.update-post',
+                name: 'Update Post',
+                type: MenuType.MENU,
+                hide: true,
+                icon: 'ic_dot',
+                path: 'update-post/:id',
+                component: '/content/posts/createOrUpdate.tsx',
             },
             {
                 label: 'sys.menu.content.categories',
@@ -253,10 +262,18 @@ export const MENUS: MenuItem[] = [
             {
                 label: 'sys.menu.kanban',
                 name: 'kanban',
-                icon: 'solar:clipboard-bold-duotone',
+                icon: 'ph:kanban',
                 type: MenuType.MENU,
                 path: 'kanban',
                 component: '/sys/others/kanban/index.tsx',
+            },
+            {
+                label: 'sys.menu.clipboard',
+                name: 'Clipboard',
+                icon: 'solar:clipboard-bold-duotone',
+                type: MenuType.MENU,
+                path: 'clipboard',
+                component: '/functions/clipboard/index.tsx',
             },
             {
                 label: 'sys.menu.disabled',
