@@ -8,6 +8,7 @@ import { FC, useRef } from 'react'
 
 import { getPostList, deletePost } from '@/api/content'
 import { IconButton, Iconify } from '@/components/icon'
+import { usePathname, useRouter } from '@/router/hooks'
 
 type ContentPostItem = {
     isPublished?: boolean
@@ -26,6 +27,8 @@ type ContentPostItem = {
 }
 
 const List: FC = () => {
+    const { push } = useRouter()
+    const pathname = usePathname()
     const actionRef = useRef<ActionType>()
 
     const getPostListMutation = useMutation(getPostList)
@@ -135,7 +138,7 @@ const List: FC = () => {
                     }
                 }}
                 toolBarRender={() => [
-                    <Button type="primary" onClick={() => null}>
+                    <Button type="primary" onClick={() => push('/content/create-post')}>
                         New
                     </Button>,
                 ]}
