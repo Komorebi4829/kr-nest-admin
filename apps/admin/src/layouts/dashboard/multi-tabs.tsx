@@ -1,6 +1,16 @@
 import { Dropdown, MenuProps, Tabs, TabsProps } from 'antd'
 import Color from 'color'
-import { CSSProperties, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, {
+    createContext,
+    CSSProperties,
+    ReactNode,
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react'
+
 import { DragDropContext, Draggable, Droppable, OnDragEndResponder } from 'react-beautiful-dnd'
 import { useTranslation } from 'react-i18next'
 import { useToggle, useFullscreen } from 'react-use'
@@ -28,6 +38,13 @@ import { MultiTabOperation, ThemeLayout } from '#/enum'
 type Props = {
     offsetTop?: boolean
 }
+
+export const TabsContext = createContext({
+    closeTab: (path?: string) => {},
+    refreshTab: (path?: string) => {},
+    tabs: [] as KeepAliveTab[],
+})
+
 export default function MultiTabs({ offsetTop = false }: Props) {
     const { t } = useTranslation()
     const { push } = useRouter()
@@ -51,6 +68,11 @@ export default function MultiTabs({ offsetTop = false }: Props) {
         closeLeft,
         closeRight,
     } = useKeepAlive()
+
+    const tabsContextValue = useMemo(
+        () => ({ closeTab, refreshTab, tabs }),
+        [closeTab, refreshTab, tabs],
+    )
 
     /**
      * Special Tab Label Render
@@ -276,9 +298,11 @@ export default function MultiTabs({ offsetTop = false }: Props) {
             key: tab.key,
             closable: tabs.length > 1, // 保留一个
             children: (
-                <div ref={tabContentRef} key={tab.timeStamp}>
-                    {tab.children}
-                </div>
+                <TabsContext.Provider value={tabsContextValue}>
+                    <div ref={tabContentRef} key={tab.timeStamp}>
+                        {tab.children}
+                    </div>
+                </TabsContext.Provider>
             ),
         }))
     }, [tabs, renderTabLabel])

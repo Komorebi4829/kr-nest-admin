@@ -100,6 +100,7 @@
         "index": "内容管理",
         "post": "文章管理",
         "create-post": "发布文章",
+        "update-post": "更新文章",
         "categories": "分类管理",
         "tags": "标签管理",
         "comments": "评论管理"

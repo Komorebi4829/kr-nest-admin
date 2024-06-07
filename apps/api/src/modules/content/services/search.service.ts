@@ -115,15 +115,18 @@ export class SearchService {
     }
 
     async update(posts: PostEntity[]) {
-        return this.client
-            .index(this.index)
-            .updateDocuments(
-                await Promise.all(
-                    posts.map((post) =>
-                        getPostData(this.categoryRepository, this.commentRepository, post),
-                    ),
-                ),
-            )
+        const documents = await Promise.all(
+            posts.map(async (post) => {
+                const postDataArray = await getPostData(
+                    this.categoryRepository,
+                    this.commentRepository,
+                    post,
+                )
+                return postDataArray[0]
+            }),
+        )
+
+        return this.client.index(this.index).updateDocuments(documents)
     }
 
     async delete(ids: string[]) {

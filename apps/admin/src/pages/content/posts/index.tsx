@@ -4,11 +4,13 @@ import type { ActionType, ProColumns } from '@ant-design/pro-components'
 import { useMutation } from '@tanstack/react-query'
 import { Button, Popconfirm, message } from 'antd'
 import { omit } from 'lodash'
-import { FC, useRef } from 'react'
+import { FC, useEffect, useRef } from 'react'
+
+import { useLocation } from 'react-router-dom'
 
 import { getPostList, deletePost } from '@/api/content'
 import { IconButton, Iconify } from '@/components/icon'
-import { usePathname, useRouter } from '@/router/hooks'
+import { useRouter } from '@/router/hooks'
 
 type ContentPostItem = {
     isPublished?: boolean
@@ -28,11 +30,15 @@ type ContentPostItem = {
 
 const List: FC = () => {
     const { push } = useRouter()
-    const pathname = usePathname()
+    const { pathname } = useLocation()
     const actionRef = useRef<ActionType>()
 
     const getPostListMutation = useMutation(getPostList)
     const deletePostMutation = useMutation(deletePost)
+
+    useEffect(() => {
+        reloadTable()
+    }, [pathname])
 
     const columns: ProColumns<ContentPostItem>[] = [
         {
@@ -80,7 +86,7 @@ const List: FC = () => {
             fixed: 'right',
             render: (_, record) => (
                 <div className="flex w-full justify-center text-gray">
-                    <IconButton onClick={() => null}>
+                    <IconButton onClick={() => push(`/content/update-post/${record.id}`)}>
                         <Iconify icon="solar:pen-bold-duotone" size={18} />
                     </IconButton>
                     <Popconfirm
@@ -92,7 +98,7 @@ const List: FC = () => {
                         okButtonProps={{ loading: deletePostMutation.isLoading }}
                         onConfirm={async () => {
                             await deletePostMutation.mutateAsync({ ids: [record.id] })
-                            message.success('Post deleted successfully', 1.5)
+                            message.success('Post deleted successfully')
                             reloadTable()
                         }}
                     >

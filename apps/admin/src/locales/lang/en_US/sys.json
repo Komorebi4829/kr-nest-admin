@@ -101,6 +101,7 @@
         "index": "Contents",
         "post": "Posts",
         "create-post": "Create Post",
+        "update-post": "Update Post",
         "categories": "Categories",
         "tags": "Tags",
         "comments": "Comments"
