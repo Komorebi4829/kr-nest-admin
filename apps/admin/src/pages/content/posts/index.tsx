@@ -9,24 +9,9 @@ import { FC, useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { getPostList, deletePost } from '@/api/content'
+import { PostProp } from '@/api/interface/content'
 import { IconButton, Iconify } from '@/components/icon'
 import { useRouter } from '@/router/hooks'
-
-type ContentPostItem = {
-    isPublished?: boolean
-    id: number
-    number: number
-    title: string
-    labels: {
-        name: string
-        color: string
-    }[]
-    state: string
-    comments: number
-    created_at: string
-    updated_at: string
-    closed_at?: string
-}
 
 const List: FC = () => {
     const { push } = useRouter()
@@ -37,10 +22,12 @@ const List: FC = () => {
     const deletePostMutation = useMutation(deletePost)
 
     useEffect(() => {
-        reloadTable()
+        if (pathname === '/content/posts') {
+            reloadTable()
+        }
     }, [pathname])
 
-    const columns: ProColumns<ContentPostItem>[] = [
+    const columns: ProColumns<PostProp>[] = [
         {
             dataIndex: 'index',
             valueType: 'index',
@@ -121,7 +108,7 @@ const List: FC = () => {
 
     return (
         <>
-            <ProTable<ContentPostItem>
+            <ProTable<PostProp>
                 rowKey="id"
                 search={{}}
                 pagination={{ pageSize: 8 }}

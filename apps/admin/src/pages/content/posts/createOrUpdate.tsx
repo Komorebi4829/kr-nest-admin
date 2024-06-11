@@ -14,6 +14,7 @@ import { useContext, useRef } from 'react'
 
 import { createPost, updatePost, getPostDetail, getTagList, getCategoryTree } from '@/api/content'
 
+import { ReqCreatePostParams, ReqUpdatePostParams } from '@/api/interface/content'
 import Editor from '@/components/editor'
 import { TabsContext } from '@/layouts/dashboard/multi-tabs'
 import { useParams } from '@/router/hooks'
@@ -62,7 +63,7 @@ export default function CreateOrUpdatePost() {
         }, trees)
     }
 
-    const onFinishCreate = async (data) => {
+    const onFinishCreate = async (data: ReqCreatePostParams & { keywords: string }) => {
         const form = {
             ...data,
             keywords: data.keywords?.trim().split(','),
@@ -74,7 +75,7 @@ export default function CreateOrUpdatePost() {
         }, 1500)
     }
 
-    const onFinishUpdate = async (data) => {
+    const onFinishUpdate = async (data: ReqUpdatePostParams & { keywords: string }) => {
         const form = {
             ...data,
             keywords: data.keywords?.trim().split(','),
