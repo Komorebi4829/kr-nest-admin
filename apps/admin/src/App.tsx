@@ -8,20 +8,20 @@ import AntdConfig from '@/theme/antd'
 import { MotionLazy } from './components/animate/motion-lazy'
 
 function App() {
-    return (
-        <AntdConfig>
-            <AntdApp>
-                <MotionLazy>
-                    <Helmet>
-                        <title>KR Nest Admin</title>
-                        <link rel="icon" href={Logo} />
-                    </Helmet>
+  return (
+    <AntdConfig>
+      <AntdApp>
+        <MotionLazy>
+          <Helmet>
+            <title>KR Nest Admin</title>
+            <link rel="icon" href={Logo} />
+          </Helmet>
 
-                    <Router />
-                </MotionLazy>
-            </AntdApp>
-        </AntdConfig>
-    )
+          <Router />
+        </MotionLazy>
+      </AntdApp>
+    </AntdConfig>
+  )
 }
 
 export default App

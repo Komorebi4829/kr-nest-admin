@@ -7,7 +7,7 @@
         "build": "tsc && vite build",
         "lint": "eslint . --ext ts,tsx --fix --report-unused-disable-directives --max-warnings 0",
         "preview": "vite preview",
-        "format": "prettier --write \"src/**/*.[ts|tsx|js]\""
+        "format": "prettier --write \"src/**/*.{ts,tsx,js}\""
     },
     "dependencies": {
         "@repo/utils": "workspace:*",

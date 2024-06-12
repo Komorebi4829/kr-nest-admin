@@ -14,98 +14,94 @@ import BottomButton from '@/components/bottom-button'
 import CategoryForm from './form'
 
 export type CategoryModalProps = {
-    onCancel: VoidFunction
-    modalData: { mode: 'new' | 'edit'; id?: string }
-    reloadTable: VoidFunction
-    treeData: TreeOptions[]
+  onCancel: VoidFunction
+  modalData: { mode: 'new' | 'edit'; id?: string }
+  reloadTable: VoidFunction
+  treeData: TreeOptions[]
 }
 
 const CategoryModal = ({ onCancel, modalData, reloadTable, treeData }: CategoryModalProps) => {
-    const { mode, id } = modalData || {}
-    const isNew = mode === 'new'
-    const formRef = useRef<ProFormInstance>()
+  const { mode, id } = modalData || {}
+  const isNew = mode === 'new'
+  const formRef = useRef<ProFormInstance>()
 
-    const getDetailMutation = useMutation(getCategoryDetail)
-    const createMutation = useMutation(createCategory)
-    const updateMutation = useMutation(updateCategory)
+  const getDetailMutation = useMutation(getCategoryDetail)
+  const createMutation = useMutation(createCategory)
+  const updateMutation = useMutation(updateCategory)
 
-    const onFinish = async (data: any) => {
-        if (isNew) {
-            await onFinishCreate(data)
-        } else {
-            await onFinishUpdate(data)
-        }
+  const onFinish = async (data: any) => {
+    if (isNew) {
+      await onFinishCreate(data)
+    } else {
+      await onFinishUpdate(data)
     }
+  }
 
-    const onFinishCreate = async (data: ReqCreateCategoryParams) => {
-        const form = {
-            ...data,
-        }
-        await createMutation.mutateAsync(form)
-
-        message.success('Create success', 1.5)
-        onCancel()
-        reloadTable?.()
+  const onFinishCreate = async (data: ReqCreateCategoryParams) => {
+    const form = {
+      ...data,
     }
+    await createMutation.mutateAsync(form)
 
-    const onFinishUpdate = async (data: ReqUpdateCategoryParams) => {
-        const form = {
-            ...data,
-        }
-        await updateMutation.mutateAsync(form)
+    message.success('Create success', 1.5)
+    onCancel()
+    reloadTable?.()
+  }
 
-        message.success('Update success', 1.5)
-        onCancel()
-        reloadTable?.()
+  const onFinishUpdate = async (data: ReqUpdateCategoryParams) => {
+    const form = {
+      ...data,
     }
+    await updateMutation.mutateAsync(form)
 
-    const onValuesChange = (values) => {}
+    message.success('Update success', 1.5)
+    onCancel()
+    reloadTable?.()
+  }
 
-    const initialValuesNew: Partial<any> = {}
+  const onValuesChange = (values) => {}
 
-    const detailRequest = async () => {
-        const res = await getDetailMutation.mutateAsync(id)
-        return {
-            ...res,
-            parent: isNil(res.parent) ? 'null' : res.parent?.id,
-        }
+  const initialValuesNew: Partial<any> = {}
+
+  const detailRequest = async () => {
+    const res = await getDetailMutation.mutateAsync(id)
+    return {
+      ...res,
+      parent: isNil(res.parent) ? 'null' : res.parent?.id,
     }
+  }
 
-    const cleanup = () => {}
+  const cleanup = () => {}
 
-    return (
-        <Modal
-            width="50%"
-            destroyOnClose
-            title={isNew ? 'New Category' : 'Update Category'}
-            open={!!mode}
-            onCancel={() => onCancel()}
-            afterClose={cleanup}
-            footer={null}
-            maskClosable={false}
-        >
-            <ProForm
-                onFinish={onFinish}
-                initialValues={isNew && initialValuesNew}
-                request={isNew ? null : detailRequest}
-                submitter={{
-                    render: (props, doms) => {
-                        return (
-                            <BottomButton
-                                {...props}
-                                loading={getDetailMutation.isLoading}
-                                onCancel={onCancel}
-                            />
-                        )
-                    },
-                }}
-                formRef={formRef}
-                onValuesChange={onValuesChange}
-            >
-                <CategoryForm treeData={treeData} />
-            </ProForm>
-        </Modal>
-    )
+  return (
+    <Modal
+      width="50%"
+      destroyOnClose
+      title={isNew ? 'New Category' : 'Update Category'}
+      open={!!mode}
+      onCancel={() => onCancel()}
+      afterClose={cleanup}
+      footer={null}
+      maskClosable={false}
+    >
+      <ProForm
+        onFinish={onFinish}
+        initialValues={isNew && initialValuesNew}
+        request={isNew ? null : detailRequest}
+        submitter={{
+          render: (props, doms) => {
+            return (
+              <BottomButton {...props} loading={getDetailMutation.isLoading} onCancel={onCancel} />
+            )
+          },
+        }}
+        formRef={formRef}
+        onValuesChange={onValuesChange}
+      >
+        <CategoryForm treeData={treeData} />
+      </ProForm>
+    </Modal>
+  )
 }
 
 export default CategoryModal

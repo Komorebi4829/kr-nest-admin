@@ -16,119 +16,119 @@ import RoleForm from './role-form'
 import { Permission } from '#/entity'
 
 export type RoleModalProps = {
-    onCancel: VoidFunction
-    modalData: { mode: 'new' | 'edit'; id: string }
-    reloadTable: VoidFunction
+  onCancel: VoidFunction
+  modalData: { mode: 'new' | 'edit'; id: string }
+  reloadTable: VoidFunction
 }
 
 const traverseTree = <
-    T extends {
-        label: string
-        id: string
-        children?: T[]
-        title?: string
-        name?: string
-        value?: string
-    },
+  T extends {
+    label: string
+    id: string
+    children?: T[]
+    title?: string
+    name?: string
+    value?: string
+  },
 >(
-    trees: T[] = [],
-    t: any,
+  trees: T[] = [],
+  t: any,
 ): T[] => {
-    return chain((node) => {
-        node.title = t(node.label)
-        node.name = t(node.label)
-        node.value = node.id
-        return traverseTree(node.children, t)
-    }, trees)
+  return chain((node) => {
+    node.title = t(node.label)
+    node.name = t(node.label)
+    node.value = node.id
+    return traverseTree(node.children, t)
+  }, trees)
 }
 
 const RoleModal = ({ onCancel, modalData, reloadTable }: RoleModalProps) => {
-    const { t } = useTranslation()
-    const { mode, id } = modalData || {}
-    const isNew = mode === 'new'
-    const formRef = useRef<ProFormInstance>()
-    const [menuData, setmenuData] = useState<Permission[]>([])
+  const { t } = useTranslation()
+  const { mode, id } = modalData || {}
+  const isNew = mode === 'new'
+  const formRef = useRef<ProFormInstance>()
+  const [menuData, setmenuData] = useState<Permission[]>([])
 
-    const getRoleDetailMutation = useMutation(roleService.getRoleDetail)
-    const createRoleMutation = useMutation(roleService.createRole)
-    const updateRoleMutation = useMutation(roleService.updateRole)
-    const getMenuTreeMutation = useMutation(menuService.getMenuTree)
+  const getRoleDetailMutation = useMutation(roleService.getRoleDetail)
+  const createRoleMutation = useMutation(roleService.createRole)
+  const updateRoleMutation = useMutation(roleService.updateRole)
+  const getMenuTreeMutation = useMutation(menuService.getMenuTree)
 
-    useEffect(() => {
-        if (!mode) return () => {}
-        getMenuTreeMutation.mutateAsync().then((res) => {
-            traverseTree(res as Permission[], t)
-            setmenuData(res as Permission[])
-        })
+  useEffect(() => {
+    if (!mode) return () => {}
+    getMenuTreeMutation.mutateAsync().then((res) => {
+      traverseTree(res as Permission[], t)
+      setmenuData(res as Permission[])
+    })
 
-        return () => {}
-    }, [mode])
+    return () => {}
+  }, [mode])
 
-    const onFinishWhenNew = async (data) => {
-        const form = {
-            ...data,
-        }
-        await createRoleMutation.mutateAsync(form)
-
-        message.success('Create successfully', 1.5)
-        onCancel()
-        reloadTable?.()
+  const onFinishWhenNew = async (data) => {
+    const form = {
+      ...data,
     }
+    await createRoleMutation.mutateAsync(form)
 
-    const onFinishWhenUpdate = async (data) => {
-        const form = {
-            ...data,
-        }
-        await updateRoleMutation.mutateAsync(form)
+    message.success('Create successfully', 1.5)
+    onCancel()
+    reloadTable?.()
+  }
 
-        message.success('Update successfully', 1.5)
-        onCancel()
-        reloadTable?.()
+  const onFinishWhenUpdate = async (data) => {
+    const form = {
+      ...data,
     }
+    await updateRoleMutation.mutateAsync(form)
 
-    const onValuesChange = (values) => {}
+    message.success('Update successfully', 1.5)
+    onCancel()
+    reloadTable?.()
+  }
 
-    const initialValuesNew: Partial<Permission> = {}
+  const onValuesChange = (values) => {}
 
-    const detailRequest = async () => {
-        const res = await getRoleDetailMutation.mutateAsync(id)
-        return res
-    }
+  const initialValuesNew: Partial<Permission> = {}
 
-    const cleanup = () => {}
+  const detailRequest = async () => {
+    const res = await getRoleDetailMutation.mutateAsync(id)
+    return res
+  }
 
-    return (
-        <Modal
-            destroyOnClose
-            title={isNew ? 'New Role' : 'Update Role'}
-            open={!!mode}
-            onCancel={() => onCancel()}
-            afterClose={cleanup}
-            footer={null}
-            maskClosable={false}
-        >
-            <ProForm
-                onFinish={isNew ? onFinishWhenNew : onFinishWhenUpdate}
-                initialValues={isNew && initialValuesNew}
-                request={isNew ? null : detailRequest}
-                submitter={{
-                    render: (props, doms) => {
-                        return (
-                            <BottomButton
-                                {...props}
-                                loading={getRoleDetailMutation.isLoading}
-                                onCancel={onCancel}
-                            />
-                        )
-                    },
-                }}
-                formRef={formRef}
-                onValuesChange={onValuesChange}
-            >
-                <RoleForm menuData={menuData} />
-            </ProForm>
-        </Modal>
-    )
+  const cleanup = () => {}
+
+  return (
+    <Modal
+      destroyOnClose
+      title={isNew ? 'New Role' : 'Update Role'}
+      open={!!mode}
+      onCancel={() => onCancel()}
+      afterClose={cleanup}
+      footer={null}
+      maskClosable={false}
+    >
+      <ProForm
+        onFinish={isNew ? onFinishWhenNew : onFinishWhenUpdate}
+        initialValues={isNew && initialValuesNew}
+        request={isNew ? null : detailRequest}
+        submitter={{
+          render: (props, doms) => {
+            return (
+              <BottomButton
+                {...props}
+                loading={getRoleDetailMutation.isLoading}
+                onCancel={onCancel}
+              />
+            )
+          },
+        }}
+        formRef={formRef}
+        onValuesChange={onValuesChange}
+      >
+        <RoleForm menuData={menuData} />
+      </ProForm>
+    </Modal>
+  )
 }
 
 export default RoleModal

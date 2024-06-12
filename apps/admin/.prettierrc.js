@@ -6,7 +6,7 @@ module.exports = {
   proseWrap: "never",
   endOfLine: "auto",
   semi: false,
-  tabWidth: 4,
+  tabWidth: 2,
   vueIndentScriptAndStyle: true,
   htmlWhitespaceSensitivity: "strict",
   useTabs: false,

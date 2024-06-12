@@ -1,5 +1,5 @@
 export const template = (content: string) => {
-    return `
+  return `
     <!Doctype html>
           <html>
             <head>

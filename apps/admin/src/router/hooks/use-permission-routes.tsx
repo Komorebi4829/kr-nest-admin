@@ -16,37 +16,37 @@ import { AppRouteObject } from '#/router'
 const entryPath = '/src/pages'
 const pages = import.meta.glob('/src/pages/**/*.tsx')
 export const pagesSelect = Object.entries(pages).map(([path]) => {
-    const pagePath = path.replace(entryPath, '')
-    return {
-        label: pagePath,
-        value: pagePath,
-    }
+  const pagePath = path.replace(entryPath, '')
+  return {
+    label: pagePath,
+    value: pagePath,
+  }
 })
 
 // 构建绝对路径的函数
 function resolveComponent(path: string) {
-    return pages[`${entryPath}${path}`]
+  return pages[`${entryPath}${path}`]
 }
 
 /**
  * return routes about permission
  */
 export function usePermissionRoutes() {
-    // 切换回静态路由
-    // return useMemo(() => {
-    //   return getRoutesFromModules();
-    // }, []);
+  // 切换回静态路由
+  // return useMemo(() => {
+  //   return getRoutesFromModules();
+  // }, []);
 
-    const permissions = useUserPermission()
+  const permissions = useUserPermission()
 
-    return useMemo(() => {
-        const flattenedPermissions = flattenTrees(permissions!)
-        const permissionRoutes = transformPermissionToMenuRoutes(
-            permissions || [],
-            flattenedPermissions,
-        )
-        return [...permissionRoutes]
-    }, [permissions])
+  return useMemo(() => {
+    const flattenedPermissions = flattenTrees(permissions!)
+    const permissionRoutes = transformPermissionToMenuRoutes(
+      permissions || [],
+      flattenedPermissions,
+    )
+    return [...permissionRoutes]
+  }, [permissions])
 }
 
 /**
@@ -55,84 +55,81 @@ export function usePermissionRoutes() {
  * @param parent
  */
 function transformPermissionToMenuRoutes(
-    permissions: Permission[],
-    flattenedPermissions: Permission[],
+  permissions: Permission[],
+  flattenedPermissions: Permission[],
 ) {
-    return permissions.map((permission) => {
-        const {
-            path,
-            type,
-            label,
-            icon,
-            customOrder: order,
-            hide,
-            hideTab,
-            status,
-            frameSrc,
-            newFeature,
-            component,
-            parentId,
-            children = [],
-        } = permission
+  return permissions.map((permission) => {
+    const {
+      path,
+      type,
+      label,
+      icon,
+      customOrder: order,
+      hide,
+      hideTab,
+      status,
+      frameSrc,
+      newFeature,
+      component,
+      parentId,
+      children = [],
+    } = permission
 
-        const appRoute: AppRouteObject = {
-            path,
-            meta: {
-                label,
-                key: getCompleteRoute(permission, flattenedPermissions),
-                hideMenu: !!hide,
-                hideTab,
-                disabled: status === BasicStatus.DISABLE,
-            },
-        }
+    const appRoute: AppRouteObject = {
+      path,
+      meta: {
+        label,
+        key: getCompleteRoute(permission, flattenedPermissions),
+        hideMenu: !!hide,
+        hideTab,
+        disabled: status === BasicStatus.DISABLE,
+      },
+    }
 
-        if (order) appRoute.order = order
-        if (icon) appRoute.meta!.icon = icon
-        if (frameSrc) appRoute.meta!.frameSrc = frameSrc
+    if (order) appRoute.order = order
+    if (icon) appRoute.meta!.icon = icon
+    if (frameSrc) appRoute.meta!.frameSrc = frameSrc
 
-        if (newFeature) {
-            appRoute.meta!.suffix = (
-                <ProTag
-                    color="cyan"
-                    icon={<Iconify icon="solar:bell-bing-bold-duotone" size={14} />}
-                >
-                    NEW
-                </ProTag>
-            )
-        }
+    if (newFeature) {
+      appRoute.meta!.suffix = (
+        <ProTag color="cyan" icon={<Iconify icon="solar:bell-bing-bold-duotone" size={14} />}>
+          NEW
+        </ProTag>
+      )
+    }
 
-        if (type === PermissionType.CATALOGUE) {
-            appRoute.meta!.hideTab = true
-            if (!parentId) {
-                appRoute.element = (
-                    <Suspense fallback={<CircleLoading />}>
-                        <Outlet />
-                    </Suspense>
-                )
-            }
-            appRoute.children = transformPermissionToMenuRoutes(children, flattenedPermissions)
+    if (type === PermissionType.CATALOGUE) {
+      appRoute.meta!.hideTab = true
+      if (!parentId) {
+        appRoute.element = (
+          <Suspense fallback={<CircleLoading />}>
+            <Outlet />
+          </Suspense>
+        )
+      }
+      appRoute.children = transformPermissionToMenuRoutes(children, flattenedPermissions)
 
-            if (!isEmpty(children)) {
-                appRoute.children.unshift({
-                    index: true,
-                    element: <Navigate to={children[0].path} replace />,
-                })
-            }
-        } else if (type === PermissionType.MENU) {
-            const Element = lazy(resolveComponent(component!) as any)
-            if (frameSrc) {
-                appRoute.element = <Element src={frameSrc} />
-            } else {
-                appRoute.element = (
-                    <Suspense fallback={<CircleLoading />}>
-                        <Element />
-                    </Suspense>
-                )
-            }
-        }
+      if (!isEmpty(children)) {
+        appRoute.children.unshift({
+          index: true,
+          element: <Navigate to={children[0].path} replace />,
+        })
+      }
+    } else if (type === PermissionType.MENU) {
+      const Element = lazy(resolveComponent(component!) as any)
+      if (frameSrc) {
+        appRoute.element = <Element src={frameSrc} />
+      } else {
+        appRoute.element = (
+          <Suspense fallback={<CircleLoading />}>
+            <Element />
+          </Suspense>
+        )
+      }
+    }
 
-        return appRoute
-    })
+    return appRoute
+  })
 }
 
 /**
@@ -143,11 +140,11 @@ function transformPermissionToMenuRoutes(
  * @returns {string} - The complete path after splicing
  */
 function getCompleteRoute(permission: Permission, flattenedPermissions: Permission[], path = '') {
-    const currentRoute = path ? `/${permission.path}${path}` : `/${permission.path}`
-    if (permission.parentId) {
-        const parentPermission = flattenedPermissions.find((p) => p.id === permission.parentId)!
-        return getCompleteRoute(parentPermission, flattenedPermissions, currentRoute)
-    }
+  const currentRoute = path ? `/${permission.path}${path}` : `/${permission.path}`
+  if (permission.parentId) {
+    const parentPermission = flattenedPermissions.find((p) => p.id === permission.parentId)!
+    return getCompleteRoute(parentPermission, flattenedPermissions, currentRoute)
+  }
 
-    return currentRoute
+  return currentRoute
 }

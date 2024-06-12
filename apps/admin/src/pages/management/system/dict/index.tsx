@@ -1,3 +1,3 @@
 export default function DictPage() {
-    return <div>DictPage</div>
+  return <div>DictPage</div>
 }

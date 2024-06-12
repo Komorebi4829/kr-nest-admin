@@ -3,8 +3,8 @@ import apiClient from '@/utils/http/apiClient'
 import { Permission } from '#/entity'
 
 export enum MenuApi {
-    MenuTree = '/manage/api/rbac/menus/tree',
-    Menu = '/manage/api/rbac/menus',
+  MenuTree = '/manage/api/rbac/menus/tree',
+  Menu = '/manage/api/rbac/menus',
 }
 
 const getMenuTree = () => apiClient.get<Permission[]>({ url: `${MenuApi.MenuTree}` })
@@ -15,10 +15,10 @@ const deleteMenu = (data: any) => apiClient.delete<Permission[]>({ url: `${MenuA
 const getMenuDetail = (id: string) => apiClient.get<Permission>({ url: `${MenuApi.Menu}/${id}` })
 
 export default {
-    getMenuTree,
-    getMenuList,
-    createMenu,
-    updateMenu,
-    deleteMenu,
-    getMenuDetail,
+  getMenuTree,
+  getMenuList,
+  createMenu,
+  updateMenu,
+  deleteMenu,
+  getMenuDetail,
 }

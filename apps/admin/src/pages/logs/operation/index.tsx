@@ -1,3 +1,3 @@
 export default function OperationPage() {
-    return <div>Operation Page</div>
+  return <div>Operation Page</div>
 }
