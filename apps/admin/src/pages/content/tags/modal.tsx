@@ -2,11 +2,11 @@ import { ProForm } from '@ant-design/pro-components'
 import type { ProFormInstance } from '@ant-design/pro-components'
 import { useMutation } from '@tanstack/react-query'
 import { message, Modal } from 'antd'
-import { merge } from 'lodash'
-import { useRef, useEffect } from 'react'
+import { useRef } from 'react'
 
 import { getTagDetail, updateTag, createTag } from '@/api/content'
 
+import { ReqCreateTagParams, ReqUpdateTagParams } from '@/api/interface/content'
 import BottomButton from '@/components/bottom-button'
 
 import TagForm from './form'
@@ -26,9 +26,15 @@ const TagModal = ({ onCancel, modalData, reloadTable }: TagModalProps) => {
     const createMutation = useMutation(createTag)
     const updateMutation = useMutation(updateTag)
 
-    useEffect(() => {}, [])
+    const onFinish = async (data: any) => {
+        if (isNew) {
+            await onFinishCreate(data)
+        } else {
+            await onFinishUpdate(data)
+        }
+    }
 
-    const onFinishCreate = async (data) => {
+    const onFinishCreate = async (data: ReqCreateTagParams) => {
         const form = {
             ...data,
         }
@@ -39,7 +45,7 @@ const TagModal = ({ onCancel, modalData, reloadTable }: TagModalProps) => {
         reloadTable?.()
     }
 
-    const onFinishUpdate = async (data) => {
+    const onFinishUpdate = async (data: ReqUpdateTagParams) => {
         const form = {
             ...data,
         }
@@ -75,17 +81,15 @@ const TagModal = ({ onCancel, modalData, reloadTable }: TagModalProps) => {
             maskClosable={false}
         >
             <ProForm
-                onFinish={isNew ? onFinishCreate : onFinishUpdate}
+                onFinish={onFinish}
                 initialValues={isNew && initialValuesNew}
                 request={isNew ? null : detailRequest}
                 submitter={{
                     render: (props, doms) => {
                         return (
                             <BottomButton
-                                submitButtonProps={merge(
-                                    { loading: getDetailMutation.isLoading },
-                                    props,
-                                )}
+                                {...props}
+                                loading={getDetailMutation.isLoading}
                                 onCancel={onCancel}
                             />
                         )

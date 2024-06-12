@@ -14,7 +14,8 @@ import { useContext, useRef } from 'react'
 
 import { createPost, updatePost, getPostDetail, getTagList, getCategoryTree } from '@/api/content'
 
-import { ReqCreatePostParams, ReqUpdatePostParams } from '@/api/interface/content'
+import { RespDetailData } from '@/api/interface'
+import { PostProp, ReqCreatePostParams, ReqUpdatePostParams } from '@/api/interface/content'
 import Editor from '@/components/editor'
 import { TabsContext } from '@/layouts/dashboard/multi-tabs'
 import { useParams } from '@/router/hooks'
@@ -33,7 +34,15 @@ export default function CreateOrUpdatePost() {
     const getTagListMutation = useMutation(getTagList)
     const getCategoryTreeMutation = useMutation(getCategoryTree)
 
-    const getDataReq = async () => {
+    const getDataReq = async (): Promise<
+        RespDetailData<
+            Omit<PostProp, 'category' | 'tags' | 'keywords'> & {
+                category: string | null
+                tags: string[] | null
+                keywords: string | null
+            }
+        >
+    > => {
         const res = await getPostDetailMutation.mutateAsync(id)
         return {
             ...res,
@@ -63,7 +72,17 @@ export default function CreateOrUpdatePost() {
         }, trees)
     }
 
-    const onFinishCreate = async (data: ReqCreatePostParams & { keywords: string }) => {
+    const onFinish = async (data: any) => {
+        if (id) {
+            await onFinishUpdate(data)
+        } else {
+            await onFinishCreate(data)
+        }
+    }
+
+    const onFinishCreate = async (
+        data: Omit<ReqCreatePostParams, 'keywords'> & { keywords: string },
+    ) => {
         const form = {
             ...data,
             keywords: data.keywords?.trim().split(','),
@@ -75,7 +94,9 @@ export default function CreateOrUpdatePost() {
         }, 1500)
     }
 
-    const onFinishUpdate = async (data: ReqUpdatePostParams & { keywords: string }) => {
+    const onFinishUpdate = async (
+        data: Omit<ReqUpdatePostParams, 'keywords'> & { keywords: string },
+    ) => {
         const form = {
             ...data,
             keywords: data.keywords?.trim().split(','),
@@ -99,7 +120,7 @@ export default function CreateOrUpdatePost() {
 
     return (
         <ProForm
-            onFinish={id ? onFinishUpdate : onFinishCreate}
+            onFinish={onFinish}
             initialValues={null}
             request={id && getDataReq}
             submitter={{
@@ -111,7 +132,6 @@ export default function CreateOrUpdatePost() {
                                     type="default"
                                     onClick={() => {
                                         const body = props.form.getFieldValue('body')
-                                        console.log('preview', body)
                                         preview(body)
                                     }}
                                 >
@@ -180,7 +200,7 @@ export default function CreateOrUpdatePost() {
                                 rules={[{ required: true }]}
                                 request={async () => {
                                     const res = await getCategoryTreeMutation.mutateAsync()
-                                    normalizeTreeOptions(res)
+                                    normalizeTreeOptions(res as any)
                                     return res
                                 }}
                             />

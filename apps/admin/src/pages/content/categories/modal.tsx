@@ -2,11 +2,13 @@ import { ProForm } from '@ant-design/pro-components'
 import type { ProFormInstance } from '@ant-design/pro-components'
 import { useMutation } from '@tanstack/react-query'
 import { message, Modal } from 'antd'
-import { isNil, merge } from 'lodash'
-import { useRef, useEffect } from 'react'
+import { isNil } from 'lodash'
+import { useRef } from 'react'
 
 import { getCategoryDetail, updateCategory, createCategory } from '@/api/content'
 
+import { TreeOptions } from '@/api/interface'
+import { ReqCreateCategoryParams, ReqUpdateCategoryParams } from '@/api/interface/content'
 import BottomButton from '@/components/bottom-button'
 
 import CategoryForm from './form'
@@ -15,6 +17,7 @@ export type CategoryModalProps = {
     onCancel: VoidFunction
     modalData: { mode: 'new' | 'edit'; id?: string }
     reloadTable: VoidFunction
+    treeData: TreeOptions[]
 }
 
 const CategoryModal = ({ onCancel, modalData, reloadTable, treeData }: CategoryModalProps) => {
@@ -26,9 +29,15 @@ const CategoryModal = ({ onCancel, modalData, reloadTable, treeData }: CategoryM
     const createMutation = useMutation(createCategory)
     const updateMutation = useMutation(updateCategory)
 
-    useEffect(() => { }, [])
+    const onFinish = async (data: any) => {
+        if (isNew) {
+            await onFinishCreate(data)
+        } else {
+            await onFinishUpdate(data)
+        }
+    }
 
-    const onFinishCreate = async (data) => {
+    const onFinishCreate = async (data: ReqCreateCategoryParams) => {
         const form = {
             ...data,
         }
@@ -39,7 +48,7 @@ const CategoryModal = ({ onCancel, modalData, reloadTable, treeData }: CategoryM
         reloadTable?.()
     }
 
-    const onFinishUpdate = async (data) => {
+    const onFinishUpdate = async (data: ReqUpdateCategoryParams) => {
         const form = {
             ...data,
         }
@@ -50,7 +59,7 @@ const CategoryModal = ({ onCancel, modalData, reloadTable, treeData }: CategoryM
         reloadTable?.()
     }
 
-    const onValuesChange = (values) => { }
+    const onValuesChange = (values) => {}
 
     const initialValuesNew: Partial<any> = {}
 
@@ -62,7 +71,7 @@ const CategoryModal = ({ onCancel, modalData, reloadTable, treeData }: CategoryM
         }
     }
 
-    const cleanup = () => { }
+    const cleanup = () => {}
 
     return (
         <Modal
@@ -76,17 +85,15 @@ const CategoryModal = ({ onCancel, modalData, reloadTable, treeData }: CategoryM
             maskClosable={false}
         >
             <ProForm
-                onFinish={isNew ? onFinishCreate : onFinishUpdate}
+                onFinish={onFinish}
                 initialValues={isNew && initialValuesNew}
                 request={isNew ? null : detailRequest}
                 submitter={{
                     render: (props, doms) => {
                         return (
                             <BottomButton
-                                submitButtonProps={merge(
-                                    { loading: getDetailMutation.isLoading },
-                                    props,
-                                )}
+                                {...props}
+                                loading={getDetailMutation.isLoading}
                                 onCancel={onCancel}
                             />
                         )

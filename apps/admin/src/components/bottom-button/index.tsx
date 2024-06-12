@@ -1,17 +1,11 @@
-import type { FormInstance, SubmitterProps } from '@ant-design/pro-components'
-import { Button, Space, Row } from 'antd'
+import type { FormInstance } from '@ant-design/pro-components'
+import { Button, Space, Row, RowProps } from 'antd'
 
-export type BottomButtonProps = {
-    justify?: 'start' | 'end' | 'center' | 'space-between' | 'space-around' | 'space-evenly'
-    submitButtonProps: SubmitterProps & {
-        form?: FormInstance<any>
-    } & {
-        submit: () => void
-        reset: () => void
-    } & {
-        loading: boolean
-    }
-    onCancel: VoidFunction
+export interface BottomButtonProps {
+    loading?: boolean
+    form?: FormInstance<any>
+    justify?: RowProps['justify']
+    onCancel?: () => void
 }
 
 const BottomButton = (props: BottomButtonProps) => {
@@ -21,16 +15,12 @@ const BottomButton = (props: BottomButtonProps) => {
                 <Button
                     type="primary"
                     key="submit"
-                    loading={props?.submitButtonProps?.loading}
-                    onClick={() => props.submitButtonProps?.form?.submit?.()}
+                    loading={props?.loading}
+                    onClick={() => props.form?.submit?.()}
                 >
                     Submit
                 </Button>
-                <Button
-                    type="default"
-                    key="rest"
-                    onClick={() => props?.submitButtonProps?.form?.resetFields()}
-                >
+                <Button type="default" key="rest" onClick={() => props?.form?.resetFields()}>
                     Reset
                 </Button>
                 <Button type="default" key="cancel" onClick={props?.onCancel}>

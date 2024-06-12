@@ -1,3 +1,9 @@
+export type TreeOptions = {
+    title: string
+    value: string
+    children?: TreeOptions[]
+}
+
 type ListItems<T> = T[]
 
 type PaginateMeta = {
@@ -20,7 +26,6 @@ export type RespTreeData<T> = ListItems<T>
 export interface ReqQueryParams {
     page?: number
     limit?: number
-    search?: string
     [key: string]: any
 }
 

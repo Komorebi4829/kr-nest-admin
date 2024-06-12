@@ -2,20 +2,13 @@ import { QuestionCircleOutlined } from '@ant-design/icons'
 import { ProTable } from '@ant-design/pro-components'
 import type { ActionType, ProColumns } from '@ant-design/pro-components'
 import { useMutation } from '@tanstack/react-query'
-import { Button, Popconfirm, message } from 'antd'
+import { Popconfirm, message } from 'antd'
 import { omit } from 'lodash'
 import { FC, useRef } from 'react'
 
-
 import { getCommentList, deleteComment } from '@/api/content'
+import { CommentProp } from '@/api/interface/content'
 import { IconButton, Iconify } from '@/components/icon'
-
-type CommentItem = {
-    name: string
-    id: string
-    customOrder: number
-    post: Record<string, any>
-}
 
 const List: FC = () => {
     const actionRef = useRef<ActionType>()
@@ -23,7 +16,7 @@ const List: FC = () => {
     const getCommentListMutation = useMutation(getCommentList)
     const deleteCommentMutation = useMutation(deleteComment)
 
-    const columns: ProColumns<CommentItem>[] = [
+    const columns: ProColumns<CommentProp>[] = [
         {
             dataIndex: 'index',
             valueType: 'index',
@@ -39,7 +32,7 @@ const List: FC = () => {
             title: 'Author',
             dataIndex: 'author',
             width: 90,
-            renderText: (value) => value.nickname
+            renderText: (value) => value.nickname,
         },
         {
             title: 'Post',
@@ -48,7 +41,7 @@ const List: FC = () => {
             ellipsis: true,
             render: (_, record) => {
                 return record?.post?.title
-            }
+            },
         },
         {
             title: 'Create Time',
@@ -97,7 +90,7 @@ const List: FC = () => {
 
     return (
         <>
-            <ProTable<CommentItem>
+            <ProTable<CommentProp>
                 rowKey="id"
                 search={false}
                 pagination={{ pageSize: 10 }}
@@ -106,12 +99,12 @@ const List: FC = () => {
                 columns={columns}
                 actionRef={actionRef}
                 request={async (params, sort, filter) => {
-                    const res = (await getCommentListMutation.mutateAsync({
+                    const res = await getCommentListMutation.mutateAsync({
                         page: params.current,
                         limit: params.pageSize,
                         search: params.title,
                         ...omit(params, ['current', 'pageSize', 'title']),
-                    })) as any
+                    })
 
                     return {
                         data: res.items,

@@ -4,21 +4,16 @@ import type { ActionType, ProColumns } from '@ant-design/pro-components'
 import { useMutation } from '@tanstack/react-query'
 import { Button, Popconfirm, message } from 'antd'
 import { omit, unset } from 'lodash'
+import { chain } from 'ramda'
 import { FC, useEffect, useRef, useState } from 'react'
 
 import { useSetState } from 'react-use'
 
 import { getCategoryList, deleteCategory, getCategoryTree } from '@/api/content'
+import { CategoryProp } from '@/api/interface/content'
 import { IconButton, Iconify } from '@/components/icon'
 
 import CategoryModal from './modal'
-import { chain } from 'ramda'
-
-type CategoryItem = {
-    name: string
-    id: string
-    customOrder: number
-}
 
 function normalizeTreeOptions<
     T extends {
@@ -38,7 +33,6 @@ function normalizeTreeOptions<
     }, trees)
 }
 
-
 const List: FC = () => {
     const actionRef = useRef<ActionType>()
     const [modalData, setmodalData] = useSetState<{ mode: 'new' | 'edit'; id?: string }>()
@@ -49,17 +43,15 @@ const List: FC = () => {
     const getCategoryTreeMutation = useMutation(getCategoryTree)
 
     useEffect(() => {
-        getCategoryTreeMutation.mutateAsync().then(res => {
+        getCategoryTreeMutation.mutateAsync().then((res) => {
             normalizeTreeOptions(res)
             settreeData([{ value: 'null', label: 'Root', children: res }] as any)
         })
 
-        return () => {
-        }
+        return () => {}
     }, [])
 
-
-    const columns: ProColumns<CategoryItem>[] = [
+    const columns: ProColumns<CategoryProp>[] = [
         {
             dataIndex: 'index',
             valueType: 'index',
@@ -120,7 +112,7 @@ const List: FC = () => {
 
     return (
         <>
-            <ProTable<CategoryItem>
+            <ProTable<CategoryProp>
                 rowKey="id"
                 search={false}
                 pagination={{ pageSize: 10 }}
@@ -129,12 +121,12 @@ const List: FC = () => {
                 columns={columns}
                 actionRef={actionRef}
                 request={async (params, sort, filter) => {
-                    const res = (await getCategoryListMutation.mutateAsync({
+                    const res = await getCategoryListMutation.mutateAsync({
                         page: params.current,
                         limit: params.pageSize,
                         search: params.title,
                         ...omit(params, ['current', 'pageSize', 'title']),
-                    })) as any
+                    })
 
                     return {
                         data: res.items,

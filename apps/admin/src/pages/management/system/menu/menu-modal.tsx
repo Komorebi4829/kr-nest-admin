@@ -2,7 +2,7 @@ import { ProForm } from '@ant-design/pro-components'
 import type { ProFormInstance } from '@ant-design/pro-components'
 import { useMutation } from '@tanstack/react-query'
 import { message, Modal } from 'antd'
-import { isNil, merge, unset } from 'lodash'
+import { isNil, unset } from 'lodash'
 import { useRef, useEffect } from 'react'
 
 import menuService from '@/api/menu'
@@ -121,10 +121,8 @@ const MenuModal = ({ onCancel, modalData, reloadTable, treeData }: MenuModalProp
                     render: (props, doms) => {
                         return (
                             <BottomButton
-                                submitButtonProps={merge(
-                                    { loading: getMenuDetailMutation.isLoading },
-                                    props,
-                                )}
+                                {...props}
+                                loading={getMenuDetailMutation.isLoading}
                                 onCancel={onCancel}
                             />
                         )

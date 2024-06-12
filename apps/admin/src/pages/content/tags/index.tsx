@@ -9,16 +9,10 @@ import { FC, useRef } from 'react'
 import { useSetState } from 'react-use'
 
 import { getTagList, deleteTag } from '@/api/content'
+import { TagProp } from '@/api/interface/content'
 import { IconButton, Iconify } from '@/components/icon'
 
 import TagModal from './modal'
-
-type TagItem = {
-    name: string
-    id: string
-    description?: string
-    postCount: number
-}
 
 const List: FC = () => {
     const actionRef = useRef<ActionType>()
@@ -27,7 +21,7 @@ const List: FC = () => {
     const getTagListMutation = useMutation(getTagList)
     const deleteTagMutation = useMutation(deleteTag)
 
-    const columns: ProColumns<TagItem>[] = [
+    const columns: ProColumns<TagProp>[] = [
         {
             dataIndex: 'index',
             valueType: 'index',
@@ -94,7 +88,7 @@ const List: FC = () => {
 
     return (
         <>
-            <ProTable<TagItem>
+            <ProTable<TagProp>
                 rowKey="id"
                 search={false}
                 pagination={{ pageSize: 10 }}
@@ -103,12 +97,12 @@ const List: FC = () => {
                 columns={columns}
                 actionRef={actionRef}
                 request={async (params, sort, filter) => {
-                    const res = (await getTagListMutation.mutateAsync({
+                    const res = await getTagListMutation.mutateAsync({
                         page: params.current,
                         limit: params.pageSize,
                         search: params.title,
                         ...omit(params, ['current', 'pageSize', 'title']),
-                    })) as any
+                    })
 
                     return {
                         data: res.items,

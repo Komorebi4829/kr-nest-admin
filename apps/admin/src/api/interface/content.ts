@@ -5,6 +5,7 @@ import { ReqQueryParams } from '.'
 export interface PostProp {
     id: string
     title: string
+    body: string
     summary: string
     keywords: string[] | null
     type: string
@@ -38,6 +39,7 @@ export interface Author {
 }
 
 export interface ReqQueryPostParams extends ReqQueryParams {
+    search?: string
     isPublished?: boolean
     category?: string
     tags?: string[]
@@ -65,7 +67,7 @@ export interface CategoryProp {
 }
 
 export type CategoryTreeProp = Omit<CategoryProp, 'parent' | 'depth'> & {
-    children: CategoryTreeProp
+    children: CategoryTreeProp[]
 }
 
 export type ReqCreateCategoryParams = Pick<CategoryProp, 'name'> & {

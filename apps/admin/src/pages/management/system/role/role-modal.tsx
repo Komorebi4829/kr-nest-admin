@@ -2,9 +2,10 @@ import { ProForm } from '@ant-design/pro-components'
 import type { ProFormInstance } from '@ant-design/pro-components'
 import { useMutation } from '@tanstack/react-query'
 import { message, Modal } from 'antd'
-import { merge } from 'lodash'
+import { chain } from 'ramda'
 import { useEffect, useRef, useState } from 'react'
-import { useTranslation, } from 'react-i18next';
+import { useTranslation } from 'react-i18next'
+
 import menuService from '@/api/menu'
 import roleService from '@/api/role'
 
@@ -13,7 +14,6 @@ import BottomButton from '@/components/bottom-button'
 import RoleForm from './role-form'
 
 import { Permission } from '#/entity'
-import { chain } from 'ramda'
 
 export type RoleModalProps = {
     onCancel: VoidFunction
@@ -21,14 +21,19 @@ export type RoleModalProps = {
     reloadTable: VoidFunction
 }
 
-const traverseTree = <T extends {
-    label: string,
-    id: string,
-    children?: T[],
-    title?: string,
-    name?: string,
-    value?: string
-}>(trees: T[] = [], t: any): T[] => {
+const traverseTree = <
+    T extends {
+        label: string
+        id: string
+        children?: T[]
+        title?: string
+        name?: string
+        value?: string
+    },
+>(
+    trees: T[] = [],
+    t: any,
+): T[] => {
     return chain((node) => {
         node.title = t(node.label)
         node.name = t(node.label)
@@ -50,13 +55,13 @@ const RoleModal = ({ onCancel, modalData, reloadTable }: RoleModalProps) => {
     const getMenuTreeMutation = useMutation(menuService.getMenuTree)
 
     useEffect(() => {
-        if (!mode) return () => { }
+        if (!mode) return () => {}
         getMenuTreeMutation.mutateAsync().then((res) => {
             traverseTree(res as Permission[], t)
             setmenuData(res as Permission[])
         })
 
-        return () => { }
+        return () => {}
     }, [mode])
 
     const onFinishWhenNew = async (data) => {
@@ -70,7 +75,7 @@ const RoleModal = ({ onCancel, modalData, reloadTable }: RoleModalProps) => {
         reloadTable?.()
     }
 
-    const onFinishWhenEdit = async (data) => {
+    const onFinishWhenUpdate = async (data) => {
         const form = {
             ...data,
         }
@@ -81,7 +86,7 @@ const RoleModal = ({ onCancel, modalData, reloadTable }: RoleModalProps) => {
         reloadTable?.()
     }
 
-    const onValuesChange = (values) => { }
+    const onValuesChange = (values) => {}
 
     const initialValuesNew: Partial<Permission> = {}
 
@@ -90,12 +95,12 @@ const RoleModal = ({ onCancel, modalData, reloadTable }: RoleModalProps) => {
         return res
     }
 
-    const cleanup = () => { }
+    const cleanup = () => {}
 
     return (
         <Modal
             destroyOnClose
-            title={isNew ? 'New Role' : 'Edit Role'}
+            title={isNew ? 'New Role' : 'Update Role'}
             open={!!mode}
             onCancel={() => onCancel()}
             afterClose={cleanup}
@@ -103,17 +108,15 @@ const RoleModal = ({ onCancel, modalData, reloadTable }: RoleModalProps) => {
             maskClosable={false}
         >
             <ProForm
-                onFinish={isNew ? onFinishWhenNew : onFinishWhenEdit}
+                onFinish={isNew ? onFinishWhenNew : onFinishWhenUpdate}
                 initialValues={isNew && initialValuesNew}
                 request={isNew ? null : detailRequest}
                 submitter={{
                     render: (props, doms) => {
                         return (
                             <BottomButton
-                                submitButtonProps={merge(
-                                    { loading: getRoleDetailMutation.isLoading },
-                                    props,
-                                )}
+                                {...props}
+                                loading={getRoleDetailMutation.isLoading}
                                 onCancel={onCancel}
                             />
                         )
