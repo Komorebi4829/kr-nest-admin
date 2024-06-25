@@ -25,7 +25,10 @@ export const createUserApi = () => {
             { name: '用户查询', description: '查看用户列表和用户信息' },
             { name: '账户操作', description: '注册、登录、找回密码、查看修改账户信息、修改密码等' },
         ],
-        manage: [{ name: '用户管理', description: '管理用户信息' }],
+        manage: [
+            { name: '用户管理', description: '管理用户信息' },
+            { name: '令牌管理', description: '管理用户令牌' },
+        ],
     }
     return { routes, tags }
 }

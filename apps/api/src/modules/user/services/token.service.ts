@@ -6,20 +6,25 @@ import jwt from 'jsonwebtoken'
 import { v4 as uuid } from 'uuid'
 
 import { getTime } from '@/bootstrap/utils'
+import { BaseService } from '@/helpers/BaseClass'
 import { Configure } from '@/modules/config/configure'
 
 import { AccessTokenEntity } from '../entities/access-token.entity'
 import { RefreshTokenEntity } from '../entities/refresh-token.entity'
 import { UserEntity } from '../entities/user.entity'
 import { getUserConfig } from '../helpers'
+import { AccessTokenRepository } from '../repositories/accessToken.repository'
 import { JwtConfig, JwtPayload } from '../types'
 
 @Injectable()
-export class TokenService {
+export class TokenService extends BaseService<AccessTokenEntity, AccessTokenRepository> {
     constructor(
         protected configure: Configure,
         protected jwtService: JwtService,
-    ) {}
+        protected repository: AccessTokenRepository,
+    ) {
+        super(repository)
+    }
 
     async refreshToken(accessToken: AccessTokenEntity, response: Response) {
         const { user, refreshToken } = accessToken
