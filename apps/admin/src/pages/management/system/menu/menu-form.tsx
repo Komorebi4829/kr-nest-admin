@@ -83,6 +83,7 @@ export default function MenuForm({
             tooltip="I18n label"
             placeholder="E.g. sys.menu.system.index"
             options={i18nOptions}
+            fieldProps={{ showSearch: true }}
           />
         </Col>
         <Col {...colStyle}>

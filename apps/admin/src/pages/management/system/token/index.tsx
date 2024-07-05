@@ -23,6 +23,11 @@ const List: FC = () => {
       width: 48,
     },
     {
+      title: 'Token Type',
+      width: 80,
+      render: () => 'Bearer',
+    },
+    {
       title: 'Access Token',
       dataIndex: 'value',
       width: 180,
@@ -86,6 +91,7 @@ const List: FC = () => {
         rowKey="id"
         search={false}
         headerTitle="Tokens"
+        pagination={{ pageSize: 10 }}
         scroll={{ x: 888 }}
         columns={columns}
         actionRef={actionRef}

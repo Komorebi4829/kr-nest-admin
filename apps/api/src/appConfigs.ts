@@ -17,6 +17,7 @@ import { ApiConfig } from './helpers/types'
 import { ContentModule } from './modules/content/content.module'
 import * as dbCommands from './modules/database/commands'
 import { DatabaseModule } from './modules/database/database.module'
+import { DictModule } from './modules/dict/dict.module'
 import { MeilliModule } from './modules/meilisearch/melli.module'
 import { RbacGuard } from './modules/rbac/guards'
 import { RbacModule } from './modules/rbac/rbac.module'
@@ -35,6 +36,7 @@ export const createOptions: CreateOptions = {
         MeilliModule.forRoot(configure),
         RestfulModule.forRoot(configure),
         ContentModule.forRoot(configure),
+        DictModule.forRoot(configure),
         UserModule.forRoot(configure),
         RbacModule.forRoot(configure),
     ],

@@ -87,6 +87,7 @@ const MenuModal = ({ onCancel, modalData, reloadTable, treeData }: MenuModalProp
     hide: false,
     hideTab: false,
     status: 1,
+    parent: id,
   }
 
   const detailRequest = async () => {
@@ -106,7 +107,7 @@ const MenuModal = ({ onCancel, modalData, reloadTable, treeData }: MenuModalProp
     <Modal
       width="80%"
       destroyOnClose
-      title={isNew ? 'New Menu' : 'Edit Menu'}
+      title={isNew ? 'New Menu' : 'Update Menu'}
       open={!!mode}
       onCancel={() => onCancel()}
       afterClose={cleanup}

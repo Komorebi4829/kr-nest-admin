@@ -5,7 +5,6 @@ export default function AboutPage() {
   const { pkg, lastBuildTime } = __APP_INFO__
 
   const { dependencies, devDependencies, version } = pkg
-  console.log('🚀 ~ file: index.tsx:8 ~ AboutPage ~ dependencies:', dependencies)
 
   return (
     <Row gutter={[24, 24]}>
