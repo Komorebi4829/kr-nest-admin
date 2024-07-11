@@ -187,7 +187,7 @@ const List: FC = () => {
             ]}
             onRow={(record) => {
               return {
-                onClickCapture: (event) => {
+                onDoubleClick: (event) => {
                   if (dict?.id === record?.id) {
                     reloadTable2()
                   } else {
