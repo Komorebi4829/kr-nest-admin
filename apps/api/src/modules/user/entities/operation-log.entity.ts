@@ -4,7 +4,7 @@ import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm'
 
 import type { Relation } from 'typeorm'
 
-import { OperationStatus } from '../constants'
+import { OperationStatus, OperationType } from '../constants'
 
 import { UserEntity } from './user.entity'
 
@@ -20,15 +20,20 @@ export class OperationLogEntity extends BaseEntity {
     operation_name: string
 
     @Expose()
-    @Column({ comment: '操作类型（创建、读取、更新、删除、其它）', nullable: false })
-    operation_type: string
+    @Column({
+        comment: '操作类型（创建、读取、更新、删除、其它）',
+        nullable: false,
+        type: 'enum',
+        enum: OperationType,
+    })
+    operation_type: OperationType
 
     @Expose()
-    @Column({ comment: '登录时间', nullable: true })
+    @Column({ comment: '操作时间', nullable: true })
     operation_time?: Date
 
     @Expose()
-    @Column({ comment: '登录IP', nullable: true, length: 40 })
+    @Column({ comment: '操作IP', nullable: true, length: 40 })
     operation_ip?: string
 
     @Expose()

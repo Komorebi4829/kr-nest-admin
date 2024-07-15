@@ -16,6 +16,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { isNil } from 'lodash'
 
 import { Depends } from '@/helpers/decorators'
+import { OperationName } from '@/helpers/decorators/operationName.decorator'
 import { DeleteWithTrashDto, RestoreDto } from '@/helpers/dtos'
 import { PermissionAction } from '@/modules/rbac/constants'
 import { Permission } from '@/modules/rbac/decorators'
@@ -39,6 +40,7 @@ const permission: PermissionChecker = async (ab) => ab.can(PermissionAction.MANA
 export class PostController {
     constructor(protected service: PostService) {}
 
+    @OperationName('Query Post')
     @Get()
     @SerializeOptions({ groups: ['post-list'] })
     @Permission(permission)

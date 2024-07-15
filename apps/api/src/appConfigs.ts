@@ -8,6 +8,7 @@ import { existsSync } from 'fs-extra'
 
 import { isNil, join } from 'lodash'
 
+import { LoggingInterceptor } from './bootstrap/logger.interceptor'
 import { Restful } from './bootstrap/restful'
 import { RestfulModule } from './bootstrap/restful.module'
 import { CreateOptions } from './bootstrap/types'
@@ -43,6 +44,7 @@ export const createOptions: CreateOptions = {
     commands: () => [...Object.values(dbCommands)],
     globals: {
         guard: RbacGuard,
+        interceptor: LoggingInterceptor,
     },
     builder: async ({ configure, BootModule }) => {
         const container = await NestFactory.create<NestFastifyApplication>(
