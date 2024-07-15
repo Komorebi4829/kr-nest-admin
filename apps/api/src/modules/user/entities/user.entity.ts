@@ -18,6 +18,8 @@ import { CommentEntity, PostEntity } from '@/modules/content/entities'
 import { PermissionEntity, RoleEntity } from '@/modules/rbac/entities'
 
 import { AccessTokenEntity } from './access-token.entity'
+import { LoginLogEntity } from './login-log.entity'
+import { OperationLogEntity } from './operation-log.entity'
 
 @Exclude()
 @Entity('users')
@@ -94,4 +96,14 @@ export class UserEntity {
         cascade: true,
     })
     permissions: Relation<PermissionEntity>[]
+
+    @OneToMany(() => LoginLogEntity, (loginLog) => loginLog.user, {
+        cascade: true,
+    })
+    loginLogs: Relation<LoginLogEntity>[]
+
+    @OneToMany(() => OperationLogEntity, (operationLog) => operationLog.user, {
+        cascade: true,
+    })
+    operationLogs: Relation<LoginLogEntity>[]
 }

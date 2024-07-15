@@ -28,6 +28,8 @@ export const createUserApi = () => {
         manage: [
             { name: '用户管理', description: '管理用户信息' },
             { name: '令牌管理', description: '管理用户令牌' },
+            { name: '登录日志', description: '' },
+            { name: '操作日志', description: '' },
         ],
     }
     return { routes, tags }

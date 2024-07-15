@@ -44,8 +44,12 @@ export class AccountController {
     @Post('login')
     @Guest()
     @UseGuards(LocalAuthGuard)
-    async login(@ReqUser() user: ClassToPlain<UserEntity>, @Body() _data: CredentialDto) {
-        return this.authService.login(user)
+    async login(
+        @ReqUser() user: ClassToPlain<UserEntity>,
+        @Body() _data: CredentialDto,
+        @Request() req: any,
+    ) {
+        return this.authService.login(user, req)
     }
 
     @Post('logout')

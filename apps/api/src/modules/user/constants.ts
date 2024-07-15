@@ -18,3 +18,27 @@ export enum UserValidateGroups {
 }
 
 export const ALLOW_GUEST = 'allowGuest'
+
+/**
+ * 登录/操作结果
+ */
+export enum LoginStatus {
+    SUCCESS = 'success',
+    FAILED = 'failed',
+}
+
+export enum OperationStatus {
+    SUCCESS = 'success',
+    FAILED = 'failed',
+}
+
+/**
+ * 操作日志-操作类型
+ */
+export enum OperationType {
+    CREATE = 'create',
+    UPDATE = 'update',
+    DELETE = 'delete',
+    READ = 'read',
+    OTHER = 'other',
+}

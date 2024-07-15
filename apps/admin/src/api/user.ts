@@ -1,5 +1,8 @@
 import apiClient from '@/utils/http/apiClient'
 
+import { ReqQueryParams, RespListData } from './interface'
+import { LoginLogProp } from './interface/user'
+
 import { Permission, UserInfo as UserInfoEntity, UserToken } from '#/entity'
 
 export interface SignInReq {
@@ -19,6 +22,8 @@ export enum UserApi {
   Refresh = '/auth/refresh',
   UserInfo = '/api/user/account/profile',
   MenuTree = '/manage/api/rbac/menus/tree',
+  LoginLog = '/manage/api/user/login-log',
+  OperationLog = '/manage/api/user/operation-log',
 }
 
 const signin = (data: SignInReq) => apiClient.post<SignInRes>({ url: UserApi.SignIn, data })
@@ -26,6 +31,8 @@ const signup = (data: SignUpReq) => apiClient.post<SignInRes>({ url: UserApi.Sig
 const logout = () => apiClient.get({ url: UserApi.Logout })
 const getUserInfo = () => apiClient.get<UserInfoEntity>({ url: `${UserApi.UserInfo}` })
 const getMenuTree = () => apiClient.get<Permission[]>({ url: `${UserApi.MenuTree}` })
+const getLoginLogList = (params: ReqQueryParams) =>
+  apiClient.get<RespListData<LoginLogProp>>({ url: `${UserApi.LoginLog}`, params })
 
 export default {
   signin,
@@ -33,4 +40,5 @@ export default {
   getUserInfo,
   getMenuTree,
   logout,
+  getLoginLogList,
 }

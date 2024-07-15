@@ -1,18 +1,21 @@
 import { ForbiddenException, Injectable } from '@nestjs/common'
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt'
+import dayjs from 'dayjs'
 import { FastifyRequest as Request } from 'fastify'
 import { ExtractJwt } from 'passport-jwt'
 
 import { getTime } from '@/bootstrap/utils'
 import { Configure } from '@/modules/config/configure'
 
+import { LoginStatus } from '../constants'
 import { RegisterDto, UpdatePasswordDto } from '../dtos'
 import { UserEntity } from '../entities/user.entity'
 import { decrypt, defaultUserConfig } from '../helpers'
 
-import { UserRepository } from '../repositories'
+import { LoginLogRepository, UserRepository } from '../repositories'
 import { UserConfig } from '../types'
 
+import { LoginLogService } from './login-log.service'
 import { TokenService } from './token.service'
 import { UserService } from './user.service'
 
@@ -28,6 +31,8 @@ export class AuthService {
         protected userService: UserService,
         protected tokenService: TokenService,
         protected userRepository: UserRepository,
+        protected loginLogService: LoginLogService,
+        protected loginLogRepository: LoginLogRepository,
     ) {}
 
     async validateUser(credential: string, password: string) {
@@ -40,9 +45,24 @@ export class AuthService {
         return false
     }
 
-    async login(user: UserEntity): Promise<LoginResponse> {
+    async login(user: UserEntity, request: Request): Promise<LoginResponse> {
         const now = await getTime(this.configure)
         const { accessToken } = await this.tokenService.generateAccessToken(user, now)
+        const userAgent = request.headers['user-agent']
+        const remoteIp = request.headers['X-Real-IP']
+
+        try {
+            this.loginLogRepository.save({
+                login_time: dayjs(now).format('YYYY-MM-DD HH:mm:ss'),
+                login_ip: (remoteIp as string) ?? '127.0.0.1',
+                login_device: userAgent,
+                status: LoginStatus.SUCCESS,
+                user,
+            })
+        } catch (e) {
+            console.log('save login log error', e)
+        }
+
         return {
             accessToken: accessToken.value,
             userId: user.id,

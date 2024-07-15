@@ -1,3 +1,5 @@
 export * from './access-token.entity'
 export * from './refresh-token.entity'
 export * from './user.entity'
+export * from './login-log.entity'
+export * from './operation-log.entity'
