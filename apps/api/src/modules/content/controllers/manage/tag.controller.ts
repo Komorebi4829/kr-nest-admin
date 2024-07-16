@@ -14,6 +14,7 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
 import { Depends } from '@/helpers/decorators'
+import { OperationName } from '@/helpers/decorators/operationName.decorator'
 import { DeleteWithTrashDto, PaginateDto } from '@/helpers/dtos'
 import { PermissionAction } from '@/modules/rbac/constants'
 import { Permission } from '@/modules/rbac/decorators'
@@ -33,6 +34,7 @@ const permission: PermissionChecker = async (ab) => ab.can(PermissionAction.MANA
 export class TagController {
     constructor(protected service: TagService) {}
 
+    @OperationName('Query Tag')
     @Get()
     @SerializeOptions({})
     @Permission(permission)
@@ -43,6 +45,7 @@ export class TagController {
         return this.service.paginate(options)
     }
 
+    @OperationName('Query Tag')
     @Get(':id')
     @SerializeOptions({})
     @Permission(permission)
@@ -53,6 +56,7 @@ export class TagController {
         return this.service.detail(id)
     }
 
+    @OperationName('Create Tag')
     @Post()
     @SerializeOptions({})
     @Permission(permission)
@@ -63,6 +67,7 @@ export class TagController {
         return this.service.create(data)
     }
 
+    @OperationName('Update Tag')
     @Patch()
     @SerializeOptions({})
     @Permission(permission)
@@ -73,6 +78,7 @@ export class TagController {
         return this.service.update(data)
     }
 
+    @OperationName('Delete Tag')
     @Delete()
     @SerializeOptions({})
     @Permission(permission)

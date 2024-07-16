@@ -14,6 +14,7 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
 import { Depends } from '@/helpers/decorators'
+import { OperationName } from '@/helpers/decorators/operationName.decorator'
 import { DeleteWithTrashDto, PaginateDto } from '@/helpers/dtos'
 import { PermissionAction } from '@/modules/rbac/constants'
 import { Permission } from '@/modules/rbac/decorators'
@@ -34,6 +35,7 @@ const permission: PermissionChecker = async (ab) =>
 export class CategoryController {
     constructor(protected service: CategoryService) {}
 
+    @OperationName('Query Category')
     @Get()
     @Permission(permission)
     @SerializeOptions({ groups: ['category-list'] })
@@ -41,6 +43,7 @@ export class CategoryController {
         return this.service.paginate(options)
     }
 
+    @OperationName('Query Category')
     @Get(':id')
     @Permission(permission)
     @SerializeOptions({ groups: ['category-detail'] })
@@ -51,6 +54,7 @@ export class CategoryController {
         return this.service.detail(id)
     }
 
+    @OperationName('Create Category')
     @Post()
     @Permission(permission)
     @SerializeOptions({ groups: ['category-detail'] })
@@ -58,6 +62,7 @@ export class CategoryController {
         return this.service.create(data)
     }
 
+    @OperationName('Update Category')
     @Patch()
     @Permission(permission)
     @SerializeOptions({ groups: ['category-detail'] })
@@ -68,6 +73,7 @@ export class CategoryController {
         return this.service.update(data)
     }
 
+    @OperationName('Delete Category')
     @Delete()
     @Permission(permission)
     @SerializeOptions({ groups: ['category-list'] })

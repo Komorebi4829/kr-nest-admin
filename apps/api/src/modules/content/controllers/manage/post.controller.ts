@@ -51,6 +51,7 @@ export class PostController {
         return this.service.paginate(options)
     }
 
+    @OperationName('Query Post')
     @Get(':id')
     @SerializeOptions({ groups: ['post-detail'] })
     @Permission(permission)
@@ -61,6 +62,7 @@ export class PostController {
         return this.service.detail(id)
     }
 
+    @OperationName('Create Post')
     @Post()
     @SerializeOptions({ groups: ['post-detail'] })
     @Permission(permission)
@@ -74,6 +76,7 @@ export class PostController {
         } as ClassToPlain<UserEntity>)
     }
 
+    @OperationName('Update Post')
     @Patch()
     @SerializeOptions({ groups: ['post-detail'] })
     @Permission(permission)
@@ -84,6 +87,7 @@ export class PostController {
         return this.service.update(data)
     }
 
+    @OperationName('Delete Post')
     @Delete()
     @SerializeOptions({ groups: ['post-list'] })
     @Permission(permission)
@@ -95,6 +99,7 @@ export class PostController {
         return this.service.delete(ids, trash)
     }
 
+    @OperationName('Update Post')
     @Patch('restore')
     @ApiBearerAuth()
     @SerializeOptions({ groups: ['post-list'] })

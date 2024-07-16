@@ -23,12 +23,13 @@ export class LoggerInterceptor implements NestInterceptor {
         context: ExecutionContext,
         next: CallHandler,
     ): Observable<any> | Promise<Observable<any>> {
+        const operationName = this.reflector.get<string>(OPERATION_NAME, context.getHandler())
+        if (!operationName) return next.handle()
+
         const now = Date.now()
         const request = context.switchToHttp().getRequest<Request>()
         console.log(`Request to: ${request.method} ${request.url}`)
         const operationType = this.getTypeByMethod(request.method)
-        const operationName =
-            this.reflector.get<string>(OPERATION_NAME, context.getHandler()) || 'NOT SET'
 
         const newLog = new OperationLogEntity()
         newLog.operation_name = operationName

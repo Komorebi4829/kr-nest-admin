@@ -3,6 +3,7 @@ import { Body, Controller, Delete, Get, Query, SerializeOptions } from '@nestjs/
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
 import { Depends } from '@/helpers/decorators'
+import { OperationName } from '@/helpers/decorators/operationName.decorator'
 import { DeleteDto } from '@/helpers/dtos'
 import { PermissionAction } from '@/modules/rbac/constants'
 import { Permission } from '@/modules/rbac/decorators'
@@ -23,6 +24,7 @@ const permission: PermissionChecker = async (ab) =>
 export class CommentController {
     constructor(protected service: CommentService) {}
 
+    @OperationName('Query Comment')
     @Get()
     @SerializeOptions({ groups: ['comment-list'] })
     @Permission(permission)
@@ -33,6 +35,7 @@ export class CommentController {
         return this.service.paginate(query)
     }
 
+    @OperationName('Delete Comment')
     @Delete()
     @SerializeOptions({ groups: ['comment-list'] })
     @Permission(permission)
