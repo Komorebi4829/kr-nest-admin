@@ -4,7 +4,7 @@ import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm'
 
 import type { Relation } from 'typeorm'
 
-import { OperationStatus, OperationType } from '../constants'
+import { HttpMethod, OperationStatus, OperationType } from '../constants'
 
 import { UserEntity } from './user.entity'
 
@@ -51,6 +51,14 @@ export class OperationLogEntity extends BaseEntity {
     @Expose()
     @Column({ comment: '登录失败原因', nullable: true, length: 500 })
     fail_reason?: string
+
+    @Expose()
+    @Column({ comment: '执行时间', nullable: true, length: 20 })
+    time?: string
+
+    @Expose()
+    @Column({ comment: '请求方法', nullable: true, type: 'enum', enum: HttpMethod })
+    method?: HttpMethod
 
     @Expose()
     @ManyToOne(() => UserEntity, (user) => user.operationLogs, {

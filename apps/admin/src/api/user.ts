@@ -1,7 +1,7 @@
 import apiClient from '@/utils/http/apiClient'
 
 import { ReqQueryParams, RespListData } from './interface'
-import { LoginLogProp } from './interface/user'
+import { LoginLogProp, OperationLogProp } from './interface/user'
 
 import { Permission, UserInfo as UserInfoEntity, UserToken } from '#/entity'
 
@@ -33,6 +33,8 @@ const getUserInfo = () => apiClient.get<UserInfoEntity>({ url: `${UserApi.UserIn
 const getMenuTree = () => apiClient.get<Permission[]>({ url: `${UserApi.MenuTree}` })
 const getLoginLogList = (params: ReqQueryParams) =>
   apiClient.get<RespListData<LoginLogProp>>({ url: `${UserApi.LoginLog}`, params })
+const getOperationLogList = (params: ReqQueryParams) =>
+  apiClient.get<RespListData<OperationLogProp>>({ url: `${UserApi.OperationLog}`, params })
 
 export default {
   signin,
@@ -41,4 +43,5 @@ export default {
   getMenuTree,
   logout,
   getLoginLogList,
+  getOperationLogList,
 }

@@ -32,13 +32,23 @@ export enum OperationStatus {
     FAILED = 'failed',
 }
 
+export enum HttpMethod {
+    GET = 'GET',
+    POST = 'POST',
+    PUT = 'PUT',
+    PATCH = 'PATCH',
+    DELETE = 'DELETE',
+    OPTIONS = 'OPTIONS',
+    HEAD = 'HEAD',
+}
+
 /**
  * 操作日志-操作类型
  */
 export enum OperationType {
-    CREATE = 'create',
-    UPDATE = 'update',
-    DELETE = 'delete',
-    READ = 'read',
-    OTHER = 'other',
+    CREATE = 'Create',
+    UPDATE = 'Update',
+    DELETE = 'Delete',
+    READ = 'Read',
+    OTHER = 'Other',
 }

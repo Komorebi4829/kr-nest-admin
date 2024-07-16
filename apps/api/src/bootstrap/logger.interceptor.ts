@@ -8,12 +8,12 @@ import { tap } from 'rxjs/operators'
 import { EntityManager } from 'typeorm'
 
 import { OPERATION_NAME } from '@/helpers/constants'
-import { OperationStatus, OperationType } from '@/modules/user/constants'
+import { HttpMethod, OperationStatus, OperationType } from '@/modules/user/constants'
 
 import { OperationLogEntity } from '@/modules/user/entities'
 
 @Injectable()
-export class LoggingInterceptor implements NestInterceptor {
+export class LoggerInterceptor implements NestInterceptor {
     constructor(
         private reflector: Reflector,
         private entityManager: EntityManager,
@@ -39,9 +39,16 @@ export class LoggingInterceptor implements NestInterceptor {
         newLog.operation_url = request.url
         newLog.status = OperationStatus.SUCCESS
         newLog.user = (request as any).user
-        this.entityManager.save(OperationLogEntity, newLog)
+        newLog.method = request.method as HttpMethod
 
-        return next.handle().pipe(tap(() => console.log(`After... ${Date.now() - now}ms`)))
+        return next.handle().pipe(
+            tap(() => {
+                console.log(`After... ${Date.now() - now}ms`)
+                const time = Date.now() - now
+                newLog.time = String(time)
+                this.entityManager.save(OperationLogEntity, newLog)
+            }),
+        )
     }
 
     private getTypeByMethod(method: string) {
