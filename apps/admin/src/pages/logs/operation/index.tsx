@@ -12,7 +12,7 @@ import { OperationType } from '@/utils/constants'
 const List: FC = () => {
   const actionRef = useRef<ActionType>()
 
-  const getOperationLogListMutation = useMutation(userService.getOperationLogList)
+  const getOperationLogListMutation = useMutation({ mutationFn: userService.getOperationLogList })
 
   const columns: ProColumns<OperationLogProp>[] = [
     {

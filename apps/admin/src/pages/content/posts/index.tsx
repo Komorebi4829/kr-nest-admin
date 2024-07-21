@@ -18,8 +18,8 @@ const List: FC = () => {
   const { pathname } = useLocation()
   const actionRef = useRef<ActionType>()
 
-  const getPostListMutation = useMutation(getPostList)
-  const deletePostMutation = useMutation(deletePost)
+  const getPostListMutation = useMutation({ mutationFn: getPostList })
+  const deletePostMutation = useMutation({ mutationFn: deletePost })
 
   useEffect(() => {
     if (pathname === '/content/posts') {

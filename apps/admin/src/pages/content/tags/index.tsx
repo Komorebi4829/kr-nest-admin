@@ -18,8 +18,8 @@ const List: FC = () => {
   const actionRef = useRef<ActionType>()
   const [modalData, setmodalData] = useSetState<{ mode: 'new' | 'edit'; id?: string }>()
 
-  const getTagListMutation = useMutation(getTagList)
-  const deleteTagMutation = useMutation(deleteTag)
+  const getTagListMutation = useMutation({ mutationFn: getTagList })
+  const deleteTagMutation = useMutation({ mutationFn: deleteTag })
 
   const columns: ProColumns<TagProp>[] = [
     {

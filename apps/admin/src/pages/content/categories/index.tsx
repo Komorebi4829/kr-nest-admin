@@ -38,9 +38,9 @@ const List: FC = () => {
   const [modalData, setmodalData] = useSetState<{ mode: 'new' | 'edit'; id?: string }>()
   const [treeData, settreeData] = useState([])
 
-  const getCategoryListMutation = useMutation(getCategoryList)
-  const deleteCategoryMutation = useMutation(deleteCategory)
-  const getCategoryTreeMutation = useMutation(getCategoryTree)
+  const getCategoryListMutation = useMutation({ mutationFn: getCategoryList })
+  const deleteCategoryMutation = useMutation({ mutationFn: deleteCategory })
+  const getCategoryTreeMutation = useMutation({ mutationFn: getCategoryTree })
 
   useEffect(() => {
     getCategoryTreeMutation.mutateAsync().then((res) => {

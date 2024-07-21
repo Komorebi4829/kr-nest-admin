@@ -13,8 +13,8 @@ import { IconButton, Iconify } from '@/components/icon'
 const List: FC = () => {
   const actionRef = useRef<ActionType>()
 
-  const getCommentListMutation = useMutation(getCommentList)
-  const deleteCommentMutation = useMutation(deleteComment)
+  const getCommentListMutation = useMutation({ mutationFn: getCommentList })
+  const deleteCommentMutation = useMutation({ mutationFn: deleteComment })
 
   const columns: ProColumns<CommentProp>[] = [
     {

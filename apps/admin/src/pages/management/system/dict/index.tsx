@@ -31,10 +31,10 @@ const List: FC = () => {
     reloadTable2()
   }, [dict])
 
-  const getDictListMutation = useMutation(getDictList)
-  const deleteDictMutation = useMutation(deleteDict)
-  const getDictItemListMutation = useMutation(getDictItemList)
-  const deleteDictItemMutation = useMutation(deleteDictItem)
+  const getDictListMutation = useMutation({ mutationFn: getDictList })
+  const deleteDictMutation = useMutation({ mutationFn: deleteDict })
+  const getDictItemListMutation = useMutation({ mutationFn: getDictItemList })
+  const deleteDictItemMutation = useMutation({ mutationFn: deleteDictItem })
 
   const dictColumns: ProColumns<DictProp>[] = [
     {

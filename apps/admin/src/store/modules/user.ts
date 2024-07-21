@@ -1,7 +1,6 @@
+import { faker } from '@faker-js/faker'
 import { useMutation } from '@tanstack/react-query'
 import { App } from 'antd'
-import { useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import userService, { SignInReq } from '@/api/user'
@@ -47,20 +46,19 @@ const useUserStore = create<UserStore>((set) => {
   }
 })
 
-export const useUserInfo = () => useUserStore((state) => state.userInfo)
+export const useUserInfo = () => useUserStore((state) => ({ ...state.userInfo }))
 export const useUserToken = () => useUserStore((state) => state.userToken)
 export const useUserPermission = () => useUserStore((state) => state.userInfo.permissions)
 export const useUserActions = () => useUserStore((state) => state.actions)
 
 export const useSignIn = () => {
-  const { t } = useTranslation()
   const navigatge = useNavigate()
-  const { notification, message } = App.useApp()
+  const { message } = App.useApp()
   const { setUserToken, setUserInfo } = useUserActions()
 
-  const signInMutation = useMutation(userService.signin)
-  const getUserInfoMutation = useMutation(userService.getUserInfo)
-  const getMenuTreeMutation = useMutation(userService.getMenuTree)
+  const signInMutation = useMutation({ mutationFn: userService.signin })
+  const getUserInfoMutation = useMutation({ mutationFn: userService.getUserInfo })
+  const getMenuTreeMutation = useMutation({ mutationFn: userService.getMenuTree })
 
   const signIn = async (data: SignInReq) => {
     try {
@@ -71,14 +69,8 @@ export const useSignIn = () => {
       // TODO menu-tree -> user-menu-tree
       const menuTree = await getMenuTreeMutation.mutateAsync()
       user.permissions = menuTree
-      setUserInfo(user)
+      setUserInfo({ ...user, avatar: faker.image.avatarLegacy() })
       navigatge(HOMEPAGE, { replace: true })
-
-      notification.success({
-        message: t('sys.login.loginSuccessTitle'),
-        description: `${t('sys.login.loginSuccessDesc')}: ${data.credential}`,
-        duration: 3,
-      })
     } catch (err) {
       message.warning({
         content: err.message,
@@ -88,5 +80,5 @@ export const useSignIn = () => {
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  return useCallback(signIn, [])
+  return signIn
 }

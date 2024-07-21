@@ -22,9 +22,9 @@ const TagModal = ({ onCancel, modalData, reloadTable }: TagModalProps) => {
   const isNew = mode === 'new'
   const formRef = useRef<ProFormInstance>()
 
-  const getDetailMutation = useMutation(getTagDetail)
-  const createMutation = useMutation(createTag)
-  const updateMutation = useMutation(updateTag)
+  const getDetailMutation = useMutation({ mutationFn: getTagDetail })
+  const createMutation = useMutation({ mutationFn: createTag })
+  const updateMutation = useMutation({ mutationFn: updateTag })
 
   const onFinish = async (data: any) => {
     if (isNew) {

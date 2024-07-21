@@ -49,10 +49,10 @@ const RoleModal = ({ onCancel, modalData, reloadTable }: RoleModalProps) => {
   const formRef = useRef<ProFormInstance>()
   const [menuData, setmenuData] = useState<Permission[]>([])
 
-  const getRoleDetailMutation = useMutation(roleService.getRoleDetail)
-  const createRoleMutation = useMutation(roleService.createRole)
-  const updateRoleMutation = useMutation(roleService.updateRole)
-  const getMenuTreeMutation = useMutation(menuService.getMenuTree)
+  const getRoleDetailMutation = useMutation({ mutationFn: roleService.getRoleDetail })
+  const createRoleMutation = useMutation({ mutationFn: roleService.createRole })
+  const updateRoleMutation = useMutation({ mutationFn: roleService.updateRole })
+  const getMenuTreeMutation = useMutation({ mutationFn: menuService.getMenuTree })
 
   useEffect(() => {
     if (!mode) return () => {}

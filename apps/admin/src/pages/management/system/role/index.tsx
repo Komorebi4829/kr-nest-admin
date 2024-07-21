@@ -20,8 +20,8 @@ export default function RolePage() {
 
   const actionRef = useRef<ActionType>()
 
-  const getRoleListMutation = useMutation(roleService.getRoleList)
-  const deleteRoleTreeMutation = useMutation(roleService.deleteRole)
+  const getRoleListMutation = useMutation({ mutationFn: roleService.getRoleList })
+  const deleteRoleTreeMutation = useMutation({ mutationFn: roleService.deleteRole })
 
   const columns: ProColumns<Role>[] = [
     {

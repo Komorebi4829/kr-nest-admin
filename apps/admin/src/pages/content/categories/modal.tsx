@@ -25,9 +25,9 @@ const CategoryModal = ({ onCancel, modalData, reloadTable, treeData }: CategoryM
   const isNew = mode === 'new'
   const formRef = useRef<ProFormInstance>()
 
-  const getDetailMutation = useMutation(getCategoryDetail)
-  const createMutation = useMutation(createCategory)
-  const updateMutation = useMutation(updateCategory)
+  const getDetailMutation = useMutation({ mutationFn: getCategoryDetail })
+  const createMutation = useMutation({ mutationFn: createCategory })
+  const updateMutation = useMutation({ mutationFn: updateCategory })
 
   const onFinish = async (data: any) => {
     if (isNew) {

@@ -58,8 +58,8 @@ export default function MenuPage() {
 
   const actionRef = useRef<ActionType>()
 
-  const getMenuTreeMutation = useMutation(menuService.getMenuTree)
-  const deleteMenuTreeMutation = useMutation(menuService.deleteMenu)
+  const getMenuTreeMutation = useMutation({ mutationFn: menuService.getMenuTree })
+  const deleteMenuTreeMutation = useMutation({ mutationFn: menuService.deleteMenu })
 
   const columns: ProColumns<MyMenuItem>[] = [
     {

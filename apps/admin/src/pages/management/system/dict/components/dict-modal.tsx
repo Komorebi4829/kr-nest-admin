@@ -22,9 +22,9 @@ const DictModal = ({ onCancel, modalData, reloadTable }: DictModalProps) => {
   const isNew = mode === 'new'
   const formRef = useRef<ProFormInstance>()
 
-  const getDictDetailMutation = useMutation(getDictDetail)
-  const createDictMutation = useMutation(createDict)
-  const updateDictMutation = useMutation(updateDict)
+  const getDictDetailMutation = useMutation({ mutationFn: getDictDetail })
+  const createDictMutation = useMutation({ mutationFn: createDict })
+  const updateDictMutation = useMutation({ mutationFn: updateDict })
 
   const onFinishWhenNew = async (data) => {
     const form = {

@@ -26,9 +26,9 @@ const MenuModal = ({ onCancel, modalData, reloadTable, treeData }: MenuModalProp
   const isNew = mode === 'new'
   const formRef = useRef<ProFormInstance>()
 
-  const getMenuDetailMutation = useMutation(menuService.getMenuDetail)
-  const createMenuMutation = useMutation(menuService.createMenu)
-  const updateMenuMutation = useMutation(menuService.updateMenu)
+  const getMenuDetailMutation = useMutation({ mutationFn: menuService.getMenuDetail })
+  const createMenuMutation = useMutation({ mutationFn: menuService.createMenu })
+  const updateMenuMutation = useMutation({ mutationFn: menuService.updateMenu })
 
   useEffect(() => {}, [])
 

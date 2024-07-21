@@ -11,7 +11,7 @@ import userService from '@/api/user'
 const List: FC = () => {
   const actionRef = useRef<ActionType>()
 
-  const getLoginLogListMutation = useMutation(userService.getLoginLogList)
+  const getLoginLogListMutation = useMutation({ mutationFn: userService.getLoginLogList })
 
   const columns: ProColumns<LoginLogProp>[] = [
     {

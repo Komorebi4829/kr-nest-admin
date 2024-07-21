@@ -28,11 +28,11 @@ export default function CreateOrUpdatePost() {
 
   const formRef = useRef<ProFormInstance>()
 
-  const createPostMutation = useMutation(createPost)
-  const updatePostMutation = useMutation(updatePost)
-  const getPostDetailMutation = useMutation(getPostDetail)
-  const getTagListMutation = useMutation(getTagList)
-  const getCategoryTreeMutation = useMutation(getCategoryTree)
+  const createPostMutation = useMutation({ mutationFn: createPost })
+  const updatePostMutation = useMutation({ mutationFn: updatePost })
+  const getPostDetailMutation = useMutation({ mutationFn: getPostDetail })
+  const getTagListMutation = useMutation({ mutationFn: getTagList })
+  const getCategoryTreeMutation = useMutation({ mutationFn: getCategoryTree })
 
   const getDataReq = async (): Promise<
     RespDetailData<
@@ -123,6 +123,7 @@ export default function CreateOrUpdatePost() {
       onFinish={onFinish}
       initialValues={null}
       request={id && getDataReq}
+      style={{ paddingBottom: 50 }}
       submitter={{
         render: (props, doms) => {
           return (
