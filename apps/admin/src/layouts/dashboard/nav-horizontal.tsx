@@ -1,6 +1,5 @@
 import { Menu, MenuProps } from 'antd'
-import { ItemType } from 'antd/es/menu/hooks/useItems'
-import { useState, useEffect, CSSProperties } from 'react'
+import { useState, useEffect, CSSProperties, useMemo } from 'react'
 import { useNavigate, useMatches, useLocation } from 'react-router-dom'
 
 import { useRouteToMenuFn, usePermissionRoutes, useFlattenedRoutes } from '@/router/hooks'
@@ -18,6 +17,11 @@ export default function NavHorizontal() {
 
   const routeToMenuFn = useRouteToMenuFn()
   const permissionRoutes = usePermissionRoutes()
+  const menuList = useMemo(() => {
+    const menuRoutes = menuFilter(permissionRoutes)
+    return routeToMenuFn(menuRoutes)
+  }, [routeToMenuFn, permissionRoutes])
+
   // 获取拍平后的路由菜单
   const flattenedRoutes = useFlattenedRoutes()
 
@@ -26,17 +30,10 @@ export default function NavHorizontal() {
    */
   const [openKeys, setOpenKeys] = useState<string[]>([])
   const [selectedKeys, setSelectedKeys] = useState<string[]>([''])
-  const [menuList, setMenuList] = useState<ItemType[]>([])
 
   useEffect(() => {
     setSelectedKeys([pathname])
   }, [pathname, matches])
-
-  useEffect(() => {
-    const menuRoutes = menuFilter(permissionRoutes)
-    const menus = routeToMenuFn(menuRoutes)
-    setMenuList(menus)
-  }, [permissionRoutes, routeToMenuFn])
 
   /**
    * events
