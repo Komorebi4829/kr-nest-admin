@@ -18,9 +18,8 @@ import styled from 'styled-components'
 
 import { USER_LIST } from '@/_mock/assets'
 import { Iconify } from '@/components/icon'
-import useKeepAlive, { KeepAliveTab } from '@/hooks/web/use-keepalive'
 import { useRouter } from '@/router/hooks'
-import { replaceDynamicParams } from '@/router/hooks/use-match-route-meta'
+import { replaceDynamicParams } from '@/router/hooks/use-current-route-meta'
 import { useSettings } from '@/store'
 import { useResponsive, useThemeToken } from '@/theme/hooks'
 
@@ -31,7 +30,9 @@ import {
   OFFSET_HEADER_HEIGHT,
   MULTI_TABS_HEIGHT,
   NAV_HORIZONTAL_HEIGHT,
-} from './config'
+} from '../config'
+
+import { useMultiTabsContext, type KeepAliveTab } from './multi-tabs-provider'
 
 import { MultiTabOperation, ThemeLayout } from '#/enum'
 
@@ -67,7 +68,7 @@ export default function MultiTabs({ offsetTop = false }: Props) {
     closeAll,
     closeLeft,
     closeRight,
-  } = useKeepAlive()
+  } = useMultiTabsContext()
 
   const tabsContextValue = useMemo(
     () => ({ closeTab, refreshTab, tabs }),

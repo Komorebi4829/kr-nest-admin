@@ -7,12 +7,14 @@ import { useRouter } from './use-router'
 
 import type { RouteMeta } from '#/router'
 
+const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env
+
 /**
  * 返回当前路由Meta信息
  */
-export function useMatchRouteMeta() {
-  const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env
-  const [matchRouteMeta, setMatchRouteMeta] = useState<RouteMeta>()
+export function useCurrentRouteMeta() {
+  // const pathname = usePathname();
+  const { push } = useRouter()
 
   // 获取路由组件实例
   const children = useOutlet()
@@ -23,8 +25,7 @@ export function useMatchRouteMeta() {
   // 获取拍平后的路由菜单
   const flattenedRoutes = useFlattenedRoutes()
 
-  // const pathname = usePathname();
-  const { push } = useRouter()
+  const [currentRouteMeta, setCurrentRouteMeta] = useState<RouteMeta>()
 
   useEffect(() => {
     // 获取当前匹配的路由
@@ -32,23 +33,24 @@ export function useMatchRouteMeta() {
     if (!lastRoute) return
 
     const { pathname, params } = lastRoute
-    const currentRouteMeta = flattenedRoutes.find((item) => {
+    const matchedRouteMeta = flattenedRoutes.find((item) => {
       const replacedKey = replaceDynamicParams(item.key, params)
       return replacedKey === pathname || `${replacedKey}/` === pathname
     })
-    if (currentRouteMeta) {
-      currentRouteMeta.outlet = children
+
+    if (matchedRouteMeta) {
+      matchedRouteMeta.outlet = children
       if (!isEmpty(params)) {
-        currentRouteMeta.params = params
+        matchedRouteMeta.params = params
       }
-      setMatchRouteMeta({ ...currentRouteMeta })
+      setCurrentRouteMeta({ ...matchedRouteMeta })
     } else {
       push(HOMEPAGE)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [matchs])
 
-  return matchRouteMeta
+  return currentRouteMeta
 }
 
 /**

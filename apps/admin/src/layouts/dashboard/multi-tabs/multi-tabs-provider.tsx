@@ -1,26 +1,64 @@
 import { isEmpty } from 'ramda'
-import { useCallback, useEffect, useState } from 'react'
+import {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 
-import { useMatchRouteMeta, useRouter } from '@/router/hooks'
-import { replaceDynamicParams } from '@/router/hooks/use-match-route-meta'
+import { useCurrentRouteMeta, useRouter } from '@/router/hooks'
+import { replaceDynamicParams } from '@/router/hooks/use-current-route-meta'
 
 import type { RouteMeta } from '#/router'
 
 export type KeepAliveTab = RouteMeta & {
   children: any
 }
-export default function useKeepAlive() {
-  const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env
-  const { push } = useRouter()
+type MultiTabsContextType = {
+  tabs: KeepAliveTab[]
+  activeTabRoutePath?: string
+  setTabs: (tabs: KeepAliveTab[]) => void
+  closeTab: (path?: string) => void
+  closeOthersTab: (path?: string) => void
+  closeAll: () => void
+  closeLeft: (path: string) => void
+  closeRight: (path: string) => void
+  refreshTab: (path: string) => void
+}
+const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env
 
+export const MultiTabsContext = createContext<MultiTabsContextType>({
+  tabs: [],
+  activeTabRoutePath: '',
+  setTabs: () => {},
+  closeTab: () => {},
+  closeOthersTab: () => {},
+  closeAll: () => {},
+  closeLeft: () => {},
+  closeRight: () => {},
+  refreshTab: () => {},
+})
+
+export function MultiTabsProvider({ children }: PropsWithChildren) {
+  const { push } = useRouter()
   // tabs
   const [tabs, setTabs] = useState<KeepAliveTab[]>([])
 
-  // active tab
-  const [activeTabRoutePath, setActiveTabRoutePath] = useState<string>('')
-
   // current route meta
-  const currentRouteMeta = useMatchRouteMeta()
+  const currentRouteMeta = useCurrentRouteMeta()
+  // active tab
+  const activeTabRoutePath = useMemo(() => {
+    if (!currentRouteMeta) return ''
+
+    const { key, params = {} } = currentRouteMeta
+    if (!isEmpty(params)) {
+      return replaceDynamicParams(key, params)
+    }
+    return key
+  }, [currentRouteMeta])
 
   /**
    * Close specified tab
@@ -29,7 +67,10 @@ export default function useKeepAlive() {
     (path = activeTabRoutePath) => {
       const tempTabs = [...tabs]
       if (tempTabs.length === 1) return
+
       const deleteTabIndex = tempTabs.findIndex((item) => item.key === path)
+      if (deleteTabIndex === -1) return
+
       if (deleteTabIndex > 0) {
         push(tempTabs[deleteTabIndex - 1].key)
       } else {
@@ -39,8 +80,7 @@ export default function useKeepAlive() {
       tempTabs.splice(deleteTabIndex, 1)
       setTabs(tempTabs)
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [activeTabRoutePath],
+    [activeTabRoutePath, push, tabs],
   )
 
   /**
@@ -62,7 +102,6 @@ export default function useKeepAlive() {
   const closeAll = useCallback(() => {
     setTabs([])
     push(HOMEPAGE)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [push])
 
   /**
@@ -119,30 +158,46 @@ export default function useKeepAlive() {
     if (!isEmpty(params)) {
       key = replaceDynamicParams(key, params)
     }
-    const existed = tabs.find((item) => item.key === key)
+    const isExisted = tabs.find((item) => item.key === key)
 
-    if (!existed) {
+    if (!isExisted) {
       setTabs((prev) => [
         ...prev,
         { ...currentRouteMeta, key, children, timeStamp: getTimeStamp() },
       ])
     }
-
-    setActiveTabRoutePath(key)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentRouteMeta])
 
-  return {
-    tabs,
-    activeTabRoutePath,
-    setTabs,
-    closeTab,
-    closeOthersTab,
-    refreshTab,
-    closeAll,
-    closeLeft,
-    closeRight,
-  }
+  const defaultValue: MultiTabsContextType = useMemo(
+    () => ({
+      tabs,
+      activeTabRoutePath,
+      setTabs,
+      closeTab,
+      closeOthersTab,
+      refreshTab,
+      closeAll,
+      closeLeft,
+      closeRight,
+    }),
+    [
+      activeTabRoutePath,
+      closeAll,
+      closeLeft,
+      closeOthersTab,
+      closeRight,
+      closeTab,
+      refreshTab,
+      tabs,
+    ],
+  )
+
+  return <MultiTabsContext.Provider value={defaultValue}>{children}</MultiTabsContext.Provider>
+}
+
+export function useMultiTabsContext() {
+  return useContext(MultiTabsContext)
 }
 
 function getTimeStamp() {
