@@ -32,9 +32,6 @@ function KanbanTask({ index, task }: Props) {
     backgroundPosition: 'right top, left bottom',
     backgroundSize: '50, 50%',
   }
-  const bodyStyle: CSSProperties = {
-    padding: 0,
-  }
 
   const { id, title, comments = [], attachments = [], priority, assignee } = task
   return (
@@ -93,7 +90,7 @@ function KanbanTask({ index, task }: Props) {
               <Select
                 defaultValue="To do"
                 size="large"
-                bordered={false}
+                variant="borderless"
                 dropdownStyle={{
                   width: 'auto',
                 }}
@@ -121,7 +118,7 @@ function KanbanTask({ index, task }: Props) {
         open={drawerOpen}
         closable={false}
         width={420}
-        styles={{ body: bodyStyle, mask: { backgroundColor: 'transparent' } }}
+        styles={{ body: { padding: 0 }, mask: { backgroundColor: 'transparent' } }}
         style={style}
       >
         <TaskDetail task={task} />

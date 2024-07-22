@@ -42,10 +42,6 @@ export default function GeneralTab() {
             <div>Public Profile</div>
             <Switch size="small" />
           </Space>
-
-          <Button type="primary" danger>
-            Delete User
-          </Button>
         </Card>
       </Col>
       <Col span={24} lg={16}>

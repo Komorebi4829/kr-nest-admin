@@ -7,7 +7,7 @@ import MotionContainer from '@/components/animate/motion-container'
 import { getVariant } from '@/components/animate/variants'
 import { useThemeToken } from '@/theme/hooks'
 
-const TEXT = 'SlashAdmin'
+const TEXT = 'KR Nest Admin'
 type Props = {
   isText: boolean
   isMulti: boolean
