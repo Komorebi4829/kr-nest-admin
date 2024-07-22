@@ -57,21 +57,13 @@ export default function AccountDropdown() {
   )
 
   const items: MenuProps['items'] = [
-    {
-      label: (
-        <NavLink to="https://docs-admin.slashspaces.com/" target="_blank">
-          {t('sys.docs')}
-        </NavLink>
-      ),
-      key: '0',
-    },
     { label: <NavLink to={HOMEPAGE}>{t('sys.menu.dashboard')}</NavLink>, key: '1' },
     {
-      label: <NavLink to="/management/user/profile">{t('sys.menu.user.profile')}</NavLink>,
+      label: <NavLink to="/user/profile">{t('sys.menu.user.profile')}</NavLink>,
       key: '2',
     },
     {
-      label: <NavLink to="/management/user/account">{t('sys.menu.user.account')}</NavLink>,
+      label: <NavLink to="/user/account">{t('sys.menu.user.account')}</NavLink>,
       key: '3',
     },
     { type: 'divider' },
