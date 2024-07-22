@@ -2,7 +2,6 @@ import { Col, Row } from 'antd'
 import Color from 'color'
 
 import Character3 from '@/assets/images/characters/character_3.png'
-import { Iconify } from '@/components/icon'
 import { useUserInfo } from '@/store'
 import { useThemeToken } from '@/theme/hooks'
 
@@ -16,7 +15,7 @@ export default function BannerCard() {
 
   return (
     <Row
-      className="!mx-0 rounded-2xl p-10"
+      className="!mx-0 rounded-2xl p-7"
       gutter={[16, 16]}
       justify="space-between"
       style={{ background: bg }}
@@ -33,10 +32,9 @@ export default function BannerCard() {
           style={{ color: themeToken.colorPrimaryTextActive }}
           className="mx-auto mb-6 mt-4 max-w-sm text-sm opacity-80 md:mx-0"
         >
-          Welcome to join the Discord channel to discuss everything about Slash Admin, or you can
-          visite my blog:
+          Ready to start your day? Explore new features and boost your productivity!
           <div>
-            <a
+            {/* <a
               href="https://blog.slashspaces.com"
               target="_blank"
               className="text-base font-bold"
@@ -44,17 +42,17 @@ export default function BannerCard() {
               rel="noreferrer"
             >
               👉 https://blog.slashspaces.com
-            </a>
+            </a> */}
           </div>
         </div>
-        <button
+        {/* <button
           className="font-mediumtext-black m-auto flex items-center justify-center rounded-md px-2 py-1 shadow-none md:m-0"
           style={{ backgroundColor: themeToken.colorPrimary, color: '#fff' }}
           onClick={() => window.open('https://discord.gg/fXemAXVNDa')}
         >
           <Iconify icon="carbon:logo-discord" size={24} />
           <span className="ml-2">Open Discord</span>
-        </button>
+        </button> */}
       </Col>
 
       <Col

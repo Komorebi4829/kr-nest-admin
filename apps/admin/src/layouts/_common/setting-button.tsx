@@ -83,9 +83,6 @@ export default function SettingButton() {
     backgroundPosition: 'right top, left bottom',
     backgroundSize: '50, 50%',
   }
-  const bodyStyle: CSSProperties = {
-    padding: 0,
-  }
 
   const [isFullscreen, setIsFullscreen] = useState(screenfull.isFullscreen)
   const toggleFullScreen = () => {
@@ -129,7 +126,10 @@ export default function SettingButton() {
         open={drawerOpen}
         closable={false}
         width={280}
-        styles={{ body: bodyStyle, mask: { backgroundColor: 'transparent' } }}
+        styles={{
+          body: { padding: 0 },
+          mask: { backgroundColor: 'transparent' },
+        }}
         style={style}
         extra={
           <IconButton onClick={() => setDrawerOpen(false)} className="h-9 w-9 hover:scale-105">
