@@ -144,7 +144,7 @@ export default function MenuPage() {
             cancelText="No"
             placement="left"
             icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-            okButtonProps={{ loading: deleteMenuTreeMutation.isLoading }}
+            okButtonProps={{ loading: deleteMenuTreeMutation.isPending }}
             onConfirm={async () => {
               await deleteMenuTreeMutation.mutateAsync({ ids: [record.id] })
               message.success('Menu deleted successfully', 1.5)

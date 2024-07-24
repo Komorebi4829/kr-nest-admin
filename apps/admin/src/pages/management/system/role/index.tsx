@@ -48,7 +48,7 @@ export default function RolePage() {
             cancelText="No"
             placement="left"
             icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-            okButtonProps={{ loading: deleteRoleTreeMutation.isLoading }}
+            okButtonProps={{ loading: deleteRoleTreeMutation.isPending }}
             onConfirm={async () => {
               await deleteRoleTreeMutation.mutateAsync({ ids: [record.id] })
               message.success('Role deleted successfully', 1.5)

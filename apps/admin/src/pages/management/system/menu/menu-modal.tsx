@@ -123,7 +123,7 @@ const MenuModal = ({ onCancel, modalData, reloadTable, treeData }: MenuModalProp
             return (
               <BottomButton
                 {...props}
-                loading={getMenuDetailMutation.isLoading}
+                loading={getMenuDetailMutation.isPending}
                 onCancel={onCancel}
               />
             )

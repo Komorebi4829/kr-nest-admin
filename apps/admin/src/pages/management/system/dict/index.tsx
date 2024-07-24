@@ -66,7 +66,7 @@ const List: FC = () => {
             cancelText="No"
             placement="left"
             icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-            okButtonProps={{ loading: deleteDictMutation.isLoading }}
+            okButtonProps={{ loading: deleteDictMutation.isPending }}
             onConfirm={async () => {
               await deleteDictMutation.mutateAsync({ ids: [record.id] })
               message.success('Delete successfully', 1.5)
@@ -125,7 +125,7 @@ const List: FC = () => {
             cancelText="No"
             placement="left"
             icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-            okButtonProps={{ loading: deleteDictItemMutation.isLoading }}
+            okButtonProps={{ loading: deleteDictItemMutation.isPending }}
             onConfirm={async () => {
               await deleteDictItemMutation.mutateAsync({ ids: [record.id] })
               message.success('Delete successfully', 1.5)

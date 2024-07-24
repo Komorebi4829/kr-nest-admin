@@ -91,7 +91,7 @@ const CategoryModal = ({ onCancel, modalData, reloadTable, treeData }: CategoryM
         submitter={{
           render: (props, doms) => {
             return (
-              <BottomButton {...props} loading={getDetailMutation.isLoading} onCancel={onCancel} />
+              <BottomButton {...props} loading={getDetailMutation.isPending} onCancel={onCancel} />
             )
           },
         }}

@@ -85,7 +85,7 @@ const DictModal = ({ onCancel, modalData, reloadTable }: DictModalProps) => {
             return (
               <BottomButton
                 {...props}
-                loading={getDictItemDetailMutation.isLoading}
+                loading={getDictItemDetailMutation.isPending}
                 onCancel={onCancel}
               />
             )

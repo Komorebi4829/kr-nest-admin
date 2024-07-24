@@ -140,7 +140,7 @@ export default function CreateOrUpdatePost() {
                 </Button>
                 <Button
                   type="primary"
-                  loading={createPostMutation.isLoading}
+                  loading={createPostMutation.isPending}
                   onClick={() => props.submit()}
                 >
                   Submit

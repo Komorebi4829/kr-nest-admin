@@ -87,7 +87,11 @@ const TagModal = ({ onCancel, modalData, reloadTable }: TagModalProps) => {
         submitter={{
           render: (props, doms) => {
             return (
-              <BottomButton {...props} loading={getDetailMutation.isLoading} onCancel={onCancel} />
+              <BottomButton
+                {...props}
+                loading={isNew ? createMutation.isPending : updateMutation.isPending}
+                onCancel={onCancel}
+              />
             )
           },
         }}

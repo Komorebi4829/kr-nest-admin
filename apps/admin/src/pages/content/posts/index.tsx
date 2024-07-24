@@ -82,7 +82,7 @@ const List: FC = () => {
             cancelText="No"
             placement="left"
             icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-            okButtonProps={{ loading: deletePostMutation.isLoading }}
+            okButtonProps={{ loading: deletePostMutation.isPending }}
             onConfirm={async () => {
               await deletePostMutation.mutateAsync({ ids: [record.id] })
               message.success('Post deleted successfully')

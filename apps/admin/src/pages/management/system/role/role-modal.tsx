@@ -116,7 +116,7 @@ const RoleModal = ({ onCancel, modalData, reloadTable }: RoleModalProps) => {
             return (
               <BottomButton
                 {...props}
-                loading={getRoleDetailMutation.isLoading}
+                loading={getRoleDetailMutation.isPending}
                 onCancel={onCancel}
               />
             )
