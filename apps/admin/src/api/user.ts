@@ -1,7 +1,13 @@
 import apiClient from '@/utils/http/apiClient'
 
-import { ReqQueryParams, RespListData } from './interface'
-import { LoginLogProp, OperationLogProp } from './interface/user'
+import {
+  ReqDeleteParams,
+  ReqQueryParams,
+  ReqRestoreParams,
+  RespDetailData,
+  RespListData,
+} from './interface'
+import { LoginLogProp, OperationLogProp, ReqQueryUserParams, UserProp } from './interface/user'
 
 import { Permission, UserInfo as UserInfoEntity, UserToken } from '#/entity'
 
@@ -24,6 +30,9 @@ export enum UserApi {
   MenuTree = '/manage/api/rbac/menus/tree',
   LoginLog = '/manage/api/user/login-log',
   OperationLog = '/manage/api/user/operation-log',
+
+  ManageUser = '/manage/api/user/users',
+  ManageUserRestore = '/manage/api/user/users/restore',
 }
 
 const signin = (data: SignInReq) => apiClient.post<SignInRes>({ url: UserApi.SignIn, data })
@@ -35,6 +44,14 @@ const getLoginLogList = (params: ReqQueryParams) =>
   apiClient.get<RespListData<LoginLogProp>>({ url: `${UserApi.LoginLog}`, params })
 const getOperationLogList = (params: ReqQueryParams) =>
   apiClient.get<RespListData<OperationLogProp>>({ url: `${UserApi.OperationLog}`, params })
+export const getUserList = (params: ReqQueryUserParams) =>
+  apiClient.get<RespListData<UserProp>>({ url: `${UserApi.ManageUser}`, params })
+export const deleteUser = (data: ReqDeleteParams) =>
+  apiClient.delete<RespDetailData<UserProp>[]>({ url: `${UserApi.ManageUser}`, data })
+export const getUserDetail = (id: string) =>
+  apiClient.get<RespDetailData<UserProp>>({ url: `${UserApi.ManageUser}/${id}` })
+export const restoreUser = (data: ReqRestoreParams) =>
+  apiClient.patch<any>({ url: `${UserApi.ManageUserRestore}`, data })
 
 export default {
   signin,

@@ -2,7 +2,7 @@ import { HttpMethod, OperationType } from '@/utils/constants'
 
 import { ReqQueryParams } from '.'
 
-import { UserInfo as UserInfoEntity } from '#/entity'
+import { Permission, Role } from '#/entity'
 
 export interface LoginLogProp {
   id: string
@@ -11,7 +11,7 @@ export interface LoginLogProp {
   login_device?: string
   status?: string
   fail_reason?: string
-  user: UserInfoEntity
+  user: UserProp
 }
 
 export interface OperationLogProp {
@@ -26,7 +26,23 @@ export interface OperationLogProp {
   fail_reason?: string
   time?: string
   method?: HttpMethod
-  user: UserInfoEntity
+  user: UserProp
 }
 
 export interface ReqQueryTokenParams extends ReqQueryParams {}
+
+export interface UserProp {
+  id: string
+  email: string
+  username: string
+  nickname?: string
+  avatar?: string
+  phone?: string
+  createdAt?: string
+  updatedAt?: string
+  deletedAt?: string
+  roles?: Role[]
+  permissions?: Permission[]
+}
+
+export interface ReqQueryUserParams extends ReqQueryParams {}

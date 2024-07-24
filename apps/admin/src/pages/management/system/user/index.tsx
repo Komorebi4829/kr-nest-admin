@@ -1,23 +1,31 @@
-import { Button, Card, Popconfirm } from 'antd'
-import Table, { ColumnsType } from 'antd/es/table'
+import { QuestionCircleOutlined } from '@ant-design/icons'
+import { ProTable } from '@ant-design/pro-components'
+import type { ActionType, ProColumns } from '@ant-design/pro-components'
+import { faker } from '@faker-js/faker'
+import { useMutation } from '@tanstack/react-query'
+import { Popconfirm, message } from 'antd'
+import { omit } from 'lodash'
+import { useRef } from 'react'
 
-import { USER_LIST } from '@/_mock/assets'
+import { UserProp } from '@/api/interface/user'
+import { deleteUser, getUserList } from '@/api/user'
 import { IconButton, Iconify } from '@/components/icon'
-import { usePathname, useRouter } from '@/router/hooks'
 import ProTag from '@/theme/antd/components/tag'
 import { useThemeToken } from '@/theme/hooks'
 
-import type { Role, UserInfo } from '#/entity'
-import { BasicStatus } from '#/enum'
-
-const USERS: UserInfo[] = USER_LIST
-
-export default function RolePage() {
+export default function UserList() {
   const { colorTextSecondary } = useThemeToken()
-  const { push } = useRouter()
-  const pathname = usePathname()
+  const actionRef = useRef<ActionType>()
 
-  const columns: ColumnsType<UserInfo> = [
+  const getUserListMutation = useMutation({ mutationFn: getUserList })
+  const deleteUserMutation = useMutation({ mutationFn: deleteUser })
+
+  const columns: ProColumns<UserProp>[] = [
+    {
+      dataIndex: 'index',
+      valueType: 'index',
+      width: 48,
+    },
     {
       title: 'Name',
       dataIndex: 'name',
@@ -25,7 +33,7 @@ export default function RolePage() {
       render: (_, record) => {
         return (
           <div className="flex">
-            <img alt="" src={record.avatar} className="h-10 w-10 rounded-full" />
+            <img alt="" src={faker.image.avatar()} className="h-10 w-10 rounded-full" />
             <div className="ml-2 flex flex-col">
               <span className="text-sm">{record.username}</span>
               <span style={{ color: colorTextSecondary }} className="text-xs">
@@ -41,18 +49,19 @@ export default function RolePage() {
       dataIndex: 'role',
       align: 'center',
       width: 120,
-      render: (role: Role) => <ProTag color="cyan">{role.name}</ProTag>,
+      render: (_, record) =>
+        record.roles?.map((role) => (
+          <ProTag color="cyan" key={role.id}>
+            {role.label}
+          </ProTag>
+        )),
     },
     {
       title: 'Status',
       dataIndex: 'status',
       align: 'center',
       width: 120,
-      render: (status) => (
-        <ProTag color={status === BasicStatus.DISABLE ? 'error' : 'success'}>
-          {status === BasicStatus.DISABLE ? 'Disable' : 'Enable'}
-        </ProTag>
-      ),
+      render: () => <ProTag color="success">Enable</ProTag>,
     },
     {
       title: 'Action',
@@ -61,17 +70,19 @@ export default function RolePage() {
       width: 100,
       render: (_, record) => (
         <div className="flex w-full justify-center text-gray">
-          <IconButton
-            onClick={() => {
-              push(`${pathname}/${record.id}`)
+          <Popconfirm
+            title="Delete the User"
+            okText="Yes"
+            cancelText="No"
+            placement="left"
+            icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+            okButtonProps={{ loading: deleteUserMutation.isPending }}
+            onConfirm={async () => {
+              await deleteUserMutation.mutateAsync({ ids: [record.id] })
+              message.success('Delete successfully', 1.5)
+              reloadTable()
             }}
           >
-            <Iconify icon="mdi:card-account-details" size={18} />
-          </IconButton>
-          <IconButton onClick={() => {}}>
-            <Iconify icon="solar:pen-bold-duotone" size={18} />
-          </IconButton>
-          <Popconfirm title="Delete the User" okText="Yes" cancelText="No" placement="left">
             <IconButton>
               <Iconify icon="mingcute:delete-2-fill" size={18} className="text-error" />
             </IconButton>
@@ -81,23 +92,35 @@ export default function RolePage() {
     },
   ]
 
+  const reloadTable = () => {
+    actionRef?.current?.reloadAndRest?.()
+  }
+
   return (
-    <Card
-      title="User List"
-      extra={
-        <Button type="primary" onClick={() => {}}>
-          New
-        </Button>
-      }
-    >
-      <Table
+    <>
+      <ProTable<UserProp>
         rowKey="id"
-        size="small"
+        search={false}
+        headerTitle="Users"
+        pagination={{ pageSize: 10 }}
         scroll={{ x: 'max-content' }}
-        pagination={false}
         columns={columns}
-        dataSource={USERS}
+        actionRef={actionRef}
+        request={async (params, sort, filter) => {
+          const res = await getUserListMutation.mutateAsync({
+            page: params.current,
+            limit: params.pageSize,
+            orderBy: 'updatedAt',
+            ...omit(params, ['current', 'pageSize', 'title']),
+          })
+
+          return {
+            data: res.items,
+            total: res.meta.totalItems,
+            success: true,
+          }
+        }}
       />
-    </Card>
+    </>
   )
 }
