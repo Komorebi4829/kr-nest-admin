@@ -87,15 +87,6 @@ export const MENUS: MenuItem[] = [
                 component: '/management/system/dict/index.tsx',
             },
             {
-                label: 'sys.menu.system.dictData',
-                name: 'Dict Data',
-                type: MenuType.MENU,
-                icon: 'ic_dot',
-                path: 'dict/:id',
-                hide: true,
-                component: '/management/system/dict/data.tsx',
-            },
-            {
                 label: 'sys.menu.system.token',
                 name: 'Token',
                 type: MenuType.MENU,
