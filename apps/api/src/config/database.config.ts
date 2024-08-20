@@ -13,9 +13,9 @@ export const database = createDbConfig((configure: Configure) => {
         },
         connections: [
             {
-                type: 'mysql',
+                type: 'postgres',
                 host: '127.0.0.1',
-                port: 3306,
+                port: 5432,
                 database: configure.env.get('DB_NAME', 'testing'),
                 username: configure.env.get('DB_USERNAME', 'root'),
                 password: configure.env.get('DB_PASSWORD', '123456'),

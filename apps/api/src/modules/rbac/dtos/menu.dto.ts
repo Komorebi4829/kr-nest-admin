@@ -91,7 +91,7 @@ export class CreateMenuDto {
     isCache?: boolean
 
     @IsOptional({ groups: ['create', 'update'] })
-    status?: number
+    status?: boolean
 
     @IsOptional({ groups: ['create', 'update'] })
     icon?: string

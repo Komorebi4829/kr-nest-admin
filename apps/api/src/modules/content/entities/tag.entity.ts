@@ -1,5 +1,5 @@
 import { Exclude, Expose } from 'class-transformer'
-import { Column, Entity, Index, ManyToMany, PrimaryColumn } from 'typeorm'
+import { Column, Entity, Index, ManyToMany, PrimaryGeneratedColumn } from 'typeorm'
 
 import type { Relation } from 'typeorm'
 
@@ -9,7 +9,7 @@ import { PostEntity } from './post.entity'
 @Entity('content_tags')
 export class TagEntity {
     @Expose()
-    @PrimaryColumn({ type: 'varchar', generated: 'uuid', length: 36 })
+    @PrimaryGeneratedColumn('uuid')
     id: string
 
     @Expose()

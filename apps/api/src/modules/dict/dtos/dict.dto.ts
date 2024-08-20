@@ -1,9 +1,6 @@
 import { PartialType } from '@nestjs/swagger'
 
-import { Transform } from 'class-transformer'
 import { IsDefined, IsNotEmpty, IsOptional, IsUUID, MaxLength } from 'class-validator'
-
-import { toNumber } from 'lodash'
 
 import { DtoValidation } from '@/helpers/decorators'
 import { PaginateDto } from '@/helpers/dtos'
@@ -42,9 +39,8 @@ export class CreateDictDto {
     @IsOptional({ always: true })
     remark?: string
 
-    @Transform(({ value }) => toNumber(value))
     @IsOptional({ groups: ['create', 'update'] })
-    systemFlag?: number
+    systemFlag?: boolean
 }
 
 @DtoValidation({ groups: ['update'] })

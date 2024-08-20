@@ -14,7 +14,7 @@ export type MenuItem = {
     perms?: string
     query?: string
     hide?: boolean
-    status?: number
+    status?: boolean
     newFeature?: boolean
     hideTab?: boolean
     parent?: string | null
@@ -272,7 +272,7 @@ export const MENUS: MenuItem[] = [
                 icon: 'ic_disabled',
                 type: MenuType.MENU,
                 path: 'disabled',
-                status: 0,
+                status: false,
                 component: '/sys/others/calendar/index.tsx',
             },
             {

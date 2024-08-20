@@ -32,7 +32,7 @@ export default class MenuSeeder extends BaseSeeder {
                     isFrame: isNil(menu.isFrame) ? false : menu.isFrame,
                     isCache: isNil(menu.isCache) ? true : menu.isCache,
                     hide: isNil(menu.hide) ? false : menu.hide,
-                    status: isNil(menu.status) ? 1 : menu.status,
+                    status: isNil(menu.status) ? true : menu.status,
                     parent: parent || null,
                     customOrder: index + 1,
                 })

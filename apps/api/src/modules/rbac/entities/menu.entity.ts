@@ -1,5 +1,13 @@
 import { Exclude, Expose } from 'class-transformer'
-import { BaseEntity, Column, Entity, PrimaryColumn, Tree, TreeChildren, TreeParent } from 'typeorm'
+import {
+    BaseEntity,
+    Column,
+    Entity,
+    PrimaryGeneratedColumn,
+    Tree,
+    TreeChildren,
+    TreeParent,
+} from 'typeorm'
 
 import type { Relation } from 'typeorm'
 
@@ -12,7 +20,7 @@ import { MenuType } from '../constants'
 @Entity('role_menus')
 export class MenuEntity extends BaseEntity {
     @Expose()
-    @PrimaryColumn({ type: 'varchar', generated: 'uuid', length: 36 })
+    @PrimaryGeneratedColumn('uuid')
     id: string
 
     @Expose()
@@ -73,8 +81,8 @@ export class MenuEntity extends BaseEntity {
     hide?: boolean
 
     @Expose()
-    @Column({ comment: '菜单状态', type: 'tinyint', nullable: true })
-    status?: number
+    @Column({ comment: '菜单状态', type: 'boolean', nullable: true })
+    status?: boolean
 
     @Expose()
     @Column({ comment: '是否新特性', type: 'boolean', nullable: true })

@@ -1,9 +1,9 @@
 import { Exclude } from 'class-transformer'
-import { BaseEntity, Column, CreateDateColumn, PrimaryColumn } from 'typeorm'
+import { BaseEntity, Column, CreateDateColumn, PrimaryGeneratedColumn } from 'typeorm'
 
 @Exclude()
 export abstract class BaseToken extends BaseEntity {
-    @PrimaryColumn({ type: 'varchar', generated: 'uuid', length: 36 })
+    @PrimaryGeneratedColumn('uuid')
     id: string
 
     @Column({ length: 500 })

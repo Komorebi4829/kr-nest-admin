@@ -1,5 +1,5 @@
 import { Exclude, Expose } from 'class-transformer'
-import { BaseEntity, Column, Entity, OneToMany, PrimaryColumn, Relation } from 'typeorm'
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn, Relation } from 'typeorm'
 
 import { DictItemEntity } from './dict-item.entity'
 
@@ -7,7 +7,7 @@ import { DictItemEntity } from './dict-item.entity'
 @Entity('dicts')
 export class DictEntity extends BaseEntity {
     @Expose()
-    @PrimaryColumn({ type: 'varchar', generated: 'uuid', length: 36, comment: '字典编号' })
+    @PrimaryGeneratedColumn('uuid', { comment: '字典编号' })
     id: string
 
     @Expose()
@@ -19,16 +19,16 @@ export class DictEntity extends BaseEntity {
     name: string
 
     @Expose()
-    @Column({ comment: '是否系统内置, 1是 0否', type: 'tinyint', default: 0 })
-    systemFlag: number
+    @Column({ comment: '是否系统内置, 是 否', type: 'boolean', default: false })
+    systemFlag: boolean
 
     @Expose()
     @Column({ comment: '备注信息', nullable: true })
     remark?: string
 
     @Expose()
-    @Column({ comment: '启用状态, 1启用 0停用', type: 'tinyint', nullable: true, default: 1 })
-    status?: number
+    @Column({ comment: '启用状态, 启用 停用', type: 'boolean', nullable: true, default: true })
+    status?: boolean
 
     @Expose()
     @OneToMany(() => DictItemEntity, (dictItem) => dictItem.dict, {

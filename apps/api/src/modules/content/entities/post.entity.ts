@@ -10,7 +10,7 @@ import {
     ManyToMany,
     ManyToOne,
     OneToMany,
-    PrimaryColumn,
+    PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm'
 
@@ -28,7 +28,7 @@ import { TagEntity } from './tag.entity'
 @Entity('content_posts')
 export class PostEntity extends BaseEntity {
     @Expose()
-    @PrimaryColumn({ type: 'varchar', generated: 'uuid', length: 36 })
+    @PrimaryGeneratedColumn('uuid')
     id: string
 
     @Expose()

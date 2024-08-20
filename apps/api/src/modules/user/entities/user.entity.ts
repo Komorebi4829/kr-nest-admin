@@ -7,7 +7,7 @@ import {
     Entity,
     ManyToMany,
     OneToMany,
-    PrimaryColumn,
+    PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm'
 
@@ -25,7 +25,7 @@ import { OperationLogEntity } from './operation-log.entity'
 @Entity('users')
 export class UserEntity {
     @Expose()
-    @PrimaryColumn({ type: 'varchar', generated: 'uuid', length: 36 })
+    @PrimaryGeneratedColumn('uuid')
     id: string
 
     @Expose()

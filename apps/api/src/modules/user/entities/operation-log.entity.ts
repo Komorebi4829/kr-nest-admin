@@ -1,6 +1,6 @@
 import { Exclude, Expose } from 'class-transformer'
 
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm'
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
 
 import type { Relation } from 'typeorm'
 
@@ -12,7 +12,7 @@ import { UserEntity } from './user.entity'
 @Entity('operation_logs')
 export class OperationLogEntity extends BaseEntity {
     @Expose()
-    @PrimaryColumn({ type: 'varchar', generated: 'uuid', length: 36 })
+    @PrimaryGeneratedColumn('uuid')
     id: string
 
     @Expose()

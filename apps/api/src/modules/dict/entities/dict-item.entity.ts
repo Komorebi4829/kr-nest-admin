@@ -1,5 +1,5 @@
 import { Exclude, Expose } from 'class-transformer'
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn, Relation } from 'typeorm'
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn, Relation } from 'typeorm'
 
 import { DictEntity } from './dict.entity'
 
@@ -7,7 +7,7 @@ import { DictEntity } from './dict.entity'
 @Entity('dict_items')
 export class DictItemEntity extends BaseEntity {
     @Expose()
-    @PrimaryColumn({ type: 'varchar', generated: 'uuid', length: 36 })
+    @PrimaryGeneratedColumn('uuid')
     id: string
 
     @Expose()
@@ -31,8 +31,8 @@ export class DictItemEntity extends BaseEntity {
     remark?: string
 
     @Expose()
-    @Column({ comment: '启用状态', type: 'tinyint', nullable: true, default: 1 })
-    status?: number
+    @Column({ comment: '启用状态', type: 'boolean', nullable: true, default: true })
+    status?: boolean
 
     @Expose()
     @ManyToOne(() => DictEntity, (dict) => dict.dictItems, {

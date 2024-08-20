@@ -56,7 +56,7 @@ export class CreateDictItemDto {
     remark?: string
 
     @IsOptional({ groups: ['create', 'update'] })
-    status?: number
+    status?: boolean
 
     @IsDataExist(DictEntity, {
         message: '字典不存在',
