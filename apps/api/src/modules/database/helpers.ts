@@ -211,9 +211,12 @@ export async function resetForeignKey(
     if (type === 'sqlite') {
         key = disabled ? 'OFF' : 'ON'
         query = `PRAGMA foreign_keys = ${key};`
-    } else {
+    } else if (type === 'mysql') {
         key = disabled ? '0' : '1'
         query = `SET FOREIGN_KEY_CHECKS = ${key};`
+    } else if (type === 'postgres') {
+        // PostgreSQL 始终启用外键约束，无需设置
+        return em
     }
     await em.query(query)
     return em

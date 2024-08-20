@@ -62,7 +62,7 @@ export default class UserSeeder extends BaseSeeder {
         const repository = getCustomRepository(this.dataSource, UserRepository)
         const userFactory = this.factorier(UserEntity)
         const count = await repository.count()
-        if (count < 2) {
+        if (count < 3) {
             await userFactory<IUserFactoryOptions>({
                 username: 'libai',
                 nickname: '李白',
@@ -76,6 +76,14 @@ export default class UserSeeder extends BaseSeeder {
                 nickname: '苏轼',
                 phone: '+86.13012345679',
                 password: '123456a!/',
+                roles,
+            }).create({}, 'username')
+
+            await userFactory<IUserFactoryOptions>({
+                username: 'demo',
+                nickname: 'demo',
+                phone: '+86.13012346679',
+                password: 'demo123!@',
                 roles,
             }).create({}, 'username')
 

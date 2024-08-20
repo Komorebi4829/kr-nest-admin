@@ -510,12 +510,12 @@ export const ROLE_LIST = [ADMIN_ROLE, TEST_ROLE]
  */
 export const DEFAULT_USER = {
   id: 'b34719e1-ce46-457e-9575-99505ecee828',
-  username: 'superAdmin',
+  username: 'demo',
   email: faker.internet.email(),
   avatar: faker.image.avatarLegacy(),
   createdAt: faker.date.anytime(),
   updatedAt: faker.date.recent(),
-  password: '123456sS$',
+  password: 'demo123!@',
   role: ADMIN_ROLE,
   permissions: ADMIN_ROLE.permission,
 }

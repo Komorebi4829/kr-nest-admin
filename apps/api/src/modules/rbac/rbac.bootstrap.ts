@@ -223,14 +223,14 @@ export class RbacBootstrap<A extends AbilityTuple = AbilityTuple, C extends Mong
                     'Please add a super-admin user first before run server!',
                 )
             }
-            const firstUser = await userRepo.findOneByOrFail({ id: undefined })
+            const admin = await userRepo.findOneByOrFail({ nickname: 'superAdmin' })
             await userRepo
                 .createQueryBuilder('user')
                 .relation(UserEntity, 'roles')
-                .of(firstUser)
+                .of(admin)
                 .addAndRemove(
                     [superRole.id],
-                    ((firstUser.roles ?? []) as RoleEntity[]).map(({ id }) => id),
+                    ((admin.roles ?? []) as RoleEntity[]).map(({ id }) => id),
                 )
         }
     }
