@@ -6,6 +6,20 @@ export type TreeOptions = {
 
 type ListItems<T> = T[]
 
+export interface ReqQueryParams {
+  page?: number
+  limit?: number
+  [key: string]: any
+}
+
+export interface ReqDeleteParams {
+  ids: string[]
+}
+
+export interface ReqRestoreParams {
+  ids: string[]
+}
+
 type PaginateMeta = {
   currentPage: number
   itemCount: number
@@ -22,17 +36,3 @@ export interface RespListData<T> {
 export type RespDetailData<T> = T
 
 export type RespTreeData<T> = ListItems<T>
-
-export interface ReqQueryParams {
-  page?: number
-  limit?: number
-  [key: string]: any
-}
-
-export interface ReqDeleteParams {
-  ids: string[]
-}
-
-export interface ReqRestoreParams {
-  ids: string[]
-}

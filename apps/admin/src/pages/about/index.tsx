@@ -10,7 +10,7 @@ export default function AboutPage() {
     <Row gutter={[24, 24]}>
       <Col span={24}>
         <ProCard title="About" bordered>
-          <a href="https://github.com/Komorebi4829/kr-nest-admin">kr-nest-admin</a> 的前端项目是基于
+          <a href="https://github.com/Komorebi4829/kr-nest-admin">kr-nest-admin</a> 是基于
           React18、Vite、Ant Design、Ant Design Pro、TypeScript 开发，
           内置了动态路由、权限验证、并提供了常用的功能组件，帮助你快速搭建企业级中后台产品原型。
         </ProCard>

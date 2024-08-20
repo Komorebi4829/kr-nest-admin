@@ -17,7 +17,6 @@ function RegisterForm() {
   if (loginState !== LoginStateEnum.REGISTER) return null
 
   const onFinish = async (values: any) => {
-    console.log('Received values of form: ', values)
     await signUpMutation.mutateAsync(values)
     backToLogin()
   }
@@ -33,7 +32,7 @@ function RegisterForm() {
           <Input placeholder={t('sys.login.userName')} />
         </Form.Item>
         <Form.Item
-          name="email"
+          name="nickname"
           rules={[{ required: true, message: t('sys.login.emaildPlaceholder') }]}
         >
           <Input placeholder={t('sys.login.email')} />
@@ -45,7 +44,7 @@ function RegisterForm() {
           <Input.Password type="password" placeholder={t('sys.login.password')} />
         </Form.Item>
         <Form.Item
-          name="confirmPassword"
+          name="plainPassword"
           rules={[
             { required: true, message: t('sys.login.confirmPasswordPlaceholder') },
             ({ getFieldValue }) => ({
