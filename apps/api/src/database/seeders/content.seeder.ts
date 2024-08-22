@@ -116,7 +116,7 @@ export default class ContentSeeder extends BaseSeeder {
                 options.category = await getCustomRepository(
                     this.dataSource,
                     CategoryRepository,
-                ).findOneBy({ id: item.category })
+                ).findOneBy({ name: item.category })
             }
             if (item.tags) {
                 options.tags = await getCustomRepository(this.dataSource, TagRepository).find({
