@@ -1,0 +1,55 @@
+kind: pipeline
+type: docker
+name: kr-nest-admin
+
+trigger:
+    branch:
+        - main
+
+platform:
+    os: linux
+    arch: arm64
+
+steps:
+    - name: build
+      image: node:18.20-alpine
+      volumes:
+          - name: cache_admin
+            path: /tmp/cache/admin
+          - name: cache_api
+            path: /tmp/cache/api
+      commands:
+          - node -v
+          - npm i -g pnpm
+          - pnpm i
+          - pnpm run build
+          - cp -r apps/admin/dist/* /tmp/cache/admin
+          - cp -r apps/api/dist/* /tmp/cache/api
+          # TODO pm2 start ecosystem.config.cjs --env production
+
+    - name: docker build
+      image: plugins/docker
+      settings:
+          username:
+              from_secret: docker_username
+          password:
+              from_secret: docker_password
+          repo: kentriver4829/my_app
+          tags: ${DRONE_COMMIT_SHA}
+      commands:
+          - docker -v
+
+    - name: deploy
+      image: plugins/docker
+      commands:
+          - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+          - docker pull kentriver4829/my_app:${DRONE_COMMIT_SHA}
+          - docker run -d -p 3000:3000 kentriver4829/my_app:${DRONE_COMMIT_SHA}
+
+volumes:
+    - name: cache_admin
+      host:
+          path: /var/www/kr-nest-admin/admin
+    - name: cache_api
+      host:
+          path: /var/www/kr-nest-admin/api
