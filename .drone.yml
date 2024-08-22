@@ -10,6 +10,9 @@ platform:
     os: linux
     arch: arm64
 
+node:
+  server: o18
+
 steps:
     - name: build
       image: node:18.20-alpine
