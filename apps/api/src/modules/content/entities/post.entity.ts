@@ -38,7 +38,6 @@ export class PostEntity extends BaseEntity {
 
     @Expose({ groups: ['post-detail'] })
     @Column({ comment: '文章内容', type: 'text' })
-    @Index({ fulltext: true })
     body: string
 
     @Expose()
