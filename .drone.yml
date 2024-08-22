@@ -28,7 +28,6 @@ steps:
           - pnpm run build
           - cp -r apps/admin/dist/* /tmp/cache/admin
           - cp -r apps/api/dist/* /tmp/cache/api
-          # TODO pm2 start ecosystem.config.cjs --env production
 
     - name: docker build
       image: plugins/docker
@@ -38,9 +37,18 @@ steps:
               from_secret: docker_password
           repo: kentriver4829/my_app
           tags: ${DRONE_COMMIT_SHA}
+          context: ./apps/api
+          dockerfile: ./apps/api/Dockerfile
+
       environment:
-          DOCKER_PASSWORD:
-              from_secret: docker_password
+          DB_HOST:
+              from_secret: DB_HOST
+          DB_NAME:
+              from_secret: DB_NAME
+          DB_PASSWORD:
+              from_secret: DB_PASSWORD
+          DB_USERNAME:
+              from_secret: DB_USERNAME
 
     # - name: deploy
     #   image: plugins/docker
