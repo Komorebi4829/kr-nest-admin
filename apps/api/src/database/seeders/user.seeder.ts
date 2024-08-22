@@ -67,7 +67,7 @@ export default class UserSeeder extends BaseSeeder {
                 username: 'libai',
                 nickname: '李白',
                 phone: '+86.13012345678',
-                password: '123456a!/',
+                password: '123456aA!/',
                 roles,
             }).create({}, 'username')
 
@@ -75,7 +75,7 @@ export default class UserSeeder extends BaseSeeder {
                 username: 'sushi',
                 nickname: '苏轼',
                 phone: '+86.13012345679',
-                password: '123456a!/',
+                password: '123456aA!/',
                 roles,
             }).create({}, 'username')
 
@@ -83,7 +83,7 @@ export default class UserSeeder extends BaseSeeder {
                 username: 'demo',
                 nickname: 'demo',
                 phone: '+86.13012346679',
-                password: 'demo123!@',
+                password: 'Demo123!@',
                 roles,
             }).create({}, 'username')
 

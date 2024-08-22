@@ -515,7 +515,7 @@ export const DEFAULT_USER = {
   avatar: faker.image.avatarLegacy(),
   createdAt: faker.date.anytime(),
   updatedAt: faker.date.recent(),
-  password: 'demo123!@',
+  password: 'Demo123!@',
   role: ADMIN_ROLE,
   permissions: ADMIN_ROLE.permission,
 }
