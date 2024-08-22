@@ -36,7 +36,7 @@ steps:
           password:
               from_secret: docker_password
           repo: kentriver4829/my_app
-          tags: ${DRONE_COMMIT_SHA}
+          tags: kna
           context: ./apps/api
           dockerfile: ./apps/api/Dockerfile
 
@@ -50,12 +50,23 @@ steps:
           DB_USERNAME:
               from_secret: DB_USERNAME
 
-    # - name: deploy
-    #   image: plugins/docker
-    #   commands:
-    #       - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-    #       - docker pull kentriver4829/my_app:${DRONE_COMMIT_SHA}
-    #       - docker run -d -p 3000:3000 kentriver4829/my_app:${DRONE_COMMIT_SHA}
+    - name: deploy
+      image: plugins/docker
+      commands:
+          - docker login -u kentriver4829 -p ${DOCKER_PASSWORD}
+          - docker pull kentriver4829/my_app:kna
+          - docker run -d --name kr-nest-admin -p 3000:3000 --network pg --env DB_HOST=${DB_HOST} --env DB_NAME=${DB_NAME} --env DB_PASSWORD=${DB_PASSWORD} --env DB_USERNAME=${DB_USERNAME}  kentriver4829/my_app:kna
+      environment:
+          DB_HOST:
+              from_secret: DB_HOST
+          DB_NAME:
+              from_secret: DB_NAME
+          DB_PASSWORD:
+              from_secret: DB_PASSWORD
+          DB_USERNAME:
+              from_secret: DB_USERNAME
+          DOCKER_PASSWORD:
+              from_secret: docker_password
 
 volumes:
     - name: cache_admin
