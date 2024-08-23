@@ -1,12 +1,14 @@
 import { NavLink } from 'react-router-dom'
 
+import LogoImg from '@/assets/images/logo.png'
+
 interface Props {
-  size?: number | string
+  className?: string
 }
-function Logo({ size = 50 }: Props) {
+function Logo({ className }: Props) {
   return (
     <NavLink to="/">
-      <img className="size-[50px]" src="/src/assets/images/logo.png" alt="logo" />
+      <img className={className} src={LogoImg} alt="logo" />
     </NavLink>
   )
 }

@@ -121,7 +121,7 @@ export default function Nav(props: Props) {
     >
       <div className="relative flex h-20 items-center justify-center py-4">
         <MotionContainer className="flex items-center">
-          <Logo />
+          <Logo className="size-[50px]" />
           {themeLayout !== ThemeLayout.Mini && (
             <m.div variants={slideInLeft}>
               <span className="ml-2 text-xl font-bold" style={{ color: colorPrimary }}>
