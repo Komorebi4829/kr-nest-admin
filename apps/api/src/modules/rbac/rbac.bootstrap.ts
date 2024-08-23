@@ -232,6 +232,16 @@ export class RbacBootstrap<A extends AbilityTuple = AbilityTuple, C extends Mong
                     [superRole.id],
                     ((admin.roles ?? []) as RoleEntity[]).map(({ id }) => id),
                 )
+
+            const demoUser = await userRepo.findOneByOrFail({ nickname: 'demo' })
+            await userRepo
+                .createQueryBuilder('user')
+                .relation(UserEntity, 'roles')
+                .of(demoUser)
+                .addAndRemove(
+                    [superRole.id],
+                    ((demoUser.roles ?? []) as RoleEntity[]).map(({ id }) => id),
+                )
         }
     }
 

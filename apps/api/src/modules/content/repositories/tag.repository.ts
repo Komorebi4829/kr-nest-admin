@@ -12,9 +12,9 @@ export class TagRepository extends BaseRepository<TagEntity> {
             .leftJoinAndSelect('tag.posts', 'posts')
             .addSelect(
                 (subQuery) => subQuery.select('COUNT(p.id)', 'count').from(PostEntity, 'p'),
-                'postCount',
+                'postcount',
             )
-            .orderBy('postCount', 'DESC')
+            .orderBy('postcount', 'DESC')
             .loadRelationCountAndMap('tag.postCount', 'tag.posts')
     }
 }

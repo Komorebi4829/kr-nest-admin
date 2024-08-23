@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AiFillGithub, AiFillGoogleCircle, AiFillWechat } from 'react-icons/ai'
 
-import { DEFAULT_USER, TEST_USER } from '@/_mock/assets'
+import { DEFAULT_USER } from '@/_mock/assets'
 import { SignInReq } from '@/api/user'
 import { useSignIn } from '@/store'
 import ProTag from '@/theme/antd/components/tag'
@@ -47,17 +47,17 @@ function LoginForm() {
             type="info"
             description={
               <div className="flex flex-col">
-                <div className="flex">
+                {/* <div className="flex">
                   <ProTag className="flex-shrink-0">Admin {t('sys.login.userName')}:</ProTag>
                   <strong className="ml-1" style={{ color: themeToken.colorInfoTextHover }}>
                     <span>{DEFAULT_USER.username}</span>
                   </strong>
-                </div>
+                </div> */}
 
                 <div className="flex">
                   <ProTag className="flex-shrink-0">Test {t('sys.login.userName')}:</ProTag>
                   <strong className="ml-1" style={{ color: themeToken.colorInfoTextHover }}>
-                    <span>{TEST_USER.username}</span>
+                    <span>{DEFAULT_USER.username}</span>
                   </strong>
                 </div>
 
