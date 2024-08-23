@@ -1,13 +1,10 @@
 import { Layout, Typography } from 'antd'
 import Color from 'color'
 import { useTranslation } from 'react-i18next'
-import { Navigate } from 'react-router-dom'
 
-// import DashboardImg from '@/assets/images/background/dashboard.png'
 import Overlay2 from '@/assets/images/background/overlay_2.jpg'
 import DashboardImg from '@/assets/images/login-box-bg.svg'
 import LocalePicker from '@/components/locale-picker'
-import { useUserToken } from '@/store'
 import { useThemeToken } from '@/theme/hooks'
 
 import LoginForm from './LoginForm'
@@ -17,18 +14,9 @@ import RegisterForm from './RegisterForm'
 import ResetForm from './ResetForm'
 import { LoginStateProvider } from './providers/LoginStateProvider'
 
-const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env
-
 function Login() {
   const { t } = useTranslation()
-  const token = useUserToken()
   const { colorBgElevated } = useThemeToken()
-
-  // 判断用户是否有权限
-  if (token.accessToken) {
-    // 如果有授权，则跳转到首页
-    return <Navigate to={HOMEPAGE} replace />
-  }
 
   const gradientBg = Color(colorBgElevated).alpha(0.9).toString()
   const bg = `linear-gradient(${gradientBg}, ${gradientBg}) center center / cover no-repeat,url(${Overlay2})`

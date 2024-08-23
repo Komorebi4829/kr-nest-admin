@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { useMutation } from '@tanstack/react-query'
 import { App } from 'antd'
+
 import { useNavigate } from 'react-router-dom'
 
 import userService, { SignInReq } from '@/api/user'
@@ -65,12 +66,16 @@ export const useSignIn = () => {
       const res = await signInMutation.mutateAsync(data)
       const { accessToken /* refreshToken */ } = res
       setUserToken({ accessToken /* refreshToken */ })
-      const user = await getUserInfoMutation.mutateAsync()
       // TODO menu-tree -> user-menu-tree
-      const menuTree = await getMenuTreeMutation.mutateAsync()
-      user.permissions = menuTree
-      setUserInfo({ ...user, avatar: faker.image.avatarLegacy() })
-      navigatge(HOMEPAGE, { replace: true })
+      await Promise.all([
+        getUserInfoMutation.mutateAsync(),
+        getMenuTreeMutation.mutateAsync(),
+      ]).then((arr) => {
+        const [user, menuTree] = arr
+        user.permissions = menuTree
+        setUserInfo({ ...user, avatar: faker.image.avatarLegacy() })
+        navigatge(HOMEPAGE, { replace: true })
+      })
     } catch (err) {
       message.warning({
         content: err.message,

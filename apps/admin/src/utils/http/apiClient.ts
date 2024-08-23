@@ -1,6 +1,5 @@
 import { message as Message } from 'antd'
 import axios, { AxiosRequestConfig, AxiosError, AxiosResponse } from 'axios'
-import { isEmpty } from 'ramda'
 
 import { t } from '@/locales/i18n'
 
@@ -35,34 +34,48 @@ axiosInstance.interceptors.request.use(
   },
 )
 
+const handle5xxError = (error: AxiosError<Result>) => {
+  const { response } = error
+  const errMsg = response?.data?.message || t('sys.api.apiRequestFailed')
+  Message.error(errMsg)
+  return Promise.reject(error)
+}
+
+const handle401Error = (error: AxiosError<Result>) => {
+  const { response } = error
+  const errMsg = response?.data?.message || t('sys.api.needLogin')
+  Message.error(errMsg)
+  location.replace('/login')
+  return Promise.reject(error)
+}
+
+const handleOtherError = (error: AxiosError<Result>) => {
+  const { response } = error
+  const errMsg = response?.data?.message || t('sys.api.errorMessage')
+  Message.error(errMsg)
+  return Promise.reject(error)
+}
+
 // 响应拦截
 axiosInstance.interceptors.response.use(
   (res: AxiosResponse<Result>) => {
-    if (String(res.status)[0] === '2') {
+    if (res.status >= 200 && res.status < 300) {
       const data = res.data?.data
-      if (data) return data
-      return res.data
+      return data || res.data
     }
-
-    const message: string = res.data?.message
-    throw new Error(message || t('sys.api.apiRequestFailed'))
+    throw new Error(res.data?.message || t('sys.api.apiRequestFailed'))
   },
   (error: AxiosError<Result>) => {
-    const { response, message } = error || {}
-    let errMsg = ''
-    try {
-      errMsg = response?.data?.message || message
-    } catch (error) {
-      throw new Error(error as unknown as string)
+    const { response } = error
+    const statusCode = response?.status
+
+    if (statusCode === 401) {
+      return handle401Error(error)
     }
-    // 对响应错误做点什么
-    if (isEmpty(errMsg)) {
-      // checkStatus
-      // errMsg = checkStatus(response.data.status);
-      errMsg = t('sys.api.errorMessage')
+    if (statusCode >= 500) {
+      return handle5xxError(error)
     }
-    Message.error(errMsg)
-    return Promise.reject(error)
+    return handleOtherError(error)
   },
 )
 
