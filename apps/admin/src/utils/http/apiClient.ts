@@ -45,7 +45,6 @@ const handle401Error = (error: AxiosError<Result>) => {
   const { response } = error
   const errMsg = response?.data?.message || t('sys.api.needLogin')
   Message.error(errMsg)
-  location.replace('/login')
   return Promise.reject(error)
 }
 
