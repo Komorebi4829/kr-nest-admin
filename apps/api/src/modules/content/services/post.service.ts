@@ -259,7 +259,7 @@ export class PostService extends BaseService<PostEntity, PostRepository, FindPar
                     .orderBy('post.createdAt', 'DESC')
                     .addOrderBy('post.updatedAt', 'DESC')
                     .addOrderBy('post.publishedAt', 'DESC')
-                    .addOrderBy('commentCount', 'DESC')
+            // .addOrderBy('commentCount', 'DESC')
         }
     }
 
