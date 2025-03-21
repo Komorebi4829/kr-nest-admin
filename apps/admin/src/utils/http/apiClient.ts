@@ -3,6 +3,8 @@ import axios, { AxiosRequestConfig, AxiosError, AxiosResponse } from 'axios'
 
 import { t } from '@/locales/i18n'
 
+import { customNavigate } from '@/utils/navigator'
+
 import { getItem } from '../storage'
 
 import { Result } from '#/api'
@@ -45,6 +47,9 @@ const handle401Error = (error: AxiosError<Result>) => {
   const { response } = error
   const errMsg = response?.data?.message || t('sys.api.needLogin')
   Message.error(errMsg)
+  localStorage.removeItem('token')
+  customNavigate(`/login`, { replace: true })
+
   return Promise.reject(error)
 }
 

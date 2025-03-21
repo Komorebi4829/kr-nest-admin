@@ -1,10 +1,11 @@
-import { lazy } from 'react'
+import { lazy, useEffect } from 'react'
 import { Navigate, RouteObject, RouterProvider, createHashRouter } from 'react-router-dom'
 
 import DashboardLayout from '@/layouts/dashboard'
 import AuthGuard from '@/router/components/auth-guard'
 import { usePermissionRoutes } from '@/router/hooks'
 import { ErrorRoutes } from '@/router/routes/error-routes'
+import { setNavigate } from '@/utils/navigator'
 
 import { AppRouteObject } from '#/router'
 
@@ -33,6 +34,11 @@ export default function Router() {
   const routes = [LoginRoute, asyncRoutes, ErrorRoutes, PAGE_NOT_FOUND_ROUTE]
 
   const router = createHashRouter(routes as unknown as RouteObject[])
+
+  useEffect(() => {
+    // 使用 router.navigate 而不是 useNavigate hook
+    setNavigate((path) => router.navigate(path))
+  }, [router])
 
   return <RouterProvider router={router} />
 }

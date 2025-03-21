@@ -232,7 +232,7 @@ const List: FC = () => {
               ]}
             />
           ) : (
-            'Click dict on the right'
+            'Double click dict on the left'
           )}
         </ProCard>
       </ProCard>
